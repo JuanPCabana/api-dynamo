@@ -1,12 +1,4 @@
-const db = require('mongoose')
 const Model = require('./model')
-
-//mongodb+srv://juanpcabana:Crackface99.@testingcluster.xkhgagl.mongodb.net/?retryWrites=true&w=majority
-
-db.Promise = global.Promise
-db.connect('mongodb+srv://juanpcabana:Crackface99..@testingcluster.xkhgagl.mongodb.net/ChatApi?retryWrites=true&w=majority', { useNewUrlParser: 'true' })
-
-console.log('[DB] Conectada correctamente');
 
 const addMessage = (message) => {
     const myMessage = new Model(message)
