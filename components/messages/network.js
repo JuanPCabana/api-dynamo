@@ -40,4 +40,15 @@ router.patch('/:id', (req, res) => {
 
 })
 
+
+router.delete('/:id', (req, res) => {
+    controller.deleteMessage(req.params.id)
+    .then(()=>{
+        response.success(req, res, 200, 'Mensaje eliminado')
+    })
+    .catch(e=>{
+        response.error(req, res, 500, { message: 'Error insesperado' }, { message: e })
+    })
+})
+
 module.exports = router
