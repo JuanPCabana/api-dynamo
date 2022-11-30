@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router()
 const response = require('../../network/response')
+const controller = require('./controller')
 
 
 router.get('/', (req, res) => {
@@ -14,14 +15,16 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    console.log(req.body)
-    if (req.query.error === "ok") {
-        response.error(req, res, 500, { message: 'Error insesperado' }, { message: 'Error Simulado' } )
-    }
-    else {
+    const { body } = req
 
-        res.send('agregado mensaje')
-    }
+    controller.addMessage(body.user, body.message)
+        .then((fullmessage) => {
+            response.success(req, res, 201, { message: fullmessage })
+        })
+        .catch(() => {
+            response.error(req, res, 400, { message: 'Error insesperado' }, { message: 'Error en datos' })
+        })
+
 })
 
 module.exports = router
