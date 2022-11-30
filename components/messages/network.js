@@ -5,13 +5,14 @@ const controller = require('./controller')
 
 
 router.get('/', (req, res) => {
-    console.log(req.headers)
-    console.log(req.query)
-    res.header({
-        "custom-header": "Juan Header"
-    })
-    // res.send('lista mensajes')
-    response.success(req, res, 200, { docs: 'Lista de mensajes' })
+    const filterMessages = req.query.user || null
+    controller.getMessages(filterMessages)
+        .then((messages) => {
+            response.success(req, res, 200, messages)
+        })
+        .catch((err) => {
+            response.error(req, res, 500, { message: 'Error insesperado' }, { message: err })
+        })
 })
 
 router.post('/', (req, res) => {
@@ -23,6 +24,18 @@ router.post('/', (req, res) => {
         })
         .catch(() => {
             response.error(req, res, 400, { message: 'Error insesperado' }, { message: 'Error en datos' })
+        })
+
+})
+
+router.patch('/:id', (req, res) => {
+
+    controller.updateMessage(req.params.id, req.body.text)
+        .then((data) => {
+            response.success(req, res, 200, data)
+        })
+        .catch((err) => {
+            response.error(req, res, 400, { message: 'Error insesperado' }, { message: err })
         })
 
 })
