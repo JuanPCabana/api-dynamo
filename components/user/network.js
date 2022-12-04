@@ -2,17 +2,22 @@ const express = require('express');
 const router = express.Router()
 const response = require('../../network/response')
 const controller = require('./controller')
+const { checkApiKey } = require('../../middlewares/auth.handler')
+const boom = require('@hapi/boom')
 
-router.post('/', (req, res) => {
-    controller.add(req.body.name)
+
+router.post('/', (req, res, next) => {
+    controller.add(req.body)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Creado correctamente' })
+            delete data._doc.password
+            response.success(req, res, 200, { message: 'Creado correctamente', user: { ...data._doc } })
         }).catch((err) => {
-            response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
         });
 })
 
-router.get('/', (req, res) => {
+router.get('/', checkApiKey, (req, res) => {
     controller.list(req.query.id)
         .then((data) => {
             response.success(req, res, 200, data)

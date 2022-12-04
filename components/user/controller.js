@@ -1,14 +1,41 @@
 const store = require('./store')
+const bcrypt = require('bcrypt')
 
 
-const addUser = (name) => {
+const addUser = async ({
+    email,
+    additionalEmail,
+    password,
+    name,
+    birthDate,
+    height,
+    weight,
+    league,
+    category,
+    position,
+    phone,
+    username
+}) => {
 
-    if (!name) {
+    if (!email) {
         return Promise.reject('Invalid Name')
     }
 
+    const paswordHashed = await bcrypt.hash(password, 10)
+
     const user = {
-        name
+        email,
+        additionalEmail,
+        password: paswordHashed,
+        name,
+        birthDate,
+        height,
+        weight,
+        league,
+        category,
+        position,
+        phone,
+        username
     }
 
     return store.add(user)
