@@ -15,6 +15,7 @@ const mySchema = new Schema({
     position: { type: String, required: true },
     phone: { type: String, required: true },
     username: { type: String, required: true },
+    role: { type: String, required: false, default: 'student' }
 })
 
 const model = mongoose.model("Users", mySchema)

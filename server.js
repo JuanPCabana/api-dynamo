@@ -17,7 +17,7 @@ db(process.env.DB_URI)
 var app = express()
 const cors = require("cors");
 
-
+require('./utils/auth')
 
 //parsers
 app.use(bodyParser.json())

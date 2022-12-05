@@ -5,17 +5,32 @@ const addUser = (user) => {
     return myUser.save()
 }
 
-const listUsers = (id) => {
+const listUsers = (id, email) => {
     let filter = {}
     if (id) {
-        filter = { _id: id }
+        filter = {
+            $or: [
+                { _id: id },
+                { email: email }
+            ]
+        }
     }
 
     return Model.find(filter)
 
 }
+const getUserByEmail = (email) => {
+    let filter = {}
+    if (email) {
+        filter = { email: email }
+    }
+
+    return Model.findOne(filter)
+
+}
 
 module.exports = {
     add: addUser,
-    list: listUsers
+    list: listUsers,
+    findByEmail: getUserByEmail
 }

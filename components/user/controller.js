@@ -1,6 +1,6 @@
 const store = require('./store')
 const bcrypt = require('bcrypt')
-
+const boom = require('@hapi/boom')
 
 const addUser = async ({
     email,
@@ -14,11 +14,18 @@ const addUser = async ({
     category,
     position,
     phone,
-    username
+    username,
+    role
 }) => {
 
     if (!email) {
-        return Promise.reject('Invalid Name')
+        return Promise.reject(boom.badRequest('Datos erroneos!'))
+    }
+    const exist = await store.findByEmail(email)
+
+    if (exist) {
+        return Promise.reject(boom.badRequest('El correo ya existe!'))
+
     }
 
     const paswordHashed = await bcrypt.hash(password, 10)
@@ -35,16 +42,18 @@ const addUser = async ({
         category,
         position,
         phone,
-        username
+        username,
+        role
     }
 
     return store.add(user)
+
 }
 
-const listUsers = (id) => {
+const listUsers = ({ id, email }) => {
 
     return new Promise(async (resolve, reject) => {
-        const userList = await store.list(id)
+        const userList = await store.list(id, email)
 
         return resolve(userList)
     })
