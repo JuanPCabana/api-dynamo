@@ -20,8 +20,11 @@ router.post('/login', passport.authenticate('local', { session: false }), (req, 
         const secret = process.env.JWT_SECRET
 
         const token = jwt.sign(payload, secret)
-        delete user.password
-        res.json({ user, token })
+        //eliminar password
+        const retUser = user.toObject()
+        delete retUser.password
+        //
+        res.json({ retUser, token })
     } catch (error) {
         next(error)
     }
