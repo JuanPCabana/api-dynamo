@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const express = require('express')
+const { PORT } = require('./config')
 const bodyParser = require('body-parser')
 
 const db = require('./db')
@@ -37,5 +38,5 @@ app.use(errorHandler)
 
 app.use('/app', express.static('public'))
 
-app.listen(3005)
+app.listen(PORT)
 console.log('Servidor corriendo en puerto 3005')
