@@ -13,7 +13,7 @@ const router = require('./network/routes')
 const { errorHandler, errorLogger, boomErrorHandler } = require('./middlewares/error.handler')
 
 
-db(process.env.DB_URI)
+db('mongodb+srv://juanpcabana:Crackface99..@testingcluster.xkhgagl.mongodb.net/dynamo?retryWrites=true&w=majority')
 
 var app = express()
 const cors = require("cors");
