@@ -39,4 +39,4 @@ app.use(errorHandler)
 app.use('/app', express.static('public'))
 
 app.listen(PORT)
-console.log('Servidor corriendo en puerto 3005')
+console.log('Servidor corriendo en puerto ', PORT)
