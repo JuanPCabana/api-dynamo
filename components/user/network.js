@@ -5,6 +5,7 @@ const controller = require('./controller')
 const { checkApiKey } = require('../../middlewares/auth.handler')
 const boom = require('@hapi/boom')
 const passport = require('passport')
+const { checkRoles } = require('../../middlewares/auth.handler')
 
 
 router.post('/', (req, res, next) => {
@@ -18,9 +19,20 @@ router.post('/', (req, res, next) => {
         });
 })
 
-router.get('/', checkApiKey, passport.authenticate('jwt', { session: false }), (req, res, next) => {
+router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     const queryData = { ...req.query, ...req.body }
     controller.list(queryData)
+        .then((data) => {
+            response.success(req, res, 200, data)
+        }).catch((err) => {
+            // response.error(req, res, 400, { message: 'algo fallo!', err })
+            next(err)
+        });
+})
+
+router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student', 'teacher'), (req, res, next) => {
+    const userId = req.user.sub
+    controller.get(userId)
         .then((data) => {
             response.success(req, res, 200, data)
         }).catch((err) => {

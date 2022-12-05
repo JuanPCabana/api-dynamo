@@ -28,9 +28,16 @@ const getUserByEmail = (email) => {
     return Model.findOne(filter)
 
 }
+const getByToken = (userId) => {
+    let filter = { _id: userId }
+
+    return Model.findOne(filter)
+
+}
 
 module.exports = {
     add: addUser,
     list: listUsers,
-    findByEmail: getUserByEmail
+    findByEmail: getUserByEmail,
+    findByToken: getByToken
 }

@@ -60,8 +60,24 @@ const listUsers = ({ id, email }) => {
 
 }
 
+const getUser = (userId) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        if(!userId){
+            return reject(boom.badRequest('Token invalido'))
+        }
+
+        const userList = await store.findByToken(userId)
+
+        return resolve(userList)
+    })
+
+}
+
 
 module.exports = {
     add: addUser,
-    list: listUsers
+    list: listUsers,
+    get: getUser
 }
