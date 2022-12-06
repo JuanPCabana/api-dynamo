@@ -31,7 +31,7 @@ const getUserByEmail = (email) => {
 const getByToken = (userId) => {
     let filter = { _id: userId }
 
-    return Model.findOne(filter)
+    return Model.findOne(filter).populate('league')
 
 }
 
