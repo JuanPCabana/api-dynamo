@@ -15,7 +15,8 @@ const addUser = async ({
     category,
     position,
     phone,
-    username,
+    gender,
+    newStudent,
     role
 }) => {
 
@@ -44,7 +45,8 @@ const addUser = async ({
         category,
         position,
         phone,
-        username,
+        gender,
+        newStudent,
         role
     }
 

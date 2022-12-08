@@ -15,8 +15,9 @@ const mySchema = new Schema({
     category: { type: mongoose.ObjectId, required: true },
     position: { type: String, required: true },
     phone: { type: String, required: true },
-    username: { type: String, required: true },
-    role: { type: String, required: false, default: 'student' }
+    role: { type: String, required: false, default: 'student' },
+    gender: { type: String, required: true },
+    newStudent: { type: Boolean, default: false }
 })
 
 const model = mongoose.model("Users", mySchema)
