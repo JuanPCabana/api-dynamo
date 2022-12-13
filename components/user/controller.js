@@ -59,7 +59,13 @@ const listUsers = ({ id, email }) => {
     return new Promise(async (resolve, reject) => {
         const userList = await store.list(id, email)
 
-        return resolve(userList)
+        listToClient = userList.map((user)=>{
+            const aux = user.toObject()
+            delete aux.password
+            return aux
+        })
+
+        return resolve(listToClient)
     })
 
 }
