@@ -44,6 +44,19 @@ router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles(
         });
 })
 
+router.post('/multi', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.array('file'), (req, res, next) => {
+
+    controller.multiAdd(req.body, req.user.sub, req.files)
+        .then((data) => {
+            console.log("🚀 ~ file: network.js:51 ~ .then ~ data", data)
+            response.success(req, res, 200, { message: 'Documentos Cargados', fileInfo: { ...data._doc } })
+        })
+        .catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 
 
 module.exports = router

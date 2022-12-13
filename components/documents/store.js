@@ -5,8 +5,17 @@ const addDocument = (document) => {
     return myDocument.save()
 }
 
+const multiAddDocuments = async (documents) => {
+  
+    return await Promise.all(documents.map((document)=>{
+        const myDoc = new Model(document)
+        myDoc.save()
+    }))
+
+}
+
 const listAllDocuments = () => {
-   
+
     return Model.find({})
 
 }
@@ -18,6 +27,7 @@ const listUserDocs = (userId) => {
 
 module.exports = {
     add: addDocument,
+    multiAdd: multiAddDocuments,
     listAll: listAllDocuments,
     list: listUserDocs
 }
