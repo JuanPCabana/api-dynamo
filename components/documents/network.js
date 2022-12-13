@@ -12,7 +12,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('s
 
     controller.add(req.body, req.user.sub, req.file)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Creado correctamente', user: { ...data._doc } })
+            response.success(req, res, 200, { message: 'Creado correctamente', fileInfo: { ...data._doc } })
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
