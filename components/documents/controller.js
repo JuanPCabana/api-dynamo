@@ -1,28 +1,32 @@
 const store = require('./store')
 const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
-const {s3Uploadv2} = require('../../awsS3')
+const { s3Uploadv2 } = require('../../awsS3')
 
 const addDocument = async ({
     name,
-    description
+    description,
+    league,
+    category,
 }, user, file) => {
 
 
     if (!file || !name || !user) {
-    
+
 
         return Promise.reject(boom.badRequest('Datos erroneos!'))
     }
 
-    var  extension = file.originalname.slice(file.originalname.lastIndexOf('.'))
-    var fileName = Date.now()+extension
+    var extension = file.originalname.slice(file.originalname.lastIndexOf('.'))
+    var fileName = Date.now() + extension
 
     const response = await s3Uploadv2(file, fileName)
     const document = {
         file: response.Location,
         name,
         description,
+        league,
+        category,
         user
     }
 

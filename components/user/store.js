@@ -6,15 +6,15 @@ const addUser = (user) => {
 }
 
 const listUsers = (id, email) => {
-    let filter = {}
-    if (id) {
+    let filter = {role: 'student'}
+    /* if (id) {
         filter = {
             $or: [
                 { _id: id },
                 { email: email }
             ]
         }
-    }
+    } */
 
     return Model.find(filter)
 
