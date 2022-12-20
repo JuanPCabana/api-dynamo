@@ -54,10 +54,10 @@ const addUser = async ({
 
 }
 
-const listUsers = ({ id, email }) => {
+const listUsers = ({ id, email, newUsers }) => {
 
     return new Promise(async (resolve, reject) => {
-        const userList = await store.list(id, email)
+        const userList = await store.list(id, email, newUsers)
 
         listToClient = userList.map((user)=>{
             const aux = user.toObject()
@@ -85,9 +85,25 @@ const getUser = (userId) => {
 
 }
 
+const updateUser = (body) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        if(!body.id){
+            return reject(boom.badRequest('Usuario no encontrado'))
+        }
+
+        const userList = await store.update(body)
+
+        return resolve(userList)
+    })
+
+}
+
 
 module.exports = {
     add: addUser,
     list: listUsers,
-    get: getUser
+    get: getUser,
+    update: updateUser
 }

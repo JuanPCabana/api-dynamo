@@ -19,6 +19,16 @@ router.post('/', (req, res, next) => {
         });
 })
 
+router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+    controller.update(req.body)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Usuario actualizado correctamente' })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     const queryData = { ...req.query, ...req.body }
     controller.list(queryData)
