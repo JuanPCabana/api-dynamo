@@ -85,6 +85,22 @@ const getUser = (userId) => {
 
 }
 
+const getUserById = (userId) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        if(!userId){
+            return reject(boom.badRequest('Usuario invalido'))
+        }
+
+        const userList = await store.findById(userId)
+        let userInfo = userList.toObject()
+        delete userInfo.password
+        return resolve(userInfo)
+    })
+
+}
+
 const updateUser = (body) => {
 
     return new Promise(async (resolve, reject) => {
@@ -105,5 +121,6 @@ module.exports = {
     add: addUser,
     list: listUsers,
     get: getUser,
-    update: updateUser
+    update: updateUser,
+    getById: getUserById
 }

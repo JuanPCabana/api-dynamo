@@ -35,6 +35,18 @@ const getUserByEmail = (email) => {
     return Model.findOne(filter)
 
 }
+const getUserById = (id) => {
+    let filter = {}
+    if (id) {
+        filter = { _id: id }
+    }
+    else{
+        return Promise.reject('Id invalido')
+    }
+
+    return Model.findOne(filter).populate("league")
+
+}
 const getByToken = (userId) => {
     let filter = { _id: userId }
 
@@ -63,6 +75,7 @@ module.exports = {
     add: addUser,
     list: listUsers,
     findByEmail: getUserByEmail,
+    findById: getUserById,
     findByToken: getByToken,
     update: updateInfo
 }
