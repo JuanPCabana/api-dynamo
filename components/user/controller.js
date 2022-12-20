@@ -105,7 +105,7 @@ const updateUser = (body) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if(!body.id){
+        if(!body._id){
             return reject(boom.badRequest('Usuario no encontrado'))
         }
 

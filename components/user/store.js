@@ -57,7 +57,7 @@ const getByToken = (userId) => {
 const updateInfo = async (body) => {
     let filter = { _id: body.id }
 
-    let result = Model.updateOne({ _id: body.id }, {
+    let result = Model.updateOne({ _id: body._id }, {
         $set: {
             ...body,
             role: "student",
