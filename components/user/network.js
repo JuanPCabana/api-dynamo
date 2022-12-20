@@ -52,7 +52,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
 })
 
 router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
-    const userId = req.params.id
+    const userId = req.params._id
     controller.getById(userId)
         .then((data) => {
             response.success(req, res, 200, data)
