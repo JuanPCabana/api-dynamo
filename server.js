@@ -16,14 +16,14 @@ const { errorHandler, errorLogger, boomErrorHandler } = require('./middlewares/e
 db(process.env.DB_URI)
 
 var app = express()
-const cors = require("cors");
+var cors = require('cors');
+app.use(cors());
 
 require('./utils/auth')
 
 //parsers
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors());
 //agregando el api v1
 const apiRouter = express.Router()
 //se pasa la ruta y el router de arriba
