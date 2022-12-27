@@ -51,4 +51,15 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
         });
 })
 
+router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+    const userId = req.params.id
+    controller.getById(userId)
+        .then((data) => {
+            response.success(req, res, 200, data)
+        }).catch((err) => {
+            // response.error(req, res, 400, { message: 'algo fallo!', err })
+            next(err)
+        });
+})
+
 module.exports = router
