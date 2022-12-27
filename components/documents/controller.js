@@ -8,6 +8,7 @@ const addDocument = async ({
     description,
     league,
     category,
+    user:bodyUser
 }, user, file) => {
 
 
@@ -27,7 +28,7 @@ const addDocument = async ({
         description,
         league,
         category,
-        user
+        user: bodyUser? bodyUser : user
     }
 
     return store.add(document)
