@@ -8,7 +8,8 @@ const mySchema = new Schema({
    description: { type: String, required: false },
    league: { type: Schema.ObjectId, ref: 'Leagues', required: false },
    category: { type: Schema.ObjectId, ref: 'Categories', required: false },
-   user: { type: Schema.ObjectId, ref: 'Users' }
+   user: { type: Schema.ObjectId, ref: 'Users' },
+   global: {type: Boolean, required:true}
 })
 
 const model = mongoose.model("Documents", mySchema)

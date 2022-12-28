@@ -19,6 +19,11 @@ const listAllDocuments = () => {
     return Model.find({})
 
 }
+const listGlobalDocuments = () => {
+
+    return Model.find({global: true}).populate('user')
+
+}
 const listUserDocs = (userId) => {
     let filter = { user: userId }
     return Model.find(filter).populate('user')
@@ -29,5 +34,6 @@ module.exports = {
     add: addDocument,
     multiAdd: multiAddDocuments,
     listAll: listAllDocuments,
-    list: listUserDocs
+    list: listUserDocs,
+    listGlobal: listGlobalDocuments
 }

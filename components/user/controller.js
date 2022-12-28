@@ -29,25 +29,29 @@ const addUser = async ({
         return Promise.reject(boom.badRequest('El correo ya existe!'))
 
     }
+    if (role ==='admin') {
+        return Promise.reject(boom.unauthorized())
+
+    }
 
     const paswordHashed = await bcrypt.hash(password, 10)
 
     const user = {
-        email,
-        additionalEmail,
+        email:email.toLowerCase().trim(),
+        additionalEmail: additionalEmail.toLowerCase().trim(),
         password: paswordHashed,
-        firstName,
-        lastName,
-        birthDate,
-        height,
-        weight,
-        league,
-        category,
-        position,
-        phone,
-        gender,
-        newStudent,
-        role
+        firstName:firstName.toLowerCase().trim(),
+        lastName: lastName.toLowerCase().trim(),
+        birthDate:birthDate.toLowerCase().trim(),
+        height:height.toLowerCase().trim(),
+        weight:weight.toLowerCase().trim(),
+        league:league.toLowerCase().trim(),
+        category:category.toLowerCase().trim(),
+        position:position.toLowerCase().trim(),
+        phone:phone.toLowerCase().trim(),
+        gender:gender.toLowerCase().trim(),
+        newStudent:newStudent.toLowerCase().trim(),
+        role:role.toLowerCase().trim()
     }
 
     return store.add(user)

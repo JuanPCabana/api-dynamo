@@ -29,7 +29,7 @@ const listUsers = (id, email, newUsers) => {
 const getUserByEmail = (email) => {
     let filter = {}
     if (email) {
-        filter = { email: email }
+        filter = { email: email.toLowerCase() }
     }
 
     return Model.findOne(filter)
