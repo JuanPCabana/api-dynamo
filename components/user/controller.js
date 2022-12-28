@@ -29,7 +29,7 @@ const addUser = async ({
         return Promise.reject(boom.badRequest('El correo ya existe!'))
 
     }
-    if (role ==='admin') {
+    if (role === 'admin') {
         return Promise.reject(boom.unauthorized())
 
     }
@@ -37,21 +37,21 @@ const addUser = async ({
     const paswordHashed = await bcrypt.hash(password, 10)
 
     const user = {
-        email:email.toLowerCase().trim(),
+        email: email.toLowerCase().trim(),
         additionalEmail: additionalEmail.toLowerCase().trim(),
         password: paswordHashed,
-        firstName:firstName.toLowerCase().trim(),
+        firstName: firstName.toLowerCase().trim(),
         lastName: lastName.toLowerCase().trim(),
-        birthDate:birthDate.toLowerCase().trim(),
-        height:height.toLowerCase().trim(),
-        weight:weight.toLowerCase().trim(),
-        league:league.toLowerCase().trim(),
-        category:category.toLowerCase().trim(),
-        position:position.toLowerCase().trim(),
-        phone:phone.toLowerCase().trim(),
-        gender:gender.toLowerCase().trim(),
-        newStudent:newStudent.toLowerCase().trim(),
-        role:role.toLowerCase().trim()
+        birthDate: birthDate,
+        height: height,
+        weight: weight,
+        league: league,
+        category: category,
+        position: position,
+        phone: phone,
+        gender: gender,
+        newStudent: newStudent,
+        role: role
     }
 
     return store.add(user)
@@ -63,7 +63,7 @@ const listUsers = ({ id, email, newUsers }) => {
     return new Promise(async (resolve, reject) => {
         const userList = await store.list(id, email, newUsers)
 
-        listToClient = userList.map((user)=>{
+        listToClient = userList.map((user) => {
             const aux = user.toObject()
             delete aux.password
             return aux
@@ -78,7 +78,7 @@ const getUser = (userId) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if(!userId){
+        if (!userId) {
             return reject(boom.badRequest('Token invalido'))
         }
 
@@ -93,7 +93,7 @@ const getUserById = (userId) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if(!userId){
+        if (!userId) {
             return reject(boom.badRequest('Usuario invalido'))
         }
 
@@ -109,7 +109,7 @@ const updateUser = (body) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if(!body._id){
+        if (!body._id) {
             return reject(boom.badRequest('Usuario no encontrado'))
         }
 
