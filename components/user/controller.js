@@ -54,10 +54,10 @@ const addUser = async ({
 
 }
 
-const listUsers = ({ id, email, newUsers }) => {
+const listUsers = ({ id, email, newUsers, query }) => {
 
     return new Promise(async (resolve, reject) => {
-        const userList = await store.list(id, email, newUsers)
+        const userList = await store.list(id, email, newUsers, query)
 
         listToClient = userList.map((user)=>{
             const aux = user.toObject()

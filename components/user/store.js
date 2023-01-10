@@ -5,7 +5,7 @@ const addUser = (user) => {
     return myUser.save()
 }
 
-const listUsers = (id, email, newUsers) => {
+const listUsers = (id, email, newUsers, query) => {
     let filter = {}
     if (newUsers) {
 
@@ -15,12 +15,18 @@ const listUsers = (id, email, newUsers) => {
 
         filter = { role: 'student', newStudent: false }
 
-        /*  filter = {
-             $or: [
-                 { _id: id },
-                 { email: email }
-             ]
-         } */
+        if (query) {
+            filter = {
+                role: 'student',
+                $or: [
+                    { firstName: { $regex: '^' + query, $options: "i" } },
+                    { lastName: { $regex: '^' + query, $options: "i" } },
+                    { email: { $regex: '^' + query, $options: 'i' } },
+                    { additionalEmail: { $regex: '^' + query, $options: 'i' } }
+                ]
+                
+            }
+        }
     }
 
     return Model.find(filter)
@@ -40,7 +46,7 @@ const getUserById = (id) => {
     if (id) {
         filter = { _id: id }
     }
-    else{
+    else {
         return Promise.reject('Id invalido')
     }
 
