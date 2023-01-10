@@ -1,6 +1,8 @@
 const store = require('./store')
 const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
+const sendMailService = require('../../utils/mailer')
+const { makeToken } = require('../../utils/helpers/makeToken')
 
 const addUser = async ({
     email,
@@ -31,6 +33,7 @@ const addUser = async ({
     }
 
     const paswordHashed = await bcrypt.hash(password, 10)
+    const token = makeToken()
 
     const user = {
         email,
@@ -46,9 +49,11 @@ const addUser = async ({
         position,
         phone,
         gender,
+        token,
         newStudent,
         role
     }
+    await sendMailService.sendMailConfirmAccount(email, `${firstName} ${lastName}`, token.value)
 
     return store.add(user)
 
@@ -59,12 +64,11 @@ const listUsers = ({ id, email, newUsers, query }) => {
     return new Promise(async (resolve, reject) => {
         const userList = await store.list(id, email, newUsers, query)
 
-        listToClient = userList.map((user)=>{
+        listToClient = userList.map((user) => {
             const aux = user.toObject()
             delete aux.password
             return aux
         })
-
         return resolve(listToClient)
     })
 
@@ -74,7 +78,7 @@ const getUser = (userId) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if(!userId){
+        if (!userId) {
             return reject(boom.badRequest('Token invalido'))
         }
 
@@ -89,7 +93,7 @@ const getUserById = (userId) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if(!userId){
+        if (!userId) {
             return reject(boom.badRequest('Usuario invalido'))
         }
 
@@ -105,7 +109,7 @@ const updateUser = (body) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if(!body._id){
+        if (!body._id) {
             return reject(boom.badRequest('Usuario no encontrado'))
         }
 

@@ -17,8 +17,10 @@ const mySchema = new Schema({
     phone: { type: String, required: true },
     role: { type: String, required: false, default: 'student' },
     gender: { type: String, required: true },
+    token: { type: Object },
     newStudent: { type: Boolean, default: false },
-    active: {type: Boolean, default: false }
+    active: {type: Boolean, default: false },
+    verifiedEmail: {type: Boolean, default: false }
 })
 
 const model = mongoose.model("Users", mySchema)
