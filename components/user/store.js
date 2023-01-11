@@ -24,7 +24,7 @@ const listUsers = (id, email, newUsers, query) => {
                     { email: { $regex: '^' + query, $options: 'i' } },
                     { additionalEmail: { $regex: '^' + query, $options: 'i' } }
                 ]
-                
+
             }
         }
     }
@@ -60,7 +60,14 @@ const getByToken = (userId) => {
 
 }
 
-const updateInfo = async (body) => {
+const updateInfo = async (body, verification) => {
+
+    if (verification) {
+        let result = Model.replaceOne({ _id: body._id }, {...body, verifiedEmail: true})
+
+        return result
+    }
+
     let filter = { _id: body.id }
 
     let result = Model.updateOne({ _id: body._id }, {
@@ -70,11 +77,14 @@ const updateInfo = async (body) => {
             newStudent: false
         }
     })
-    console.log("🚀 ~ file: store.js:54 ~ updateInfo ~ result", result)
+    return result
+}
+
+const validateUser = async (user, token) => {
+    let filter = { _id: user }
+    let result = Model.findOne(filter)
 
     return result
-
-
 }
 
 module.exports = {
@@ -83,5 +93,6 @@ module.exports = {
     findByEmail: getUserByEmail,
     findById: getUserById,
     findByToken: getByToken,
-    update: updateInfo
+    update: updateInfo,
+    validate: validateUser
 }

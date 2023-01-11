@@ -120,11 +120,40 @@ const updateUser = (body) => {
 
 }
 
+const validateUser = (user, token) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        if (!token) {
+            return reject(boom.badRequest('Token Invalido'))
+        }
+
+        const queryResponse = await store.validate(user, token)
+        
+        if (!queryResponse.token) {
+            return reject(boom.badRequest("Token Invalido"))
+        }
+
+        if (queryResponse.token.value !== token) {
+            return reject(boom.badRequest('Token Invalido'))
+        }
+        
+        const auxResponse = queryResponse.toObject()
+        delete auxResponse.token
+
+        const finalResponse = await store.update(auxResponse, true)
+
+        return resolve(finalResponse)
+    })
+
+}
+
 
 module.exports = {
     add: addUser,
     list: listUsers,
     get: getUser,
     update: updateUser,
-    getById: getUserById
+    getById: getUserById,
+    validate: validateUser
 }

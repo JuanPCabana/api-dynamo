@@ -62,4 +62,16 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles(
         });
 })
 
+router.post('/validateEmail', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
+    const token = req.query.token
+    const userId = req.user.sub
+    controller.validate(userId, token)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Usuario validado correctamente' })
+        }).catch((err) => {
+            // response.error(req, res, 400, { message: 'algo fallo!', err })
+            next(err)
+        });
+})
+
 module.exports = router
