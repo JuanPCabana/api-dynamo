@@ -31,27 +31,30 @@ const addUser = async ({
         return Promise.reject(boom.badRequest('El correo ya existe!'))
 
     }
+    if (role === 'admin') {
+        return Promise.reject(boom.unauthorized())
+
+    }
 
     const paswordHashed = await bcrypt.hash(password, 10)
     const token = makeToken()
 
     const user = {
-        email,
-        additionalEmail,
+        email: email.toLowerCase().trim(),
+        additionalEmail: additionalEmail.toLowerCase().trim(),
         password: paswordHashed,
-        firstName,
-        lastName,
-        birthDate,
-        height,
-        weight,
-        league,
-        category,
-        position,
-        phone,
-        gender,
-        token,
-        newStudent,
-        role
+        firstName: firstName.toLowerCase().trim(),
+        lastName: lastName.toLowerCase().trim(),
+        birthDate: birthDate,
+        height: height,
+        weight: weight,
+        league: league,
+        category: category,
+        position: position,
+        phone: phone,
+        gender: gender,
+        newStudent: newStudent,
+        role: role
     }
     await sendMailService.sendMailConfirmAccount(email, `${firstName} ${lastName}`, token.value)
 

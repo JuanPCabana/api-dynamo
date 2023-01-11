@@ -8,6 +8,8 @@ const addDocument = async ({
     description,
     league,
     category,
+    user:bodyUser,
+    global
 }, user, file) => {
 
 
@@ -27,7 +29,8 @@ const addDocument = async ({
         description,
         league,
         category,
-        user
+        user: bodyUser? bodyUser : user,
+        global
     }
 
     return store.add(document)
@@ -78,6 +81,20 @@ const listAllDocuments = () => {
     })
 
 }
+const listGlobalDocuments = () => {
+
+    return new Promise(async (resolve, reject) => {
+        const documentList = await store.listGlobal()
+        const responseDocumentList = []
+        documentList.map(document =>{
+            const aux = document.toObject()
+            delete aux.user.password
+            responseDocumentList.push(aux)
+        })
+        return resolve(responseDocumentList)
+    })
+
+}
 
 
 const listUserDocuments = (user) => {
@@ -89,8 +106,15 @@ const listUserDocuments = (user) => {
         }
 
         const userList = await store.list(user.sub)
+        const responseDocumentList = []
+        userList.map(document =>{
+            const aux = document.toObject()
+            delete aux.user.password
+            responseDocumentList.push(aux)
+        })
+        return resolve(responseDocumentList)
 
-        return resolve(userList)
+
     })
 
 }
@@ -100,5 +124,6 @@ module.exports = {
     add: addDocument,
     multiAdd: multiAddDocument,
     listAll: listAllDocuments,
-    list: listUserDocuments
+    list: listUserDocuments,
+    listGlobal: listGlobalDocuments
 }

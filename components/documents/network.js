@@ -44,6 +44,18 @@ router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles(
         });
 })
 
+router.get('/global', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+
+    controller.listGlobal()
+        .then((data) => {
+            response.success(req, res, 200, data )
+        })
+        .catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 router.post('/multi', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.array('file'), (req, res, next) => {
 
     controller.multiAdd(req.body, req.user.sub, req.files)
