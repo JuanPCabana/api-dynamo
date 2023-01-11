@@ -45,7 +45,7 @@ router.get('/recoverPassword', passport.authenticate('jwt', { session: false }),
     
     userController.recoverToken(userId)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Usuario validado correctamente' })
+            response.success(req, res, 200, { message: 'Correo de recuperacion enviado correctamente' })
         }).catch((err) => {
             // response.error(req, res, 400, { message: 'algo fallo!', err })
             next(err)
