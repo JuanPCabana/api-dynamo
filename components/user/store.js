@@ -63,7 +63,7 @@ const getByToken = (userId) => {
 const updateInfo = async (body, verification) => {
 
     if (verification) {
-        let result = Model.replaceOne({ _id: body._id }, {...body, verifiedEmail: true})
+        let result = Model.replaceOne({ _id: body._id }, { ...body, verifiedEmail: true })
 
         return result
     }
@@ -77,6 +77,12 @@ const updateInfo = async (body, verification) => {
             newStudent: false
         }
     })
+    return result
+}
+
+const replaceObject = (body) => {
+    let result = Model.replaceOne({ _id: body._id }, { ...body })
+
     return result
 }
 
@@ -94,5 +100,6 @@ module.exports = {
     findById: getUserById,
     findByToken: getByToken,
     update: updateInfo,
-    validate: validateUser
+    validate: validateUser,
+    replace: replaceObject
 }
