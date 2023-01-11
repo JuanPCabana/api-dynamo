@@ -8,12 +8,12 @@ const addDocument = async ({
     description,
     league,
     category,
-    user:bodyUser,
+    user,
     global
-}, user, file) => {
+}, tokenUser, file) => {
 
 
-    if (!file || !name || !user) {
+    if (!file || !name || !tokenUser) {
 
 
         return Promise.reject(boom.badRequest('Datos erroneos!'))
@@ -29,7 +29,7 @@ const addDocument = async ({
         description,
         league,
         category,
-        user: bodyUser? bodyUser : user,
+        user: user ? user : tokenUser,
         global
     }
 
@@ -86,7 +86,7 @@ const listGlobalDocuments = () => {
     return new Promise(async (resolve, reject) => {
         const documentList = await store.listGlobal()
         const responseDocumentList = []
-        documentList.map(document =>{
+        documentList.map(document => {
             const aux = document.toObject()
             delete aux.user.password
             responseDocumentList.push(aux)
@@ -100,14 +100,13 @@ const listGlobalDocuments = () => {
 const listUserDocuments = (user) => {
     return new Promise(async (resolve, reject) => {
 
-        console.log("🚀 ~ file: controller.js:44 ~ returnnewPromise ~ user.sub", user.sub)
         if (!user.sub) {
             return reject(boom.badRequest('Id invalido'))
         }
 
         const userList = await store.list(user.sub)
         const responseDocumentList = []
-        userList.map(document =>{
+        userList.map(document => {
             const aux = document.toObject()
             delete aux.user.password
             responseDocumentList.push(aux)
