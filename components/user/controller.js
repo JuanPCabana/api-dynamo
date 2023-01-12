@@ -72,6 +72,8 @@ const listUsers = ({ id, email, newUsers, query }) => {
             delete aux.password
             return aux
         })
+        
+
         return resolve(listToClient)
     })
 

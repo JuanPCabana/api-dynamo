@@ -12,7 +12,7 @@ const mySchema = new Schema({
     height: { type: Number, required: true },
     weight: { type: Number, required: true },
     league: { type: Schema.ObjectId, ref: 'Leagues' },
-    category: { type: mongoose.ObjectId, required: false },
+    category: { type: mongoose.ObjectId, required: false, ref: 'Categories' },
     position: { type: String, required: false },
     phone: { type: String, required: true },
     role: { type: String, required: false, default: 'student' },

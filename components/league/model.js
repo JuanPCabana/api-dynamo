@@ -4,15 +4,16 @@ const Schema = mongoose.Schema
 
 const categorySchema = new Schema({
    code: { type: String, required: true },
+   league: {type: mongoose.Types.ObjectId, required:true},
    name: { type: String, required: true },
 })
 
 const mySchema = new Schema({
    code: { type: String, required: true },
    name: { type: String, required: true },
-   categories: [categorySchema]
 })
 
-const model = mongoose.model("Leagues", mySchema)
+const CategoryModel = mongoose.model("Categories", categorySchema)
+const LeagueModel = mongoose.model("Leagues", mySchema)
 
-module.exports = model
+module.exports = {LeagueModel, CategoryModel}

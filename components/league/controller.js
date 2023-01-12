@@ -5,20 +5,37 @@ const boom = require('@hapi/boom')
 const addLeague = async ({
     code,
     name,
-    categories
+
 }) => {
 
-    if (!code || !name || !categories) {
+    if (!code || !name) {
         return Promise.reject(boom.badRequest('Datos erroneos!'))
     }
 
     const league = {
         code,
-        name,
-        categories
+        name
     }
 
     return store.add(league)
+
+}
+const addCategory = async ({ categories, league }) => {
+
+    if (categories.length === 0) {
+        return Promise.reject(boom.badRequest('Datos erroneos!'))
+    }
+
+
+    return new Promise(async (resolve, reject) => {
+        const response = await store.addCategory(categories, league)
+        /* const response = await categories.map(async (category) => {
+            const auxCategory = { ...category, league }
+            return await store.addCategory(auxCategory)
+        })
+        console.log("🚀 ~ file: controller.js:34 ~ categories.map ~ response", response) */
+        return resolve(response)
+    })
 
 }
 
@@ -51,5 +68,6 @@ const getLeague = (id) => {
 module.exports = {
     add: addLeague,
     listAll: listAllLeagues,
-    get: getLeague
+    get: getLeague,
+    addCategory
 }

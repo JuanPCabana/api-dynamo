@@ -5,7 +5,7 @@ const addUser = (user) => {
     return myUser.save()
 }
 
-const listUsers = (id, email, newUsers, query) => {
+const listUsers = async (id, email, newUsers, query) => {
     let filter = {}
     if (newUsers) {
 
@@ -29,7 +29,7 @@ const listUsers = (id, email, newUsers, query) => {
         }
     }
 
-    return Model.find(filter)
+    return await Model.find(filter).populate([{path:'league'}, {path:'category'}])
 
 }
 const getUserByEmail = (email) => {

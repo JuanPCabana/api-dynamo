@@ -40,10 +40,10 @@ router.post('/login', passport.authenticate('local', { session: false }), (req, 
         }); */
 })
 
-router.get('/recoverPassword', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
-    const userId = req.user.sub
+router.get('/recoverPassword', /* passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), */ (req, res, next) => {
+    const userEmail = req.body.email
     
-    userController.recoverToken(userId)
+    userController.recoverToken(userEmail)
         .then((data) => {
             response.success(req, res, 200, { message: 'Correo de recuperacion enviado correctamente' })
         }).catch((err) => {

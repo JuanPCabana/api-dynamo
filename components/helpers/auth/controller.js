@@ -4,14 +4,14 @@ const boom = require('@hapi/boom')
 const sendMailService = require('../../../utils/mailer/index')
 const { makeToken } = require('../../../utils/helpers/makeToken')
 
-const generateRecoverToken = async (userId) => {
+const generateRecoverToken = async (userEmail) => {
 
 
     return new Promise(async (resolve, reject) => {
-        const userData = await userStore.findById(userId)
+        const userData = await userStore.findByEmail(userEmail)
 
         if (!userData) {
-            return reject(boom.badRequest('Token invalido'))
+            return reject(boom.badRequest('Email invalido'))
         }
 
         const token = makeToken()
