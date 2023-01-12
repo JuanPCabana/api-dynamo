@@ -49,6 +49,21 @@ const listAllLeagues = () => {
 
 }
 
+const listCategories = (league) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        if(!league){
+            return reject(boom.badRequest('Liga invalida'))
+        }
+
+        const categories = await store.listCategories(league)
+
+        return resolve(categories)
+    })
+
+}
+
 
 const getLeague = (id) => {
     return new Promise(async (resolve, reject) => {
@@ -69,5 +84,6 @@ module.exports = {
     add: addLeague,
     listAll: listAllLeagues,
     get: getLeague,
-    addCategory
+    addCategory,
+    listCategories
 }

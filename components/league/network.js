@@ -7,7 +7,7 @@ const boom = require('@hapi/boom')
 const passport = require('passport')
 
 
-router.post('/', passport.authenticate('jwt', { session: false }), checkRoles( 'admin'), (req, res, next) => {
+router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     controller.add(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Creado correctamente', user: { ...data._doc } })
@@ -16,10 +16,22 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles( '
             next(err)
         });
 })
-router.post('/category', passport.authenticate('jwt', { session: false }), checkRoles( 'admin'), (req, res, next) => {
+router.post('/category', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     controller.addCategory(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Creado correctamente', user: { ...data._doc } })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+router.get('/category', (req, res, next) => {
+
+    const league = req.query.id
+
+    controller.listCategories(league)
+        .then((data) => {
+            response.success(req, res, 200, { categories: data  })
         }).catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
             next(err)

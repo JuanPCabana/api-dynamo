@@ -10,6 +10,11 @@ const addCategory = async (categories, league) => {
     return  await CategoryModel.insertMany(dbCategories)
 }
 
+const listCategories = (league) => {
+    let filter = { league: league }
+    return CategoryModel.find(filter)
+}
+
 const listAllLeagues = () => {
    
     return LeagueModel.find({})
@@ -25,5 +30,6 @@ module.exports = {
     add: addLeague,
     listAll: listAllLeagues,
     get: getLeague,
-    addCategory
+    addCategory,
+    listCategories
 }
