@@ -4,11 +4,12 @@ module.exports = function makeSendMailPasswordReset({
     fs,
     path
   }) {
-    return async function sendMailPasswordReset(email, token) {
+    return async function sendMailPasswordReset(email, token, id) {
       const htmlTemplate = await getEmailTemplate();
       const buildEmailTemplate = buildEmailBodyTemplate({
         htmlTemplate,
-        token
+        token,
+        id
       });
       const info = await serverMail.sendMail({
         from: '"Test" <juanpc3399@gmail.com>',
@@ -28,9 +29,11 @@ module.exports = function makeSendMailPasswordReset({
       );
       return requestFile;
     }
-    function buildEmailBodyTemplate({ htmlTemplate, token }) {
+    function buildEmailBodyTemplate({ htmlTemplate, token, id }) {
       const dom = domParser.load(htmlTemplate);
       dom("#token").text(token);
+      dom("#link").attr("href", `http://localhost:3000/nueva_contrasena?token=${token}&id=${id}`)
+      dom("#link").text(`http://localhost:3000/nueva_contrasena?token=${token}&id=${id}`)
       return dom.html();
     }
   }

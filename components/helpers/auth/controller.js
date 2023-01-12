@@ -20,7 +20,7 @@ const generateRecoverToken = async (userEmail) => {
 
         const response = await userStore.replace(userWithToken)
 
-        sendMailService.sendMailPasswordReset(userWithToken.email, token.value)
+        sendMailService.sendMailPasswordReset(userWithToken.email, token.value, userWithToken._id)
 
         return resolve(response)
 

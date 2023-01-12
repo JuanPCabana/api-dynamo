@@ -52,8 +52,8 @@ router.get('/recoverPassword', /* passport.authenticate('jwt', { session: false 
         });
 })
 
-router.post('/resetPassword', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
-    const userId = req.user.sub
+router.post('/resetPassword', (req, res, next) => {
+    const userId = req.body.user
     const token = req.body.token
     const password = req.body.password
     

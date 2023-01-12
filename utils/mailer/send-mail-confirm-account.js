@@ -4,13 +4,14 @@ module.exports = function makeSendMailConfirmAccount({
   fs,
   path
 }) {
-  return async function sendMailConfirmAccount(email, name, token) {
+  return async function sendMailConfirmAccount(email, name, token, id) {
     const htmlTemplate = await getEmailTemplate();
     const buildEmailTemplate = buildEmailBodyTemplate({
       htmlTemplate,
       token,
       email, 
       name,
+      id
     });
     const info = await serverMail.sendMail({
       from: '"Test" <juanpc3399@gmail.com>',
@@ -30,12 +31,12 @@ module.exports = function makeSendMailConfirmAccount({
     );
     return requestFile;
   }
-  function buildEmailBodyTemplate({ htmlTemplate, token, email, name }) {
+  function buildEmailBodyTemplate({ htmlTemplate, token, email, name, id }) {
     const dom = domParser.load(htmlTemplate);
     dom("#name").text(`${name}`)
     dom("#tokenId").text(`${token}`)
     dom("#email").text(`${email}`.toLocaleLowerCase())
-    dom("#link").attr("href", `https://consumo.back9.com.ve/login?token=${token}`);
+    dom("#link").attr("href", `http://localhost:3000/confirmar_correo?token=${token}&id=${id}`)
     return dom.html();
   }
 }
