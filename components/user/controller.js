@@ -72,7 +72,7 @@ const listUsers = ({ id, email, newUsers, query }) => {
             delete aux.password
             return aux
         })
-        
+
 
         return resolve(listToClient)
     })
@@ -134,7 +134,7 @@ const validateUser = (user, token) => {
         }
 
         const queryResponse = await store.validate(user, token)
-        
+
         if (!queryResponse.token) {
             return reject(boom.badRequest("Token Invalido"))
         }
@@ -142,13 +142,34 @@ const validateUser = (user, token) => {
         if (queryResponse.token.value !== token) {
             return reject(boom.badRequest('Token Invalido'))
         }
-        
+
         const auxResponse = queryResponse.toObject()
         delete auxResponse.token
 
         const finalResponse = await store.update(auxResponse, true)
 
         return resolve(finalResponse)
+    })
+
+}
+
+const changeUserStatus = (userId, newStatus) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        if (!userId || !newStatus) {
+            return reject(boom.badRequest('Usuario no encontrado o estado invalido'))
+        }
+        
+
+        const {_doc:user} = await store.findById(userId)
+        user.active = newStatus
+        const response = await store.replace(user)
+        console.log("🚀 ~ file: controller.js:165 ~ returnnewPromise ~ user", user)
+        console.log("🚀 ~ file: controller.js:165 ~ returnnewPromise ~ user", response)
+
+
+        return resolve(user)
     })
 
 }
@@ -160,5 +181,6 @@ module.exports = {
     get: getUser,
     update: updateUser,
     getById: getUserById,
-    validate: validateUser
+    validate: validateUser,
+    statusChange: changeUserStatus
 }
