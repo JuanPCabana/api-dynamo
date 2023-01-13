@@ -50,7 +50,7 @@ const getUserByEmail = (email) => {
         filter = { email: email.toLowerCase() }
     }
 
-    return Model.findOne(filter)
+    return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
 
 }
 const getUserById = (id) => {
@@ -62,13 +62,13 @@ const getUserById = (id) => {
         return Promise.reject('Id invalido')
     }
 
-    return Model.findOne(filter).populate("league")
+    return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
 
 }
 const getByToken = (userId) => {
     let filter = { _id: userId }
 
-    return Model.findOne(filter).populate('league')
+    return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
 
 }
 
