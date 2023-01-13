@@ -67,7 +67,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles(
 })
 
 // verificacion de correo
-router.post('/validateEmail', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
+router.post('/validateEmail',(req, res, next) => {
     const token = req.query.token
     const userId = req.query.id
     controller.validate(userId, token)
