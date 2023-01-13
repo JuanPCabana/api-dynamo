@@ -10,6 +10,18 @@ const listUsers = async (id, email, newUsers, query) => {
     if (newUsers) {
 
         filter = { newStudent: true }
+        if (query) {
+            filter = {
+                newStudent: true,
+                $or: [
+                    { firstName: { $regex: '^' + query, $options: "i" } },
+                    { lastName: { $regex: '^' + query, $options: "i" } },
+                    { email: { $regex: '^' + query, $options: 'i' } },
+                    { additionalEmail: { $regex: '^' + query, $options: 'i' } }
+                ]
+            }
+        }
+
     }
     else {
 
@@ -29,7 +41,7 @@ const listUsers = async (id, email, newUsers, query) => {
         }
     }
 
-    return await Model.find(filter).populate([{path:'league'}, {path:'category'}])
+    return await Model.find(filter).populate([{ path: 'league' }, { path: 'category' }])
 
 }
 const getUserByEmail = (email) => {
