@@ -7,7 +7,7 @@ const boom = require('@hapi/boom')
 const passport = require('passport')
 const { checkRoles } = require('../../middlewares/auth.handler')
 
-
+//add user
 router.post('/', (req, res, next) => {
     controller.add(req.body)
         .then((data) => {
@@ -19,6 +19,7 @@ router.post('/', (req, res, next) => {
         });
 })
 
+//update users
 router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     controller.update(req.body)
         .then((data) => {
@@ -29,6 +30,7 @@ router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('
         });
 })
 
+//get all users
 router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     const queryData = { ...req.query, ...req.body }
     controller.list(queryData)
@@ -40,6 +42,7 @@ router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles(
         });
 })
 
+//get current user
 router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student', 'teacher'), (req, res, next) => {
     const userId = req.user.sub
     controller.get(userId)
@@ -51,6 +54,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
         });
 })
 
+//get User
 router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     const userId = req.params.id
     controller.getById(userId)
@@ -62,6 +66,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles(
         });
 })
 
+// verificacion de correo
 router.post('/validateEmail', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
     const token = req.query.token
     const userId = req.query.id
@@ -74,12 +79,13 @@ router.post('/validateEmail', passport.authenticate('jwt', { session: false }), 
         });
 })
 
+//Cambio de status (solvente : no solvente)
 router.post('/:id/status', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     const userId = req.params.id
     const newStatus = req.body.status
     controller.statusChange(userId, newStatus)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Usuario validado correctamente' })
+            response.success(req, res, 200, { message: 'Cambio de estatus realizado correctamente' })
         }).catch((err) => {
             // response.error(req, res, 400, { message: 'algo fallo!', err })
             next(err)

@@ -53,12 +53,14 @@ const addUser = async ({
         position: position,
         phone: phone,
         gender: gender,
+        token,
         newStudent: newStudent,
         role: role
     }
-    await sendMailService.sendMailConfirmAccount(email, `${firstName} ${lastName}`, token.value)
+    const userInfo = await store.add(user)
 
-    return store.add(user)
+    await sendMailService.sendMailConfirmAccount(email, `${firstName} ${lastName}`, token.value, userInfo._id)
+    return Promise.resolve(userInfo)
 
 }
 
@@ -158,15 +160,16 @@ const changeUserStatus = (userId, newStatus) => {
     return new Promise(async (resolve, reject) => {
 
         if (!userId || !newStatus) {
-            return reject(boom.badRequest('Usuario no encontrado o estado invalido'))
+            return reject(boom.badRequest("Usuario no encontrado o estado invalido"))
         }
-        
 
-        const {_doc:user} = await store.findById(userId)
+        const { _doc: user } = await store.findById(userId)
+        if(!user){
+            return reject("Usuario no encontrado")
+        }
         user.active = newStatus
         const response = await store.replace(user)
-        console.log("🚀 ~ file: controller.js:165 ~ returnnewPromise ~ user", user)
-        console.log("🚀 ~ file: controller.js:165 ~ returnnewPromise ~ user", response)
+        
 
 
         return resolve(user)
