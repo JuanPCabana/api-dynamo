@@ -18,6 +18,17 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('s
         });
 })
 
+router.post('/payment', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+    controller.addPayment(req.body)
+        .then((data) => {
+            // console.log("🚀 ~ file: network.js:13 ~ .then ~ data", data)
+            response.success(req, res, 200, { message: 'Creado correctamente', order: { ...data._doc } })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
 
     controller.listAll()

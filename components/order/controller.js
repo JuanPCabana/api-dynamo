@@ -29,6 +29,26 @@ const addOrder = async ({ ammount, user }) => {
 
 }
 
+const addPayment = ({ order, method, ref, ammount }) => {
+    return new Promise(async (resolve, reject) => {
+
+        if (!method || !ref || !ammount || !order) {
+            return reject(boom.badRequest('Datos incompletos'))
+        }
+
+        const orderInfo = await store.getOrderInfo(order)
+
+        const auxOrder = orderInfo
+
+        delete auxOrder.status
+
+        console.log(orderInfo)
+
+        return resolve(orderInfo)
+
+    })
+}
+
 const listAllOrders = () => {
 
     return new Promise(async (resolve, reject) => {
@@ -57,6 +77,7 @@ const listUserOrders = (user) => {
 
 module.exports = {
     add: addOrder,
+    addPayment,
     listAll: listAllOrders,
     list: listUserOrders
 }

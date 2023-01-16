@@ -16,8 +16,15 @@ const listUserOrders = (id) => {
 
 }
 
+const getOrderInfo = (id) => {
+    let filter = { _id: id }
+    return Model.find(filter)
+
+}
+
 module.exports = {
     add: addOrder,
     listAll: listAllOrders,
-    list: listUserOrders
+    list: listUserOrders,
+    getOrderInfo
 }
