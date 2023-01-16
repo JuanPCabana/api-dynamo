@@ -159,17 +159,17 @@ const changeUserStatus = (userId, newStatus) => {
 
     return new Promise(async (resolve, reject) => {
 
-        if (!userId || !newStatus) {
+        if (!userId) {
             return reject(boom.badRequest("Usuario no encontrado o estado invalido"))
         }
 
         const { _doc: user } = await store.findById(userId)
-        if(!user){
+        if (!user) {
             return reject("Usuario no encontrado")
         }
         user.active = newStatus
         const response = await store.replace(user)
-        
+
 
 
         return resolve(user)
@@ -177,6 +177,18 @@ const changeUserStatus = (userId, newStatus) => {
 
 }
 
+const replaceUser = async (id, newProps) => {
+
+    const user = await store.findById(id, true)
+    let auxUser = user.toObject()
+    const newUser = {
+        ...auxUser,
+        ...newProps
+    }
+    await store.replace(newUser)
+    return newUser
+
+}
 
 module.exports = {
     add: addUser,
@@ -185,5 +197,6 @@ module.exports = {
     update: updateUser,
     getById: getUserById,
     validate: validateUser,
-    statusChange: changeUserStatus
+    statusChange: changeUserStatus,
+    replace: replaceUser
 }
