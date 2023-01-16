@@ -13,8 +13,8 @@ const PaymentSchema = new Schema( {
 const mySchema = new Schema({
    status: { type: String, default: "pendding" },
    date: { type: Date, required: true },
-   payment: [PaymentSchema],
-   ammount: { type: Number, required: true },
+   payment: {PaymentSchema},
+   ammount: { type: Schema.ObjectId, ref: 'Prices'},
    user: { type: Schema.ObjectId, ref: 'Users' }
 })
 

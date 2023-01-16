@@ -5,7 +5,7 @@ const addUser = (user) => {
     return myUser.save()
 }
 
-const listUsers = async (id, email, newUsers, query) => {
+const listUsers = async (newUsers, query) => {
     let filter = {}
     if (newUsers) {
 
@@ -53,7 +53,7 @@ const getUserByEmail = (email) => {
     return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
 
 }
-const getUserById = (id) => {
+const getUserById = (id, unpopulate) => {
     let filter = {}
     if (id) {
         filter = { _id: id }
@@ -62,7 +62,12 @@ const getUserById = (id) => {
         return Promise.reject('Id invalido')
     }
 
-    return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
+    if (!unpopulate) {
+        return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
+    }
+    else {
+        return Model.findOne(filter)
+    }
 
 }
 const getByToken = (userId) => {
@@ -105,6 +110,12 @@ const validateUser = async (user, token) => {
     return result
 }
 
+const getTodayUsers = async (date) => {
+    let filter = { nextPaymentDate: date }
+    let result = await Model.find(filter)
+    return result
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -113,5 +124,6 @@ module.exports = {
     findByToken: getByToken,
     update: updateInfo,
     validate: validateUser,
-    replace: replaceObject
+    replace: replaceObject,
+    getToday: getTodayUsers
 }

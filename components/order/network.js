@@ -8,9 +8,10 @@ const passport = require('passport')
 
 
 router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
-    controller.add(req.body, req.user.sub)
+    controller.add(req.body)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Creado correctamente', user: { ...data._doc } })
+            // console.log("🚀 ~ file: network.js:13 ~ .then ~ data", data)
+            response.success(req, res, 200, { message: 'Creado correctamente', order: { ...data._doc } })
         }).catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
             next(err)

@@ -1,8 +1,10 @@
-import moment from "moment";
+const moment = require("moment");
 
-export default function now(date) {
+function now(date) {
   if (date) {
     return moment(date).format("YYYY-MM-DDTHH:mm:ss");
   }
   return moment().format("YYYY-MM-DDTHH:mm:ss");
 }
+
+module.exports = now

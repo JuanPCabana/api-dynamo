@@ -1,23 +1,23 @@
 const Model = require('./model')
 
-const addPayment = (payment) => {
-    const myPayment = new Model(payment);
-    return myPayment.save()
+const addOrder = async (order) => {
+    const myOrder = new Model(order);
+    return await myOrder.save()
 }
 
-const listAllPayments = () => {
+const listAllOrders = () => {
    
     return Model.find({})
 
 }
-const listUserPayments = (id) => {
+const listUserOrders = (id) => {
     let filter = { user: id }
     return Model.find(filter).populate('user')
 
 }
 
 module.exports = {
-    add: addPayment,
-    listAll: listAllPayments,
-    list: listUserPayments
+    add: addOrder,
+    listAll: listAllOrders,
+    list: listUserOrders
 }

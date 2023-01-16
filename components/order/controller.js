@@ -1,43 +1,49 @@
 const store = require('./store')
 const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
+const now = require('../../utils/helpers/now')
+const userController = require('../user/controller')
 
-const addPayment = async ({
-    method,
-    ref,
-    ammount
-}, user) => {
+const addOrder = async ({ ammount, user }) => {
 
-    if (!method || !ref || !ammount || !user) {
-        return Promise.reject(boom.badRequest('Datos erroneos!'))
-    }
+    if (!user) return Promise.reject(boom.badRequest("Usuario Invalido"))
+    if (!ammount) return Promise.reject(boom.badRequest("Monto Invalido"))
 
-    const payment = {
-        method,
-        ref,
+    const order = {
         ammount,
-        user
+        user,
+        date: now()
     }
 
-    return store.add(payment)
+    const day = new Date().getDate()
+    const month = new Date().getMonth() + 2
+
+    const paymentDay = `${day}/${month}`
+
+    const response = await store.add(order)
+
+    await userController.replace(user, { newPaymentDate: paymentDay })
+
+
+    return response
 
 }
 
-const listAllPayments = () => {
+const listAllOrders = () => {
 
     return new Promise(async (resolve, reject) => {
-        const paymentList = await store.listAll()
+        const orderList = await store.listAll()
 
-        return resolve(paymentList)
+        return resolve(orderList)
     })
 
 }
 
 
-const listUserPayments = (user) => {
+const listUserOrders = (user) => {
     return new Promise(async (resolve, reject) => {
 
-        if(!user.sub){
+        if (!user.sub) {
             return reject(boom.badRequest('Id invalido'))
         }
 
@@ -50,7 +56,7 @@ const listUserPayments = (user) => {
 
 
 module.exports = {
-    add: addPayment,
-    listAll: listAllPayments,
-    list: listUserPayments
+    add: addOrder,
+    listAll: listAllOrders,
+    list: listUserOrders
 }
