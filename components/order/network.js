@@ -20,7 +20,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('s
 router.post('/payment', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
     controller.addPayment(req.body)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Información de pago agregada correctamente', order: { ...data._doc } })
+            response.success(req, res, 200, { message: 'Información de pago agregada correctamente', order: { ...data } })
         }).catch((err) => {
             next(err)
         });

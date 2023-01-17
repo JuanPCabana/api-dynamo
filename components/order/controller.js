@@ -41,6 +41,7 @@ const addPayment = ({ order, method, ref, ammount }) => {
         const auxOrder = orderInfo.toObject()
 
         paymentInfo = {
+            date: now(),
             method,
             ref,
             ammount
