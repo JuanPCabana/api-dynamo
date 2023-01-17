@@ -6,28 +6,36 @@ const { checkApiKey, checkRoles } = require('../../middlewares/auth.handler')
 const boom = require('@hapi/boom')
 const passport = require('passport')
 
-
+// create order
 router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
     controller.add(req.body)
         .then((data) => {
-            // console.log("🚀 ~ file: network.js:13 ~ .then ~ data", data)
             response.success(req, res, 200, { message: 'Creado correctamente', order: { ...data._doc } })
         }).catch((err) => {
-            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
             next(err)
         });
 })
 
+//add payment info
 router.post('/payment', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
     controller.addPayment(req.body)
         .then((data) => {
-            // console.log("🚀 ~ file: network.js:13 ~ .then ~ data", data)
-            response.success(req, res, 200, { message: 'Creado correctamente', order: { ...data._doc } })
+            response.success(req, res, 200, { message: 'Información de pago agregada correctamente', order: { ...data._doc } })
         }).catch((err) => {
-            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
             next(err)
         });
 })
+
+//change order status
+router.post('/status', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+    controller.updateStatus(req.body)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Estatus de la orden actualizado correctamente', order: { ...data} })
+        }).catch((err) => {
+            next(err)
+        });
+})
+
 
 router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
 
@@ -35,18 +43,16 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
         .then((data) => {
             response.success(req, res, 200, data)
         }).catch((err) => {
-            // response.error(req, res, 400, { message: 'algo fallo!', err })
             next(err)
         });
 })
 
-router.get('/user-payments', checkApiKey, passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    const queryData = { ...req.user }
+router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+    const queryData = { ...req.body }
     controller.list(queryData)
         .then((data) => {
             response.success(req, res, 200, data)
         }).catch((err) => {
-            // response.error(req, res, 400, { message: 'algo fallo!', err })
             next(err)
         });
 })

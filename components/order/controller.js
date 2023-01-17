@@ -38,13 +38,41 @@ const addPayment = ({ order, method, ref, ammount }) => {
 
         const orderInfo = await store.getOrderInfo(order)
 
-        const auxOrder = orderInfo
+        const auxOrder = orderInfo.toObject()
 
-        delete auxOrder.status
+        paymentInfo = {
+            method,
+            ref,
+            ammount
+        }
+        auxOrder.payment = paymentInfo
+        auxOrder.status = 'pending'
 
-        console.log(orderInfo)
+        console.log(auxOrder)
+        await store.update(auxOrder._id, { payment: paymentInfo, status: 'pending' })
 
-        return resolve(orderInfo)
+        return resolve(auxOrder)
+
+    })
+}
+
+const changeOrderStatus = ({ order, status }) => {
+    return new Promise(async (resolve, reject) => {
+
+        if (!order || !status) {
+            return reject(boom.badRequest('Datos incompletos'))
+        }
+
+        const orderInfo = await store.getOrderInfo(order)
+
+        const auxOrder = orderInfo.toObject()
+
+        auxOrder.status = status
+
+        console.log(auxOrder)
+        await store.update(auxOrder._id, { status: status })
+
+        return resolve(auxOrder)
 
     })
 }
@@ -60,16 +88,22 @@ const listAllOrders = () => {
 }
 
 
-const listUserOrders = (user) => {
+const listUserOrders = (body) => {
     return new Promise(async (resolve, reject) => {
 
-        if (!user.sub) {
+        if (!body.user) {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userList = await store.list(user.sub)
+        const userOrderList = await store.list(body.user)
 
-        return resolve(userList)
+        const response = userOrderList.map((order) => {
+            const auxOrder = order.toObject()
+            delete auxOrder.user.password
+            return auxOrder
+        })
+
+        return resolve(response)
     })
 
 }
@@ -79,5 +113,6 @@ module.exports = {
     add: addOrder,
     addPayment,
     listAll: listAllOrders,
-    list: listUserOrders
+    list: listUserOrders,
+    updateStatus: changeOrderStatus
 }
