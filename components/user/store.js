@@ -116,6 +116,12 @@ const getTodayUsers = async (date) => {
     return result
 }
 
+const userModify = async (id, newProps) => {
+    let filter = { _id: id }
+    const result = await Model.updateOne(filter, { $set: { ...newProps } })
+    return result
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -125,5 +131,6 @@ module.exports = {
     update: updateInfo,
     validate: validateUser,
     replace: replaceObject,
-    getToday: getTodayUsers
+    getToday: getTodayUsers,
+    userModify
 }

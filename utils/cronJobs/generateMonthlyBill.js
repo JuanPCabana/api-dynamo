@@ -13,7 +13,7 @@ const nextPayment = `${day}/${nextMonth}`
 
 const todayUserList = async () => { return await userStore.getToday(today) }
 
-const generateBills = cron.schedule('30 10 * * *', async () => {
+const generateBills = cron.schedule('0 0 * * *', async () => {
     const list = await todayUserList()
     console.log("🚀 ~ file: generateMonthlyBill.js:18 ~ generateBills ~ list", list)
     list.map((user) => {
@@ -21,7 +21,7 @@ const generateBills = cron.schedule('30 10 * * *', async () => {
 
         orderController.add({ ammount: '63c56873019597f1d03b24e2', user: auxUser._id })
 
-        userController.replace(auxUser._id, { nextPaymentDate: nextPayment })
+        userController.replace(auxUser._id, { nextPaymentDate: nextPayment, active: false })
 
     })
 

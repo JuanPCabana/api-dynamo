@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
 const now = require('../../utils/helpers/now')
 const userController = require('../user/controller')
+const userStore = require('../user/store')
 
 const addOrder = async ({ ammount, user }) => {
 
@@ -73,6 +74,10 @@ const changeOrderStatus = ({ order, status }) => {
         console.log(auxOrder)
         await store.update(auxOrder._id, { status: status })
 
+        if (status === 'approved') {
+            await userStore.userModify(auxOrder.user, { active: true })
+        }
+
         return resolve(auxOrder)
 
     })
@@ -83,7 +88,14 @@ const listAllOrders = () => {
     return new Promise(async (resolve, reject) => {
         const orderList = await store.listAll()
 
-        return resolve(orderList)
+        const response = orderList.map((order) => {
+            const auxOrder = order.toObject()
+            delete auxOrder.user.password
+            return auxOrder
+        })
+
+
+        return resolve(response)
     })
 
 }

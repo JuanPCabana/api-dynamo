@@ -7,7 +7,7 @@ const addOrder = async (order) => {
 
 const listAllOrders = () => {
 
-    return Model.find({})
+    return Model.find({}).populate([{path:'user'}, {path:'ammount'}])
 
 }
 const listUserOrders = (id) => {
