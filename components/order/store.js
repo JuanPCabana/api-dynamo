@@ -5,14 +5,22 @@ const addOrder = async (order) => {
     return await myOrder.save()
 }
 
-const listAllOrders = () => {
-
-    return Model.find({}).populate([{path:'user'}, {path:'ammount'}])
+const listAllOrders = (query) => {
+    if (query.status) {
+        return Model.find({ status: query.status }).populate([{ path: 'user' }, { path: 'ammount' }])
+    }
+    return Model.find({}).populate([{ path: 'user' }, { path: 'ammount' }])
 
 }
-const listUserOrders = (id) => {
+const listUserOrders = (id, query) => {
+
+    if (query) {
+        let filter = { user: id, status: query }
+        return Model.find(filter).populate([{ path: 'user' }, { path: 'ammount' }])
+    }
+
     let filter = { user: id }
-    return Model.find(filter).populate([{path:'user'}, {path:'ammount'}])
+    return Model.find(filter).populate([{ path: 'user' }, { path: 'ammount' }])
 
 }
 

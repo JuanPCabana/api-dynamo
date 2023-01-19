@@ -83,10 +83,10 @@ const changeOrderStatus = ({ order, status }) => {
     })
 }
 
-const listAllOrders = () => {
+const listAllOrders = (query) => {
 
     return new Promise(async (resolve, reject) => {
-        const orderList = await store.listAll()
+        const orderList = await store.listAll(query)
 
         const response = orderList.map((order) => {
             const auxOrder = order.toObject()
@@ -108,7 +108,7 @@ const listUserOrders = (body) => {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userOrderList = await store.list(body.user)
+        const userOrderList = await store.list(body.user, body.status)
 
         const response = userOrderList.map((order) => {
             const auxOrder = order.toObject()

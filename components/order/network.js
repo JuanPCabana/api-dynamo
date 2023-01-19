@@ -38,8 +38,8 @@ router.post('/status', passport.authenticate('jwt', { session: false }), checkRo
 
 
 router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
-
-    controller.listAll()
+    const queryData = {...req.query}
+    controller.listAll(queryData)
         .then((data) => {
             response.success(req, res, 200, data)
         }).catch((err) => {
@@ -48,7 +48,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
 })
 
 router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
-    const queryData = { ...req.body }
+    const queryData = { ...req.body, ...req.query }
     controller.list(queryData)
         .then((data) => {
             response.success(req, res, 200, data)
