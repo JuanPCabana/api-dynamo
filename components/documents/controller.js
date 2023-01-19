@@ -2,6 +2,7 @@ const store = require('./store')
 const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
 const { s3Uploadv2, s3MultiUploadv2 } = require('../../awsS3')
+const now = require('../../utils/helpers/now')
 
 const addDocument = async ({
     name,
@@ -25,11 +26,13 @@ const addDocument = async ({
     const response = await s3Uploadv2(file, fileName)
     const document = {
         file: response.Location,
+        date: now(),
         name,
         description,
         league,
         category,
         user: user ? user : tokenUser,
+        from: tokenUser,
         global
     }
 
