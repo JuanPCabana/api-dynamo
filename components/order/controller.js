@@ -114,14 +114,14 @@ const listAllOrders = (query) => {
 }
 
 
-const listUserOrders = (body) => {
+const listUserOrders = (body, tokenUser) => {
     return new Promise(async (resolve, reject) => {
 
-        if (!body.user) {
+        if (body.user && tokenUser.role === 'student') {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userOrderList = await store.list(body.user, body.status)
+        const userOrderList = await store.list(body.user? body.user : tokenUser.sub, body.status)
 
         const response = userOrderList.map((order) => {
             const auxOrder = order.toObject()

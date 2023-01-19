@@ -30,15 +30,15 @@ router.post('/payment', passport.authenticate('jwt', { session: false }), checkR
 router.post('/status', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     controller.updateStatus(req.body)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Estatus de la orden actualizado correctamente', order: { ...data} })
+            response.success(req, res, 200, { message: 'Estatus de la orden actualizado correctamente', order: { ...data } })
         }).catch((err) => {
             next(err)
         });
 })
 
-
+//get all orders
 router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
-    const queryData = {...req.query}
+    const queryData = { ...req.query }
     controller.listAll(queryData)
         .then((data) => {
             response.success(req, res, 200, data)
@@ -46,10 +46,11 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
             next(err)
         });
 })
-
-router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+//get user orders
+router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
     const queryData = { ...req.body, ...req.query }
-    controller.list(queryData)
+    const tokenUser = req.user
+    controller.list(queryData, tokenUser)
         .then((data) => {
             response.success(req, res, 200, data)
         }).catch((err) => {
