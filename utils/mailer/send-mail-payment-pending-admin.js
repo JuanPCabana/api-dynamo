@@ -1,50 +1,54 @@
-module.exports = function makeSendMailPaymentPendingAdmin({ serverMail, domParser, fs, path }) {
-  return async function sendMailPaymentPendingAdmin(name, order, products) {
-    const htmlTemplate = await getEmailTemplate()
+module.exports = function makeSendMailPaymentPendingAdmin({
+  serverMail,
+  domParser,
+  fs,
+  path,
+}) {
+  return async function sendMailPaymentPendingAdmin(
+    email,
+    name,
+    ref,
+    method
+  ) {
+    const htmlTemplate = await getEmailTemplate();
     const buildEmailTemplate = buildEmailBodyTemplate({
       htmlTemplate,
+      email,
       name,
-      order,
-      products
-    })
+      ref,
+      method
+    });
     const info = await serverMail.sendMail({
       from: '"Test" <juanpc3399@gmail.com>',
-      to: "cusicalivegerencia@gmail.com",
-      subject: "Nuevo pago en proceso",
-      html: buildEmailTemplate
-    })
-    console.log("Message sent: %s", info.messageId)
-  }
+      to: process.env.SMTP_USER,
+      subject: "Nuevo pago registrado",
+      html: buildEmailTemplate,
+    });
+    console.log("Message sent: %s", info.messageId);
+  };
   async function getEmailTemplate() {
     const requestFile = await new Promise((resolve, reject) =>
       fs.readFile(
-        path.resolve(__dirname, "../../files/payment-pending-admin.html"),
+        path.resolve(__dirname, "../../files/payment-pending.html"),
         "utf8",
         (err, content) => (err ? reject(err) : resolve(content))
       )
-    )
-    return requestFile
+    );
+    return requestFile;
   }
-  function buildEmailBodyTemplate({ htmlTemplate, products, order, name }) {
-    const currency = order.currency === "USD" ? "$" : "BS"
-    const dom = domParser.load(htmlTemplate)
-    dom("#ref").text(`${order.payment.ref}`)
-    dom("#method").text(`${order.payment.type}`.toLocaleUpperCase())
-    dom("#amount").text(`${currency} ${order.amount}`)
-    dom("#currency").text(currency)
-    dom("#name").text(`${name}`)
-    let domProductsInfo = dom("#productInfo")
-    dom(domProductsInfo).remove()
-    let domTotalAmountContainer = dom("#totalAmountTr")
-    dom(domTotalAmountContainer).remove()
-    products.forEach((product) => {
-      let domProduct = domProductsInfo.clone()
-      dom("#productQuantity", domProduct).text(`${product.quantity}`)
-      dom("#productName", domProduct).text(`${product.name}`)
-      dom("#productPrice", domProduct).text(`${currency} ${product.price}`)
-      dom("#products").append(domProduct)
-    })
-    dom("#products").append(domTotalAmountContainer)
-    return dom.html()
+  function buildEmailBodyTemplate({
+    htmlTemplate,
+    ref,
+    name,
+    email,
+    method
+  }) {
+
+    const dom = domParser.load(htmlTemplate);
+    dom('#refNumber').text(ref)
+    dom('#name').text(name)
+    dom('#email').text(email)
+    dom('#method').text(method)
+    return dom.html();
   }
 }

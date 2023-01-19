@@ -1,14 +1,16 @@
-const cheerio = require("cheerio") 
-const fs = require("fs") 
-const path = require("path") 
-const serverMail = require("./server-mail") 
-const makeSendMailConfirmAccount = require("./send-mail-confirm-account") 
-const makeSendMailPasswordReset = require("./send-mail-password-reset") 
-const makeSendMailPaymentPending = require("./send-mail-payment-pending") 
-const makeSendMailPaymentApproved = require("./send-mail-payment-approved") 
-const makeSendMailNewPayment = require("./new-payment") 
-const makeSendMailWelcome = require("./send-mail-welcome") 
-const makeSendMailPaymentPendingAdmin = require("./send-mail-payment-pending-admin") 
+const cheerio = require("cheerio")
+const fs = require("fs")
+const path = require("path")
+const serverMail = require("./server-mail")
+const makeSendMailConfirmAccount = require("./send-mail-confirm-account")
+const makeSendMailPasswordReset = require("./send-mail-password-reset")
+const makeSendMailPaymentPending = require("./send-mail-payment-pending")
+const makeSendMailPaymentApproved = require("./send-mail-payment-approved")
+const makeSendMailNewPayment = require("./new-payment")
+const makeSendMailWelcome = require("./send-mail-welcome")
+const makeSendMailPaymentPendingAdmin = require("./send-mail-payment-pending-admin")
+const makeSendMailNewBill = require('./send-mail-new-bill')
+const makeSendMailPaymentRejected = require('./send-mail-payment-rejected')
 
 const sendMailConfirmAccount = makeSendMailConfirmAccount({
   serverMail,
@@ -37,6 +39,12 @@ const sendMailPaymentApproved = makeSendMailPaymentApproved({
   fs,
   path
 })
+const sendMailPaymentRejected = makeSendMailPaymentRejected({
+  serverMail,
+  domParser: cheerio,
+  fs,
+  path
+})
 const sendMailNewPayment = makeSendMailNewPayment({
   serverMail,
   domParser: cheerio,
@@ -57,6 +65,13 @@ const sendMailPaymentPendingAdmin = makeSendMailPaymentPendingAdmin({
   path
 })
 
+const sendMailNewBill = makeSendMailNewBill({
+  serverMail,
+  domParser: cheerio,
+  fs,
+  path
+})
+
 const sendMailService = Object.freeze({
   sendMailConfirmAccount,
   sendMailPasswordReset,
@@ -64,7 +79,9 @@ const sendMailService = Object.freeze({
   sendMailPaymentApproved,
   sendMailNewPayment,
   sendMailWelcome,
-  sendMailPaymentPendingAdmin
+  sendMailPaymentPendingAdmin,
+  sendMailNewBill,
+  sendMailPaymentRejected
 })
 
 module.exports = sendMailService

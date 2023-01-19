@@ -26,7 +26,7 @@ const listUserOrders = (id, query) => {
 
 const getOrderInfo = (id) => {
     let filter = { _id: id }
-    return Model.findOne(filter)
+    return Model.findOne(filter).populate('user')
 
 }
 

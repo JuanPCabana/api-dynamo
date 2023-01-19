@@ -1,26 +1,22 @@
-module.exports = function makeSendMailPaymentApproved({
+module.exports = function makeSendMailNewBill({
   serverMail,
   domParser,
   fs,
   path,
 }) {
-  return async function sendMailPaymentApproved(
+  return async function sendMailnewBill(
     email,
-    name,
-    ref,
     
   ) {
     const htmlTemplate = await getEmailTemplate();
     const buildEmailTemplate = buildEmailBodyTemplate({
       htmlTemplate,
-      name,
-      ref,
       
     });
     const info = await serverMail.sendMail({
       from: '"Test" <juanpc3399@gmail.com>',
       to: email,
-      subject: "Pago aprobado",
+      subject: "Nueva Factura Generada",
       html: buildEmailTemplate,
     });
     console.log("Message sent: %s", info.messageId);
@@ -28,7 +24,7 @@ module.exports = function makeSendMailPaymentApproved({
   async function getEmailTemplate() {
     const requestFile = await new Promise((resolve, reject) =>
       fs.readFile(
-        path.resolve(__dirname,"../../files/payment-approved.htm"),
+        path.resolve(__dirname,"../../files/new-bill.html"),
         "utf8",
         (err, content) => (err ? reject(err) : resolve(content))
       )
@@ -37,13 +33,10 @@ module.exports = function makeSendMailPaymentApproved({
   }
   function buildEmailBodyTemplate({
     htmlTemplate,
-    ref,
-    name
-  }) {
     
+  }) {
     const dom = domParser.load(htmlTemplate);
-    dom('#refNumber').text(ref)
-    dom('#name').text(name)
+    
     return dom.html();
   }
 }

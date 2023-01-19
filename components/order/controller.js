@@ -4,6 +4,8 @@ const boom = require('@hapi/boom')
 const now = require('../../utils/helpers/now')
 const userController = require('../user/controller')
 const userStore = require('../user/store')
+const sendMailService = require('../../utils/mailer')
+const getPaymentMethod = require('../../utils/helpers/getPaymentMethod')
 
 const addOrder = async ({ ammount, user }) => {
 
@@ -49,9 +51,11 @@ const addPayment = ({ order, method, ref, ammount }) => {
         }
         auxOrder.payment = paymentInfo
         auxOrder.status = 'pending'
+        delete auxOrder.user.password
 
-        console.log(auxOrder)
         await store.update(auxOrder._id, { payment: paymentInfo, status: 'pending' })
+
+        await sendMailService.sendMailPaymentPendingAdmin(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref, getPaymentMethod(method))
 
         return resolve(auxOrder)
 
@@ -71,11 +75,20 @@ const changeOrderStatus = ({ order, status }) => {
 
         auxOrder.status = status
 
-        console.log(auxOrder)
+        delete auxOrder.user.password
+
+        // console.log(auxOrder.user)
         await store.update(auxOrder._id, { status: status })
 
         if (status === 'approved') {
             await userStore.userModify(auxOrder.user, { active: true })
+            await sendMailService.sendMailPaymentApproved(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref)
+        }
+        if (status === 'rejected') {
+            await sendMailService.sendMailPaymentRejected(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref)
+        }
+        if (status === 'pending') {
+            await sendMailService.sendMailPaymentPending(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref)
         }
 
         return resolve(auxOrder)

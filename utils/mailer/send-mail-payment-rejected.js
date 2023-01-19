@@ -1,10 +1,10 @@
-module.exports = function makeSendMailPaymentApproved({
+module.exports = function makeSendMailPaymentRejected({
   serverMail,
   domParser,
   fs,
   path,
 }) {
-  return async function sendMailPaymentApproved(
+  return async function sendMailPaymentRejected(
     email,
     name,
     ref,
@@ -20,7 +20,7 @@ module.exports = function makeSendMailPaymentApproved({
     const info = await serverMail.sendMail({
       from: '"Test" <juanpc3399@gmail.com>',
       to: email,
-      subject: "Pago aprobado",
+      subject: "Pago rechazado",
       html: buildEmailTemplate,
     });
     console.log("Message sent: %s", info.messageId);
@@ -28,7 +28,7 @@ module.exports = function makeSendMailPaymentApproved({
   async function getEmailTemplate() {
     const requestFile = await new Promise((resolve, reject) =>
       fs.readFile(
-        path.resolve(__dirname,"../../files/payment-approved.htm"),
+        path.resolve(__dirname,"../../files/payment-rejected.htm"),
         "utf8",
         (err, content) => (err ? reject(err) : resolve(content))
       )
