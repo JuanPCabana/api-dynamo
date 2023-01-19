@@ -36,7 +36,7 @@ module.exports = function makeSendMailConfirmAccount({
     dom("#name").text(`${name}`)
     dom("#tokenId").text(`${token}`)
     dom("#email").text(`${email}`.toLocaleLowerCase())
-    dom("#link").attr("href", `http://localhost:3000/confirmar_correo?token=${token}&id=${id}`)
+    dom("#link").attr("href", `https://dynamotest.vercel.app/confirmar_correo?token=${token}&id=${id}`)
     return dom.html();
   }
 }
