@@ -60,7 +60,6 @@ router.post('/multi', passport.authenticate('jwt', { session: false }), checkRol
 
     controller.multiAdd(req.body, req.user.sub, req.files)
         .then((data) => {
-            console.log("🚀 ~ file: network.js:51 ~ .then ~ data", data)
             response.success(req, res, 200, { message: 'Documentos Cargados', fileInfo: { ...data._doc } })
         })
         .catch((err) => {

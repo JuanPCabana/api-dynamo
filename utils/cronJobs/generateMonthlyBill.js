@@ -15,8 +15,8 @@ const todayUserList = async () => { return await userStore.getToday(today) }
 
 const generateBills = cron.schedule('0 0 * * *', async () => {
     const list = await todayUserList()
-    console.log("🚀 ~ file: generateMonthlyBill.js:18 ~ generateBills ~ list", list)
     list.map((user) => {
+        console.log("🚀 ~ list", user.email)
         let auxUser = user.toObject()
 
         orderController.add({ ammount: '63c56873019597f1d03b24e2', user: auxUser._id })

@@ -6,7 +6,6 @@ const addLeague = (league) => {
 }
 const addCategory = async (categories, league) => {
     const dbCategories = categories.map((category)=>{return {...category, league: league }})
-    console.log("🚀 ~ file: store.js:9 ~ addCategory ~ dbCategories", dbCategories)
     return  await CategoryModel.insertMany(dbCategories)
 }
 
