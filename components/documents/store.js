@@ -6,8 +6,8 @@ const addDocument = (document) => {
 }
 
 const multiAddDocuments = async (documents) => {
-  
-    return await Promise.all(documents.map((document)=>{
+
+    return await Promise.all(documents.map((document) => {
         const myDoc = new Model(document)
         myDoc.save()
     }))
@@ -16,17 +16,17 @@ const multiAddDocuments = async (documents) => {
 
 const listAllDocuments = () => {
 
-    return Model.find({})
+    return Model.find({}).populate([{ path: 'user' }, { path: 'from' }])
 
 }
 const listGlobalDocuments = () => {
 
-    return Model.find({global: true}).populate('user')
+    return Model.find({ global: true }).populate([{ path: 'user' }, { path: 'from' }])
 
 }
 const listUserDocs = (userId) => {
     let filter = { user: userId }
-    return Model.find(filter).populate('user')
+    return Model.find(filter).populate([{ path: 'user' }, { path: 'from' }])
 
 }
 

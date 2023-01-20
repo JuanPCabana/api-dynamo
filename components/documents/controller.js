@@ -79,8 +79,13 @@ const listAllDocuments = () => {
 
     return new Promise(async (resolve, reject) => {
         const documentList = await store.listAll()
-
-        return resolve(documentList)
+        const response = documentList.map(document => {
+            const aux = document.toObject()
+            delete aux?.user?.password
+            delete aux?.from?.password
+            return (aux)
+        })
+        return resolve(response)
     })
 
 }
@@ -88,13 +93,13 @@ const listGlobalDocuments = () => {
 
     return new Promise(async (resolve, reject) => {
         const documentList = await store.listGlobal()
-        const responseDocumentList = []
-        documentList.map(document => {
+        const response = documentList.map(document => {
             const aux = document.toObject()
-            delete aux.user.password
-            responseDocumentList.push(aux)
+            delete aux?.user?.password
+            delete aux?.from?.password
+            return (aux)
         })
-        return resolve(responseDocumentList)
+        return resolve(response)
     })
 
 }
@@ -108,13 +113,13 @@ const listUserDocuments = (user) => {
         }
 
         const userList = await store.list(user.sub)
-        const responseDocumentList = []
-        userList.map(document => {
+        const response = userList.map(document => {
             const aux = document.toObject()
-            delete aux.user.password
-            responseDocumentList.push(aux)
+            delete aux?.user?.password
+            delete aux?.from?.password
+            return (aux)
         })
-        return resolve(responseDocumentList)
+        return resolve(response)
 
 
     })
