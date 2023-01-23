@@ -25,7 +25,7 @@ const listUsers = async (newUsers, query) => {
     }
     else {
 
-        filter = { role: 'student', newStudent: false }
+        filter = { role: 'student' }
 
         if (query) {
             filter = {
