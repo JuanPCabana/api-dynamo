@@ -11,11 +11,11 @@ const PaymentSchema = new Schema({
 
 
 const mySchema = new Schema({
-   status: { type: String, default: "unpaid" },
+   status: { type: String, default: "unpaid", required: true },
    date: { type: Date, required: true },
    payment: { type: Object },
-   ammount: { type: Schema.ObjectId, ref: 'Prices' },
-   user: { type: Schema.ObjectId, ref: 'Users' }
+   ammount: { type: Schema.ObjectId, ref: 'Prices', required: true },
+   user: { type: Schema.ObjectId, ref: 'Users', required: true }
 })
 
 const model = mongoose.model("Orders", mySchema)

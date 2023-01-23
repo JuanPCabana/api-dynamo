@@ -82,13 +82,13 @@ const changeOrderStatus = ({ order, status }) => {
 
         if (status === 'approved') {
             await userStore.userModify(auxOrder.user, { active: true })
-            await sendMailService.sendMailPaymentApproved(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref)
+            await sendMailService.sendMailPaymentApproved(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
         }
         if (status === 'rejected') {
-            await sendMailService.sendMailPaymentRejected(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref)
+            await sendMailService.sendMailPaymentRejected(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
         }
         if (status === 'pending') {
-            await sendMailService.sendMailPaymentPending(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref)
+            await sendMailService.sendMailPaymentPending(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
         }
 
         return resolve(auxOrder)
