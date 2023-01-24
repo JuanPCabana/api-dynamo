@@ -5,7 +5,8 @@ const controller = require('./controller')
 const { checkApiKey } = require('../../middlewares/auth.handler')
 const boom = require('@hapi/boom')
 const passport = require('passport')
-const { checkRoles } = require('../../middlewares/auth.handler')
+const { checkRoles } = require('../../middlewares/auth.handler');
+const upload = require('../../middlewares/multer.handler');
 
 //add user
 router.post('/', (req, res, next) => {
@@ -67,7 +68,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles(
 })
 
 // verificacion de correo
-router.post('/validateEmail',(req, res, next) => {
+router.post('/validateEmail', (req, res, next) => {
     const token = req.query.token
     const userId = req.query.id
     controller.validate(userId, token)
@@ -88,6 +89,19 @@ router.post('/:id/status', passport.authenticate('jwt', { session: false }), che
             response.success(req, res, 200, { message: 'Cambio de estatus realizado correctamente' })
         }).catch((err) => {
             // response.error(req, res, 400, { message: 'algo fallo!', err })
+            next(err)
+        });
+})
+
+//post avatar
+router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.single('file'), (req, res, next) => {
+    console.log(req.user.sub, req.file);
+    controller.addAvatar(req.user.sub, req.file)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Creado correctamente', fileInfo: { ...data._doc } })
+        })
+        .catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
             next(err)
         });
 })

@@ -8,6 +8,7 @@ const passport = require('passport')
 
 const upload = require('../../middlewares/multer.handler')
 
+//post pdf file
 router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.single('file'), (req, res, next) => {
 
     controller.add(req.body, req.user.sub, req.file)

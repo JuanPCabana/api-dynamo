@@ -19,10 +19,11 @@ const mySchema = new Schema({
     gender: { type: String, required: true },
     token: { type: Object },
     newStudent: { type: Boolean, default: false },
-    active: {type: Boolean, default: false },
-    verifiedEmail: {type: Boolean, default: false },
-    nextPaymentDate: {type: String},
-    
+    active: { type: Boolean, default: false },
+    verifiedEmail: { type: Boolean, default: false },
+    nextPaymentDate: { type: String },
+    avatar: { type: String }
+
 })
 
 const model = mongoose.model("Users", mySchema)

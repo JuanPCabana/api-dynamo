@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
 const sendMailService = require('../../utils/mailer')
 const { makeToken } = require('../../utils/helpers/makeToken')
+const { s3Uploadv2 } = require('../../awsS3')
 
 const addUser = async ({
     email,
@@ -190,6 +191,30 @@ const replaceUser = async (id, newProps) => {
 
 }
 
+
+const addAvatar = async (tokenUser, file) => {
+    console.log("🚀 ~ file: controller.js:195 ~ addAvatar ~ file", file)
+    console.log("🚀 ~ file: controller.js:195 ~ addAvatar ~ tokenUser", tokenUser)
+
+
+    if (!file || !tokenUser) {
+        return Promise.reject(boom.badRequest('Datos erroneos!'))
+    }
+
+    var extension = file.originalname.slice(file.originalname.lastIndexOf('.'))
+    var fileName = Date.now() + extension
+
+    const response = await s3Uploadv2(file, fileName)
+    console.log("🚀 ~ file: controller.js:205 ~ addAvatar ~ response", response)
+
+    /* const userData = await userStore.findById(tokenUser, false)
+    const auxUser = userData.toObject()
+    auxUser.avatar = response.Location
+ */
+    return store.userModify(tokenUser, { avatar: response.Location })
+
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -198,5 +223,6 @@ module.exports = {
     getById: getUserById,
     validate: validateUser,
     statusChange: changeUserStatus,
-    replace: replaceUser
+    replace: replaceUser,
+    addAvatar
 }
