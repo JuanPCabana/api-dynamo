@@ -29,7 +29,7 @@ module.exports = function makeSendMailPaymentPendingAdmin({
   async function getEmailTemplate() {
     const requestFile = await new Promise((resolve, reject) =>
       fs.readFile(
-        path.resolve(__dirname, "../../files/payment-pending.html"),
+        path.resolve(__dirname, "../../files/payment-pending-admin.html"),
         "utf8",
         (err, content) => (err ? reject(err) : resolve(content))
       )
