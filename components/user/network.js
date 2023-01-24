@@ -98,7 +98,7 @@ router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRo
     console.log(req.user.sub, req.file);
     controller.addAvatar(req.user.sub, req.file)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Creado correctamente', fileInfo: { ...data._doc } })
+            response.success(req, res, 200, { message: 'Avatar cargado correctamente' })
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
