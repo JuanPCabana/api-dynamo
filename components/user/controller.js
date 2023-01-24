@@ -193,8 +193,6 @@ const replaceUser = async (id, newProps) => {
 
 
 const addAvatar = async (tokenUser, file) => {
-    console.log("🚀 ~ file: controller.js:195 ~ addAvatar ~ file", file)
-    console.log("🚀 ~ file: controller.js:195 ~ addAvatar ~ tokenUser", tokenUser)
 
 
     if (!file || !tokenUser) {
@@ -205,7 +203,6 @@ const addAvatar = async (tokenUser, file) => {
     var fileName = Date.now() + extension
 
     const response = await s3Uploadv2(file, fileName)
-    console.log("🚀 ~ file: controller.js:205 ~ addAvatar ~ response", response)
 
     /* const userData = await userStore.findById(tokenUser, false)
     const auxUser = userData.toObject()
