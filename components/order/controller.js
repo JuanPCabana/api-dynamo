@@ -32,7 +32,7 @@ const addOrder = async ({ ammount, user }) => {
 
 }
 
-const addPayment = ({ order, method, ref, ammount }) => {
+const addPayment = ({ order, method, ref, ammount, email }) => {
     return new Promise(async (resolve, reject) => {
 
         if (!method || !ref || !ammount || !order) {
@@ -43,12 +43,20 @@ const addPayment = ({ order, method, ref, ammount }) => {
 
         const auxOrder = orderInfo.toObject()
 
-        paymentInfo = {
+        paymentInfo = method === 'ZELLE' ? {
             date: now(),
             method,
             ref,
-            ammount
+            ammount,
+            email
         }
+            :
+            {
+                date: now(),
+                method,
+                ref,
+                ammount
+            }
         auxOrder.payment = paymentInfo
         auxOrder.status = 'pending'
         delete auxOrder.user.password
@@ -121,7 +129,7 @@ const listUserOrders = (body, tokenUser) => {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userOrderList = await store.list(body.user? body.user : tokenUser.sub, body.status)
+        const userOrderList = await store.list(body.user ? body.user : tokenUser.sub, body.status)
 
         const response = userOrderList.map((order) => {
             const auxOrder = order.toObject()
