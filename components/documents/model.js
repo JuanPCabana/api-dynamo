@@ -7,8 +7,8 @@ const mySchema = new Schema({
    name: { type: String, required: true },
    date: { type: Date },
    description: { type: String, required: false },
-   league: [{ type: Schema.ObjectId, ref: 'Leagues', required: false }],
-   category: [{ type: Schema.ObjectId, ref: 'Categories', required: false }],
+   league: { type: Schema.ObjectId, ref: 'Leagues'},
+   category: [{ type: Schema.ObjectId, ref: 'Categories'}],
    user: { type: Schema.ObjectId, ref: 'Users' },
    from: { type: Schema.ObjectId, ref: 'Users' },
    global: { type: Boolean, required: true }

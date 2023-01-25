@@ -7,9 +7,8 @@ const now = require('../../utils/helpers/now')
 const addDocument = async ({
     name,
     description,
-    league,
-    category,
     user,
+    group,
     global
 }, tokenUser, file) => {
 
@@ -23,14 +22,16 @@ const addDocument = async ({
     var extension = file.originalname.slice(file.originalname.lastIndexOf('.'))
     var fileName = Date.now() + extension
 
+    const groupObj = JSON.parse(group);
+
     const response = await s3Uploadv2(file, fileName)
     const document = {
         file: response.Location,
         date: now(),
         name,
         description,
-        league,
-        category,
+        league: groupObj.league,
+        category: groupObj.category,
         user: user ? user : tokenUser,
         from: tokenUser,
         global
