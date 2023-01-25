@@ -21,7 +21,7 @@ router.post('/', (req, res, next) => {
 })
 
 //update users
-router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
     controller.update(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Usuario actualizado correctamente' })
