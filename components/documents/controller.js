@@ -22,10 +22,10 @@ const addDocument = async ({
     var extension = file.originalname.slice(file.originalname.lastIndexOf('.'))
     var fileName = Date.now() + extension
 
-    const groupObj = JSON.parse(group);
+    const groupObj = group ? JSON.parse(group) : null;
 
     const response = await s3Uploadv2(file, fileName)
-    const document = {
+    const document = group ? {
         file: response.Location,
         date: now(),
         name,
@@ -36,6 +36,16 @@ const addDocument = async ({
         from: tokenUser,
         global
     }
+        :
+        {
+            file: response.Location,
+            date: now(),
+            name,
+            description,
+            user: tokenUser,
+            from: tokenUser,
+            global
+        }
 
     return store.add(document)
 
