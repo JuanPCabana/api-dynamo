@@ -116,14 +116,14 @@ const listGlobalDocuments = () => {
 }
 
 
-const listUserDocuments = (user) => {
+const listUserDocuments = (tokenUser, { user }) => {
     return new Promise(async (resolve, reject) => {
 
-        if (!user.sub) {
+        if (!tokenUser.sub) {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userList = await store.list(user.sub)
+        const userList = await store.list(user ? user : tokenUser.sub)
         const response = userList.map(document => {
             const aux = document.toObject()
             delete aux?.user?.password
