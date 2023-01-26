@@ -23,7 +23,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('s
 
 router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
 
-    controller.list(req.user, req.body)
+    controller.list(req.user, req.query)
         .then((data) => {
             response.success(req, res, 200, data )
         })
