@@ -11,6 +11,7 @@ const addDocument = async ({
     group,
     global
 }, tokenUser, file) => {
+    console.log("🚀 ~ file: controller.js:14 ~ user", user)
 
 
     if (!file || !name || !tokenUser) {
@@ -32,7 +33,7 @@ const addDocument = async ({
         description,
         league: groupObj.league,
         category: groupObj.category,
-        user: user ? user : tokenUser,
+        user: user ?? tokenUser,
         from: tokenUser,
         global
     }
@@ -42,7 +43,7 @@ const addDocument = async ({
             date: now(),
             name,
             description,
-            user: tokenUser,
+            user: user ?? tokenUser,
             from: tokenUser,
             global
         }
