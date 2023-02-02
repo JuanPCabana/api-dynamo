@@ -14,7 +14,7 @@ module.exports = function makeSendMailNewBill({
       
     });
     const info = await serverMail.sendMail({
-      from: `"Dynamo" <${process.env.SMTP_USER}>`,
+      from: `"Dynamo" <account@back9.com.ve>`,
       to: email,
       subject: "Nueva Factura Generada",
       html: buildEmailTemplate,

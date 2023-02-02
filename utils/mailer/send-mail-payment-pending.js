@@ -18,7 +18,7 @@ module.exports = function makeSendMailPaymentPending({
 
     });
     const info = await serverMail.sendMail({
-      from: `"Dynamo" <${process.env.SMTP_USER}>`,
+      from: `"Dynamo" <account@back9.com.ve>`,
       to: email,
       subject: "Pago en proceso",
       html: buildEmailTemplate,
