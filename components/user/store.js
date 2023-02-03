@@ -5,7 +5,7 @@ const addUser = (user) => {
     return myUser.save()
 }
 
-const listUsers = async (newUsers, query) => {
+const listUsers = async (id, email, newUsers, query) => {
     let filter = {}
     if (newUsers) {
 
