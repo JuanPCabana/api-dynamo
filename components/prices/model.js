@@ -6,6 +6,7 @@ const Schema = mongoose.Schema
 
 const mySchema = new Schema({
    ammount: {type:Number, required: true},
+   name: {type:String, required: true},
 
 })
 
