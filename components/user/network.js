@@ -105,4 +105,16 @@ router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRo
         });
 })
 
+//Change membership
+router.patch('/membership', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+    controller.changeMembership(req.body)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Plan actualizado correctamente' })
+        })
+        .catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 module.exports = router

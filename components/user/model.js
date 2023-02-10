@@ -22,7 +22,8 @@ const mySchema = new Schema({
     active: { type: Boolean, default: false },
     verifiedEmail: { type: Boolean, default: false },
     nextPaymentDate: { type: String },
-    avatar: { type: String }
+    avatar: { type: String },
+    membership: { type: Schema.ObjectId, ref: 'Prices'  }
 
 })
 

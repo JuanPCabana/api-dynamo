@@ -191,6 +191,19 @@ const replaceUser = async (id, newProps) => {
 
 }
 
+const changeMembership = async ({ id, price }) => {
+    const newProps = { membership: price }
+    const user = await store.findById(id, true)
+    let auxUser = user.toObject()
+    const newUser = {
+        ...auxUser,
+        ...newProps
+    }
+    await store.replace(newUser)
+    return newUser
+
+}
+
 
 const addAvatar = async (tokenUser, file) => {
 
@@ -221,5 +234,6 @@ module.exports = {
     validate: validateUser,
     statusChange: changeUserStatus,
     replace: replaceUser,
-    addAvatar
+    addAvatar,
+    changeMembership
 }

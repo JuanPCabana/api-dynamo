@@ -63,7 +63,7 @@ const getUserById = (id, unpopulate) => {
     }
 
     if (!unpopulate) {
-        return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
+        return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }, { path: 'membership' }])
     }
     else {
         return Model.findOne(filter)
