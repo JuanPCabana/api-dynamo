@@ -90,7 +90,7 @@ const updateInfo = async (body, verification) => {
     let result = Model.updateOne({ _id: body._id }, {
         $set: {
             ...body,
-            role: "student",
+            // role: "student",
             newStudent: false
         }
     })
