@@ -4,6 +4,7 @@ const boom = require('@hapi/boom')
 const sendMailService = require('../../utils/mailer')
 const { makeToken } = require('../../utils/helpers/makeToken')
 const { s3Uploadv2 } = require('../../awsS3')
+const orderController = require('../../components/order/controller')
 
 const addUser = async ({
     email,
@@ -225,6 +226,22 @@ const addAvatar = async (tokenUser, file) => {
 
 }
 
+const enroleStudent = async (user, paymentInfo) => {
+
+    const userInfo = await addUser(user)
+
+    const userId = userInfo._id.toString()
+
+    await replaceUser(userId, { active: true, verifiedEmail: true })
+
+    const newOrder = await orderController.inscription({ ammount: paymentInfo.bill, user: userId })
+    const orderId = newOrder._id.toString()
+
+    const payment = await orderController.addPayment({ order: orderId, ...paymentInfo }, true)
+
+    return payment
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -235,5 +252,6 @@ module.exports = {
     statusChange: changeUserStatus,
     replace: replaceUser,
     addAvatar,
-    changeMembership
+    changeMembership,
+    enrole: enroleStudent
 }

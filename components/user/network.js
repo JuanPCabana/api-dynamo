@@ -20,6 +20,21 @@ router.post('/', (req, res, next) => {
         });
 })
 
+//new inscription
+router.post('/enrole', (req, res, next) => {
+    const { user } = req.body
+    const { paymentInfo } = req.body
+    controller.enrole(user, paymentInfo)
+        .then((data) => {
+            console.log("🚀 ~ file: network.js:29 ~ .then ~ data", data)
+            delete data.user.password
+            response.success(req, res, 200, { message: 'Creado correctamente', inscriptionInfo: { ...data } })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 //update users
 router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
     controller.update(req.body)
