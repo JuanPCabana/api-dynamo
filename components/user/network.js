@@ -26,7 +26,6 @@ router.post('/enrole', (req, res, next) => {
     const { paymentInfo } = req.body
     controller.enrole(user, paymentInfo)
         .then((data) => {
-            console.log("🚀 ~ file: network.js:29 ~ .then ~ data", data)
             delete data.user.password
             response.success(req, res, 200, { message: 'Creado correctamente', inscriptionInfo: { ...data } })
         }).catch((err) => {
