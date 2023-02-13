@@ -17,7 +17,7 @@ const listUsers = async (id, email, newUsers, query) => {
                     { firstName: { $regex: '^' + query, $options: "i" } },
                     { lastName: { $regex: '^' + query, $options: "i" } },
                     { email: { $regex: '^' + query, $options: 'i' } },
-                    { additionalEmail: { $regex: '^' + query, $options: 'i' } }
+                    { username: { $regex: '^' + query, $options: 'i' } }
                 ]
             }
         }
@@ -34,7 +34,7 @@ const listUsers = async (id, email, newUsers, query) => {
                     { firstName: { $regex: '^' + query, $options: "i" } },
                     { lastName: { $regex: '^' + query, $options: "i" } },
                     { email: { $regex: '^' + query, $options: 'i' } },
-                    { additionalEmail: { $regex: '^' + query, $options: 'i' } }
+                    { username: { $regex: '^' + query, $options: 'i' } }
                 ]
 
             }
@@ -122,6 +122,21 @@ const userModify = async (id, newProps) => {
     return result
 }
 
+const findByUsernameOrEmail = async (query) => {
+
+            const filter = {
+                $or: [
+                    { email: query },
+                    { username: query }
+                ]
+            }
+
+    
+   
+    return await Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
+
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -132,5 +147,6 @@ module.exports = {
     validate: validateUser,
     replace: replaceObject,
     getToday: getTodayUsers,
-    userModify
+    userModify,
+    findByUsernameOrEmail
 }

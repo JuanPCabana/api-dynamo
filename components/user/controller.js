@@ -8,7 +8,7 @@ const orderController = require('../../components/order/controller')
 
 const addUser = async ({
     email,
-    additionalEmail,
+    username,
     password,
     firstName,
     lastName,
@@ -27,10 +27,10 @@ const addUser = async ({
     if (!email) {
         return Promise.reject(boom.badRequest('Datos erroneos!'))
     }
-    const exist = await store.findByEmail(email)
+    const exist = await store.findByUsernameOrEmail(email)
 
     if (exist) {
-        return Promise.reject(boom.badRequest('El correo ya existe!'))
+        return Promise.reject(boom.badRequest('El correo o nombre de usuario ya existe!'))
 
     }
     if (role === 'admin') {
@@ -43,7 +43,7 @@ const addUser = async ({
 
     const user = {
         email: email.toLowerCase().trim(),
-        additionalEmail: additionalEmail.toLowerCase().trim(),
+        username: username.toLowerCase().trim(),
         password: paswordHashed,
         firstName: firstName.toLowerCase().trim(),
         lastName: lastName.toLowerCase().trim(),
