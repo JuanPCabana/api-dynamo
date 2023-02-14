@@ -11,7 +11,8 @@ const mySchema = new Schema({
    category: [{ type: Schema.ObjectId, ref: 'Categories'}],
    user: { type: Schema.ObjectId, ref: 'Users' },
    from: { type: Schema.ObjectId, ref: 'Users' },
-   global: { type: Boolean, required: true }
+   global: { type: Boolean, required: false }
+
 })
 
 const model = mongoose.model("Documents", mySchema)

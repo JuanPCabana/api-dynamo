@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const mySchema = new Schema({
     email: { type: String, required: true },
-    additionalEmail: { type: String, required: true },
+    username: { type: String, required: true },
     password: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -22,7 +22,9 @@ const mySchema = new Schema({
     active: { type: Boolean, default: false },
     verifiedEmail: { type: Boolean, default: false },
     nextPaymentDate: { type: String },
-    avatar: { type: String }
+    avatar: { type: String },
+    membership: { type: Schema.ObjectId, ref: 'Prices' },
+    parent: { type: String }
 
 })
 

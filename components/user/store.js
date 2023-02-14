@@ -5,7 +5,7 @@ const addUser = (user) => {
     return myUser.save()
 }
 
-const listUsers = async (newUsers, query) => {
+const listUsers = async (id, email, newUsers, query) => {
     let filter = {}
     if (newUsers) {
 
@@ -17,7 +17,7 @@ const listUsers = async (newUsers, query) => {
                     { firstName: { $regex: '^' + query, $options: "i" } },
                     { lastName: { $regex: '^' + query, $options: "i" } },
                     { email: { $regex: '^' + query, $options: 'i' } },
-                    { additionalEmail: { $regex: '^' + query, $options: 'i' } }
+                    { username: { $regex: '^' + query, $options: 'i' } }
                 ]
             }
         }
@@ -34,7 +34,7 @@ const listUsers = async (newUsers, query) => {
                     { firstName: { $regex: '^' + query, $options: "i" } },
                     { lastName: { $regex: '^' + query, $options: "i" } },
                     { email: { $regex: '^' + query, $options: 'i' } },
-                    { additionalEmail: { $regex: '^' + query, $options: 'i' } }
+                    { username: { $regex: '^' + query, $options: 'i' } }
                 ]
 
             }
@@ -63,7 +63,7 @@ const getUserById = (id, unpopulate) => {
     }
 
     if (!unpopulate) {
-        return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
+        return Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }, { path: 'membership' }])
     }
     else {
         return Model.findOne(filter)
@@ -90,13 +90,13 @@ const updateInfo = async (body, verification) => {
     let result = Model.updateOne({ _id: body._id }, {
         $set: {
             ...body,
-            role: "student",
+            // role: "student",
             newStudent: false
         }
     })
     return result
 }
-
+ 
 const replaceObject = (body) => {
     let result = Model.replaceOne({ _id: body._id }, { ...body })
 
@@ -122,6 +122,21 @@ const userModify = async (id, newProps) => {
     return result
 }
 
+const findByUsernameOrEmail = async (query) => {
+
+            const filter = {
+                $or: [
+                    { email: query },
+                    { username: query }
+                ]
+            }
+
+    
+   
+    return await Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
+
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -132,5 +147,6 @@ module.exports = {
     validate: validateUser,
     replace: replaceObject,
     getToday: getTodayUsers,
-    userModify
+    userModify,
+    findByUsernameOrEmail
 }

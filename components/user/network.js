@@ -20,6 +20,20 @@ router.post('/', (req, res, next) => {
         });
 })
 
+//new inscription
+router.post('/enrole', (req, res, next) => {
+    const { user } = req.body
+    const { paymentInfo } = req.body
+    controller.enrole(user, paymentInfo)
+        .then((data) => {
+            delete data.user.password
+            response.success(req, res, 200, { message: 'Creado correctamente', inscriptionInfo: { ...data } })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 //update users
 router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
     controller.update(req.body)
@@ -98,6 +112,18 @@ router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRo
     controller.addAvatar(req.user.sub, req.file)
         .then((data) => {
             response.success(req, res, 200, { message: 'Avatar cargado correctamente' })
+        })
+        .catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
+//Change membership
+router.patch('/membership', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+    controller.changeMembership(req.body)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Plan actualizado correctamente' })
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
