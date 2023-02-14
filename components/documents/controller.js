@@ -57,6 +57,7 @@ const multiAddDocument = async ({
     league,
     category,
 }, user, files) => {
+console.log("🚀 ~ file: controller.js:60 ~ files", files)
 
 
     if (files.lenght > 0 || !name || !user) {
