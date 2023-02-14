@@ -25,7 +25,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('st
 
     controller.list(req.user, req.query)
         .then((data) => {
-            response.success(req, res, 200, data )
+            response.success(req, res, 200, data)
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
@@ -37,7 +37,7 @@ router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles(
 
     controller.listAll()
         .then((data) => {
-            response.success(req, res, 200, data )
+            response.success(req, res, 200, data)
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
@@ -49,7 +49,7 @@ router.get('/global', passport.authenticate('jwt', { session: false }), checkRol
 
     controller.listGlobal()
         .then((data) => {
-            response.success(req, res, 200, data )
+            response.success(req, res, 200, data)
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
