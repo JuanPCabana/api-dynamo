@@ -232,11 +232,21 @@ const addAvatar = async (tokenUser, file) => {
 
 const enroleStudent = async (user, paymentInfo) => {
 
-    const userInfo = await addUser(user)
+    const existentUser = await store.findByEmail(user.email)
 
-    const userId = userInfo._id.toString()
+    let userId
 
-    await replaceUser(userId, { active: true, verifiedEmail: true })
+    if (!existentUser._id) {
+        const userInfo = await addUser(user)
+        userId = userInfo._id.toString()
+        await replaceUser(userId, { active: true, verifiedEmail: true })
+
+    }
+    else {
+        userId = existentUser._id.toString()
+        await replaceUser(userId, { ...user, active: true, verifiedEmail: true })
+    }
+
 
     const newOrder = await orderController.inscription({ ammount: paymentInfo.bill, user: userId })
     const orderId = newOrder._id.toString()
