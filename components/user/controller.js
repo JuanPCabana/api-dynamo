@@ -21,6 +21,7 @@ const addUser = async ({
     phone,
     gender,
     newStudent,
+    membership,
     role,
     parent
 }) => {
@@ -57,6 +58,7 @@ const addUser = async ({
         phone: phone,
         gender: gender,
         token,
+        membership,
         newStudent: newStudent,
         parent,
         role: role
