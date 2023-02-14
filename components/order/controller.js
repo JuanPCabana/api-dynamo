@@ -108,14 +108,13 @@ const listAllOrders = (query) => {
 
     return new Promise(async (resolve, reject) => {
         const orderList = await store.listAll(query)
-        console.log("🚀 ~ file: controller.js:111 ~ returnnewPromise ~ orderList", orderList)
 
         const response = orderList.map((order) => {
             const auxOrder = order.toObject()
             delete auxOrder.user.password
-            if(auxOrder)return auxOrder
+            if (auxOrder) return auxOrder
             else return
-            
+
         })
 
 
@@ -130,7 +129,7 @@ const listUserOrders = (body, tokenUser) => {
 
         if (body.user && tokenUser.role === 'student') {
             return reject(boom.badRequest('Id invalido'))
-        }
+        } 
 
         const userOrderList = await store.list(body.user ? body.user : tokenUser.sub, body.status)
 
