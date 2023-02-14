@@ -231,8 +231,8 @@ const addAvatar = async (tokenUser, file) => {
 }
 
 const enroleStudent = async (user, paymentInfo) => {
-console.log("🚀 ~ file: controller.js:234 ~ enroleStudent ~ user", user)
-console.log("🚀 ~ file: controller.js:234 ~ enroleStudent ~ paymentInfo", paymentInfo)
+    console.log("🚀 ~ file: controller.js:234 ~ enroleStudent ~ user", user)
+    console.log("🚀 ~ file: controller.js:234 ~ enroleStudent ~ paymentInfo", paymentInfo)
 
     const existentUser = await store.findByEmail(user.email)
 
@@ -241,12 +241,12 @@ console.log("🚀 ~ file: controller.js:234 ~ enroleStudent ~ paymentInfo", paym
     if (!existentUser._id) {
         const userInfo = await addUser(user)
         userId = userInfo._id.toString()
-        await replaceUser(userId, { active: true, verifiedEmail: true })
+        await replaceUser(userId, { active: false, verifiedEmail: true, newStudent: false })
 
     }
     else {
         userId = existentUser._id.toString()
-        await replaceUser(userId, { ...user, active: true, verifiedEmail: true })
+        await replaceUser(userId, { ...user, active: false, verifiedEmail: true, newStudent: false })
     }
 
 
