@@ -59,6 +59,7 @@ router.get('/global', passport.authenticate('jwt', { session: false }), checkRol
 
 router.post('/multi', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.array('file'), (req, res, next) => {
 
+    console.log("🚀 ~ file: network.js:63 ~ router.post ~ req.files", req.files)
     controller.multiAdd(req.body, req.user.sub, req.files)
         .then((data) => {
             response.success(req, res, 200, { message: 'Documentos Cargados', fileInfo: { ...data._doc } })
