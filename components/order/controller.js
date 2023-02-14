@@ -108,6 +108,7 @@ const listAllOrders = (query) => {
 
     return new Promise(async (resolve, reject) => {
         const orderList = await store.listAll(query)
+        console.log("🚀 ~ file: controller.js:111 ~ returnnewPromise ~ orderList", orderList)
 
         const response = orderList.map((order) => {
             const auxOrder = order.toObject()
