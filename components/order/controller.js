@@ -112,7 +112,9 @@ const listAllOrders = (query) => {
         const response = orderList.map((order) => {
             const auxOrder = order.toObject()
             delete auxOrder.user.password
-            return auxOrder
+            if(auxOrder)return auxOrder
+            else return
+            
         })
 
 
