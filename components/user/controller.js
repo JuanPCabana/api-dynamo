@@ -21,7 +21,8 @@ const addUser = async ({
     phone,
     gender,
     newStudent,
-    role
+    role,
+    parent
 }) => {
 
     if (!email) {
@@ -57,6 +58,7 @@ const addUser = async ({
         gender: gender,
         token,
         newStudent: newStudent,
+        parent,
         role: role
     }
     const userInfo = await store.add(user)

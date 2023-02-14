@@ -23,7 +23,8 @@ const mySchema = new Schema({
     verifiedEmail: { type: Boolean, default: false },
     nextPaymentDate: { type: String },
     avatar: { type: String },
-    membership: { type: Schema.ObjectId, ref: 'Prices'  }
+    membership: { type: Schema.ObjectId, ref: 'Prices' },
+    parent: { type: String }
 
 })
 
