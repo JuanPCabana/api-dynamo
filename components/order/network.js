@@ -28,7 +28,7 @@ router.post('/payment', passport.authenticate('jwt', { session: false }), checkR
 
 //change order status
 router.post('/status', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
-    controller.updateStatus(req.body)
+    controller.updateStatus(req.body, req.user)
         .then((data) => {
             response.success(req, res, 200, { message: 'Estatus de la orden actualizado correctamente', order: { ...data } })
         }).catch((err) => {

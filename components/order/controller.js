@@ -70,10 +70,11 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
     })
 }
 
-const changeOrderStatus = ({ order, status }) => {
+const changeOrderStatus = ({ order, status }, user) => {
+    console.log("🚀 ~ file: controller.js:74 ~ changeOrderStatus ~ user", user)
     return new Promise(async (resolve, reject) => {
 
-        if (!order || !status) {
+        if (!order || !status || !user) {
             return reject(boom.badRequest('Datos incompletos'))
         }
 
@@ -82,11 +83,12 @@ const changeOrderStatus = ({ order, status }) => {
         const auxOrder = orderInfo.toObject()
 
         auxOrder.status = status
+        auxOrder.managedBy = user.sub
 
         delete auxOrder.user.password
 
         // console.log(auxOrder.user)
-        await store.update(auxOrder._id, { status: status })
+        await store.update(auxOrder._id, { status: status, managedBy: user.sub })
 
         if (status === 'approved') {
             await userStore.userModify(auxOrder.user, { active: true })
@@ -129,7 +131,7 @@ const listUserOrders = (body, tokenUser) => {
 
         if (body.user && tokenUser.role === 'student') {
             return reject(boom.badRequest('Id invalido'))
-        } 
+        }
 
         const userOrderList = await store.list(body.user ? body.user : tokenUser.sub, body.status)
 
@@ -144,7 +146,7 @@ const listUserOrders = (body, tokenUser) => {
 
 }
 
-const inscriptionOrder = async ({ ammount, user }) => {
+const inscriptionOrder = async ({ ammount, user }, userId) => {
 
     if (!user) return Promise.reject(boom.badRequest("Usuario Invalido"))
     if (!ammount) return Promise.reject(boom.badRequest("Monto Invalido"))
@@ -152,6 +154,7 @@ const inscriptionOrder = async ({ ammount, user }) => {
     const order = {
         ammount,
         user,
+        managedBy: userId,
         date: now()
     }
 

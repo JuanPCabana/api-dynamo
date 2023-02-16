@@ -21,10 +21,11 @@ router.post('/', (req, res, next) => {
 })
 
 //new inscription
-router.post('/enrole', (req, res, next) => {
+router.post('/enrole', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     const { user } = req.body
     const { paymentInfo } = req.body
-    controller.enrole(user, paymentInfo)
+    const tokenUser  = req.user
+    controller.enrole(user, paymentInfo, tokenUser)
         .then((data) => {
             delete data.user.password
             response.success(req, res, 200, { message: 'Creado correctamente', inscriptionInfo: { ...data } })
