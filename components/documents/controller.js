@@ -60,7 +60,7 @@ const multiAddDocument = async ({
     console.log("🚀 ~ file: controller.js:60 ~ files", files)
 
 
-    if (files.lenght > 0 || !name || !user) {
+    if (files.lenght > 0 || !name || !user || files === []) {
 
 
         return Promise.reject(boom.badRequest('Datos erroneos!'))
