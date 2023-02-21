@@ -3,15 +3,12 @@ const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
 const now = require('../../utils/helpers/now')
 
-const addPrice = async ({ ammount, name, inscription }) => {
+const addPrice = async ({ ammount }) => {
 
    if (!ammount) return Promise.reject(boom.badRequest("Monto Invalido"))
-   if (!name) return Promise.reject(boom.badRequest("Nombre Invalido"))
 
     const price = {
-        ammount,
-        inscription,
-        name
+        ammount
     }
 
     return store.add(price)
@@ -34,5 +31,5 @@ const listAllPrices = () => {
 
 module.exports = {
     add: addPrice,
-    listAll: listAllPrices,
+    getPrice: listAllPrices,
 }

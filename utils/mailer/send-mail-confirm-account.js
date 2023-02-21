@@ -14,7 +14,7 @@ module.exports = function makeSendMailConfirmAccount({
       id
     });
     const info = await serverMail.sendMail({
-      from: '"Test" <juanpc3399@gmail.com>',
+      from: `"Test" <account@back9.com.ve>`,
       to: email,
       subject: "Confirma tu cuenta",
       html: buildEmailTemplate

@@ -4,10 +4,11 @@ const boom = require('@hapi/boom')
 const sendMailService = require('../../utils/mailer')
 const { makeToken } = require('../../utils/helpers/makeToken')
 const { s3Uploadv2 } = require('../../awsS3')
+const orderController = require('../../components/order/controller')
 
 const addUser = async ({
     email,
-    additionalEmail,
+    username,
     password,
     firstName,
     lastName,
@@ -20,16 +21,18 @@ const addUser = async ({
     phone,
     gender,
     newStudent,
-    role
+    membership,
+    role,
+    parent
 }) => {
 
     if (!email) {
         return Promise.reject(boom.badRequest('Datos erroneos!'))
     }
-    const exist = await store.findByEmail(email)
+    const exist = await store.findByUsernameOrEmail(email)
 
     if (exist) {
-        return Promise.reject(boom.badRequest('El correo ya existe!'))
+        return Promise.reject(boom.badRequest('El correo o nombre de usuario ya existe!'))
 
     }
     if (role === 'admin') {
@@ -42,7 +45,7 @@ const addUser = async ({
 
     const user = {
         email: email.toLowerCase().trim(),
-        additionalEmail: additionalEmail.toLowerCase().trim(),
+        username: username.toLowerCase().trim(),
         password: paswordHashed,
         firstName: firstName.toLowerCase().trim(),
         lastName: lastName.toLowerCase().trim(),
@@ -55,7 +58,9 @@ const addUser = async ({
         phone: phone,
         gender: gender,
         token,
+        membership,
         newStudent: newStudent,
+        parent,
         role: role
     }
     const userInfo = await store.add(user)
@@ -191,6 +196,19 @@ const replaceUser = async (id, newProps) => {
 
 }
 
+const changeMembership = async ({ id, price }) => {
+    const newProps = { membership: price }
+    const user = await store.findById(id, true)
+    let auxUser = user.toObject()
+    const newUser = {
+        ...auxUser,
+        ...newProps
+    }
+    await store.replace(newUser)
+    return newUser
+
+}
+
 
 const addAvatar = async (tokenUser, file) => {
 
@@ -212,6 +230,33 @@ const addAvatar = async (tokenUser, file) => {
 
 }
 
+const enroleStudent = async (user, paymentInfo, tokenUser) => {
+
+    const existentUser = await store.findByEmail(user.email)
+
+    let userId
+
+    if (!existentUser?._id) {
+        user.password = '123456'
+        const userInfo = await addUser(user)
+        userId = userInfo._id.toString()
+        await replaceUser(userId, { active: false, verifiedEmail: true, newStudent: false })
+
+    }
+    else {
+        userId = existentUser._id.toString()
+        await replaceUser(userId, { ...user, active: false, verifiedEmail: true, newStudent: false })
+    }
+
+
+    const newOrder = await orderController.inscription({ ammount: paymentInfo.bill, user: userId }, tokenUser.sub)
+    const orderId = newOrder._id.toString()
+
+    const payment = await orderController.addPayment({ order: orderId, ...paymentInfo }, true)
+
+    return payment
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -221,5 +266,7 @@ module.exports = {
     validate: validateUser,
     statusChange: changeUserStatus,
     replace: replaceUser,
-    addAvatar
+    addAvatar,
+    changeMembership,
+    enrole: enroleStudent
 }

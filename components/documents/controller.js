@@ -7,11 +7,11 @@ const now = require('../../utils/helpers/now')
 const addDocument = async ({
     name,
     description,
-    league,
-    category,
     user,
+    group,
     global
 }, tokenUser, file) => {
+    console.log("🚀 ~ file: controller.js:14 ~ user", user)
 
 
     if (!file || !name || !tokenUser) {
@@ -23,18 +23,30 @@ const addDocument = async ({
     var extension = file.originalname.slice(file.originalname.lastIndexOf('.'))
     var fileName = Date.now() + extension
 
+    const groupObj = group ? JSON.parse(group) : null;
+
     const response = await s3Uploadv2(file, fileName)
-    const document = {
+    const document = group ? {
         file: response.Location,
         date: now(),
         name,
         description,
-        league,
-        category,
-        user: user ? user : tokenUser,
+        league: groupObj.league,
+        category: groupObj.category,
+        user: user ?? tokenUser,
         from: tokenUser,
         global
     }
+        :
+        {
+            file: response.Location,
+            date: now(),
+            name,
+            description,
+            user: user ?? tokenUser,
+            from: tokenUser,
+            global
+        }
 
     return store.add(document)
 
@@ -45,9 +57,10 @@ const multiAddDocument = async ({
     league,
     category,
 }, user, files) => {
+    console.log("🚀 ~ file: controller.js:60 ~ files", files)
 
 
-    if (files.lenght > 0 || !name || !user) {
+    if (files.lenght > 0 || !name || !user || files === []) {
 
 
         return Promise.reject(boom.badRequest('Datos erroneos!'))
@@ -105,14 +118,14 @@ const listGlobalDocuments = () => {
 }
 
 
-const listUserDocuments = (user) => {
+const listUserDocuments = (tokenUser, { user }) => {
     return new Promise(async (resolve, reject) => {
 
-        if (!user.sub) {
+        if (!tokenUser.sub) {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userList = await store.list(user.sub)
+        const userList = await store.list(user ? user : tokenUser.sub)
         const response = userList.map(document => {
             const aux = document.toObject()
             delete aux?.user?.password

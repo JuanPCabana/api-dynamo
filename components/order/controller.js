@@ -32,7 +32,7 @@ const addOrder = async ({ ammount, user }) => {
 
 }
 
-const addPayment = ({ order, method, ref, ammount }) => {
+const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
     return new Promise(async (resolve, reject) => {
 
         if (!method || !ref || !ammount || !order) {
@@ -43,14 +43,22 @@ const addPayment = ({ order, method, ref, ammount }) => {
 
         const auxOrder = orderInfo.toObject()
 
-        paymentInfo = {
+        paymentInfo = method === 'ZELLE' ? {
             date: now(),
             method,
             ref,
-            ammount
+            ammount,
+            email
         }
+            :
+            {
+                date: now(),
+                method,
+                ref,
+                ammount
+            }
         auxOrder.payment = paymentInfo
-        auxOrder.status = 'pending'
+        auxOrder.status = inscription ? 'approved' : 'pending'
         delete auxOrder.user.password
 
         await store.update(auxOrder._id, { payment: paymentInfo, status: 'pending' })
@@ -62,10 +70,11 @@ const addPayment = ({ order, method, ref, ammount }) => {
     })
 }
 
-const changeOrderStatus = ({ order, status }) => {
+const changeOrderStatus = ({ order, status }, user) => {
+    console.log("🚀 ~ file: controller.js:74 ~ changeOrderStatus ~ user", user)
     return new Promise(async (resolve, reject) => {
 
-        if (!order || !status) {
+        if (!order || !status || !user) {
             return reject(boom.badRequest('Datos incompletos'))
         }
 
@@ -74,11 +83,12 @@ const changeOrderStatus = ({ order, status }) => {
         const auxOrder = orderInfo.toObject()
 
         auxOrder.status = status
+        auxOrder.managedBy = user.sub
 
         delete auxOrder.user.password
 
         // console.log(auxOrder.user)
-        await store.update(auxOrder._id, { status: status })
+        await store.update(auxOrder._id, { status: status, managedBy: user.sub })
 
         if (status === 'approved') {
             await userStore.userModify(auxOrder.user, { active: true })
@@ -104,7 +114,9 @@ const listAllOrders = (query) => {
         const response = orderList.map((order) => {
             const auxOrder = order.toObject()
             delete auxOrder.user.password
-            return auxOrder
+            if (auxOrder) return auxOrder
+            else return
+
         })
 
 
@@ -121,7 +133,7 @@ const listUserOrders = (body, tokenUser) => {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userOrderList = await store.list(body.user? body.user : tokenUser.sub, body.status)
+        const userOrderList = await store.list(body.user ? body.user : tokenUser.sub, body.status)
 
         const response = userOrderList.map((order) => {
             const auxOrder = order.toObject()
@@ -134,9 +146,27 @@ const listUserOrders = (body, tokenUser) => {
 
 }
 
+const inscriptionOrder = async ({ ammount, user }, userId) => {
+
+    if (!user) return Promise.reject(boom.badRequest("Usuario Invalido"))
+    if (!ammount) return Promise.reject(boom.badRequest("Monto Invalido"))
+
+    const order = {
+        ammount,
+        user,
+        managedBy: userId,
+        date: now()
+    }
+
+    const response = await store.add(order)
+
+    return response
+
+}
 
 module.exports = {
     add: addOrder,
+    inscription: inscriptionOrder,
     addPayment,
     listAll: listAllOrders,
     list: listUserOrders,

@@ -5,7 +5,9 @@ const Schema = mongoose.Schema
 
 
 const mySchema = new Schema({
-   ammount: {type:Number, required: true},
+   ammount: { type: Number, required: true },
+   inscription: { type: Boolean, default: false },
+   name: { type: String, required: true }
 
 })
 

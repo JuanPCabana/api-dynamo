@@ -15,7 +15,8 @@ const mySchema = new Schema({
    date: { type: Date, required: true },
    payment: { type: Object },
    ammount: { type: Schema.ObjectId, ref: 'Prices', required: true },
-   user: { type: Schema.ObjectId, ref: 'Users', required: true }
+   user: { type: Schema.ObjectId, ref: 'Users', required: true },
+   managedBy:{type: Schema.Types.ObjectId, ref:'Users', required: false}
 })
 
 const model = mongoose.model("Orders", mySchema)
