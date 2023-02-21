@@ -154,6 +154,7 @@ const inscriptionOrder = async ({ ammount, user }, userId) => {
     const order = {
         ammount,
         user,
+        inscription: true,
         managedBy: userId,
         date: now()
     }
