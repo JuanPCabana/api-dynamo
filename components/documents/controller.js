@@ -75,9 +75,10 @@ const multiAddDocument = async ({
     }) */
     const results = await s3MultiUploadv2(files)
     const documents = results.map((result) => {
+        var extension = result.key.slice(result.key.lastIndexOf('.'))
         return {
             file: result.Location,
-            name: result.key,
+            name: name ? `${name}${extension}` : result.key,
             date: now(),
             description,
             league,
