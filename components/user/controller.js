@@ -65,7 +65,7 @@ const addUser = async ({
     }
     const userInfo = await store.add(user)
 
-    await sendMailService.sendMailConfirmAccount(email, `${firstName} ${lastName}`, token.value, userInfo._id)
+    // await sendMailService.sendMailConfirmAccount(email, `${firstName} ${lastName}`, token.value, userInfo._id)
     return Promise.resolve(userInfo)
 
 }
