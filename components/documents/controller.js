@@ -77,10 +77,13 @@ const multiAddDocument = async ({
         return {
             file: result.Location,
             name: result.key,
+            date: now(),
             description,
             league,
             category,
-            user
+            user,
+            from: user,
+            global: false
         }
     })
 

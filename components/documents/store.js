@@ -7,9 +7,9 @@ const addDocument = (document) => {
 
 const multiAddDocuments = async (documents) => {
 
-    return await Promise.all(documents.map((document) => {
+    return await Promise.all(documents.map(async (document) => {
         const myDoc = new Model(document)
-        myDoc.save()
+        await myDoc.save()
     }))
 
 }
