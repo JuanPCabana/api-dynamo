@@ -143,11 +143,11 @@ const validateUser = (user, token) => {
 
         const queryResponse = await store.validate(user, token)
 
-        if (!queryResponse.token) {
+        if (!queryResponse?.token) {
             return reject(boom.badRequest("Token Invalido"))
         }
 
-        if (queryResponse.token.value !== token) {
+        if (queryResponse?.token?.value !== token) {
             return reject(boom.badRequest('Token Invalido'))
         }
 
