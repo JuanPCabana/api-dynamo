@@ -24,7 +24,8 @@ const mySchema = new Schema({
     nextPaymentDate: { type: String },
     avatar: { type: String },
     membership: { type: Schema.ObjectId, ref: 'Prices' },
-    parent: { type: String }
+    parent: { type: String },
+    cardIssued: { type: Boolean, default: false }
 
 })
 

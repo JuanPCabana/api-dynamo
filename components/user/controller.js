@@ -119,6 +119,7 @@ const getUserById = (userId) => {
 }
 
 const updateUser = (body) => {
+    console.log("🚀 ~ file: controller.js:122 ~ updateUser ~ body:", body)
 
     return new Promise(async (resolve, reject) => {
 
