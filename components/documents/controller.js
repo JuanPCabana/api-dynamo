@@ -56,11 +56,12 @@ const multiAddDocument = async ({
     description,
     league,
     category,
-}, user, files) => {
+    user
+}, userToken, files) => {
     console.log("🚀 ~ file: controller.js:60 ~ files", files)
 
 
-    if (files.lenght > 0 || !name || !user || files === []) {
+    if (files.lenght > 0 || !name || !userToken || files === []) {
 
 
         return Promise.reject(boom.badRequest('Datos erroneos!'))
@@ -81,8 +82,8 @@ const multiAddDocument = async ({
             description,
             league,
             category,
-            user,
-            from: user,
+            user: user ? user : userToken,
+            from: userToken,
             global: false
         }
     })
