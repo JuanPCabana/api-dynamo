@@ -43,7 +43,7 @@ module.exports = function makeSendMailPaymentPendingAdmin({
     email,
     method
   }) {
-
+ 
     const dom = domParser.load(htmlTemplate);
     dom('#refNumber').text(ref)
     dom('#name').text(name)
