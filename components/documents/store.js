@@ -16,17 +16,17 @@ const multiAddDocuments = async (documents) => {
 
 const listAllDocuments = () => {
 
-    return Model.find({}).populate([{ path: 'user' }, { path: 'from' }])
+    return Model.find({}).populate([{ path: 'user' }, { path: 'from' }, { path: 'league', { path: 'category' } }])
 
 }
 const listGlobalDocuments = () => {
 
-    return Model.find({ global: true }).populate([{ path: 'user' }, { path: 'from' }])
+    return Model.find({ global: true }).populate([{ path: 'user' }, { path: 'from' }, { path: 'league', { path: 'category' } }])
 
 }
 const listUserDocs = (userId) => {
     let filter = { user: userId }
-    return Model.find(filter).populate([{ path: 'user' }, { path: 'from' }])
+    return Model.find(filter).populate([{ path: 'user' }, { path: 'from' }, { path: 'league', { path: 'category' } }])
 
 }
 
