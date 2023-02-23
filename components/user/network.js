@@ -24,10 +24,11 @@ router.post('/', (req, res, next) => {
 router.post('/enrole', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
     const { user } = req.body
     const { paymentInfo } = req.body
+    const { oldStudent } = req.body
     const tokenUser  = req.user
-    controller.enrole(user, paymentInfo, tokenUser)
+    controller.enrole(user, paymentInfo, oldStudent, tokenUser)
         .then((data) => {
-            delete data.user.password
+            data?.user? delete data.user.password : null        
             response.success(req, res, 200, { message: 'Creado correctamente', inscriptionInfo: { ...data } })
         }).catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)

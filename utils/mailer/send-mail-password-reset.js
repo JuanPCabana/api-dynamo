@@ -32,8 +32,8 @@ module.exports = function makeSendMailPasswordReset({
     function buildEmailBodyTemplate({ htmlTemplate, token, id }) {
       const dom = domParser.load(htmlTemplate);
       dom("#token").text(token);
-      dom("#link").attr("href", `https://dynamotest.vercel.app/nueva_contrasena?token=${token}&id=${id}`)
-      dom("#link").text(`https://dynamotest.vercel.app/nueva_contrasena?token=${token}&id=${id}`)
+      dom("#link").attr("href", `https://dynamofc.vercel.app/nueva_contrasena?token=${token}&id=${id}`)
+      dom("#link").text(`https://dynamofc.vercel.app/nueva_contrasena?token=${token}&id=${id}`)
       return dom.html();
     }
   }
