@@ -101,12 +101,11 @@
     electronicTicket.fillRect(600, 10, logo.width, logo.height)
     electronicTicket.drawImage(logo, 600, 10) */
 
-    const birthDate = new Date(userInfo.birthDate)
     //texto
     electronicTicket.font = "50px Roboto"
     electronicTicket.fillText(`${userInfo.firstName.charAt(0).toUpperCase() + userInfo.firstName.slice(1)}`, 940, 665)
     electronicTicket.fillText(`${userInfo.lastName.charAt(0).toUpperCase() + userInfo.lastName.slice(1)}`, 940, 755)
-    electronicTicket.fillText(`${birthDate.toLocaleDateString('es-VE')}`, 940, 920)
+    electronicTicket.fillText(`${new Date(userInfo?.birthDate).toLocaleDateString("es-VE")}`, 940, 920)
 
     electronicTicket.font = "30px Roboto"
 
