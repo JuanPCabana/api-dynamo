@@ -217,7 +217,7 @@ const changeMembership = async ({ id, price }) => {
 }
 
 
-const addAvatar = async (tokenUser, file) => {
+const addAvatar = async (tokenUser, file, userId) => {
 
 
     if (!file || !tokenUser) {
@@ -233,7 +233,9 @@ const addAvatar = async (tokenUser, file) => {
     const auxUser = userData.toObject()
     auxUser.avatar = response.Location
  */
-    return store.userModify(tokenUser, { avatar: response.Location })
+    const updateId = userId ? userId : tokenUser
+
+    return store.userModify(updateId, { avatar: response.Location })
 
 }
 

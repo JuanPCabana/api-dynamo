@@ -112,7 +112,7 @@ router.post('/:id/status', passport.authenticate('jwt', { session: false }), che
 
 //post avatar
 router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.single('file'), (req, res, next) => {
-    controller.addAvatar(req.user.sub, req.file)
+    controller.addAvatar(req.user.sub, req.file, req.body.user)
         .then((data) => {
             response.success(req, res, 200, { message: 'Avatar cargado correctamente' })
         })
