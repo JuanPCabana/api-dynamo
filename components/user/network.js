@@ -7,6 +7,7 @@ const boom = require('@hapi/boom')
 const passport = require('passport')
 const { checkRoles } = require('../../middlewares/auth.handler');
 const upload = require('../../middlewares/multer.handler');
+const ticketsServices = require('../../utils/idCards');
 
 //add user
 router.post('/', (req, res, next) => {
@@ -132,5 +133,20 @@ router.patch('/membership', passport.authenticate('jwt', { session: false }), ch
             next(err)
         });
 })
+
+//descargar carnet
+router.get("/idcard/:userId", async (req, res) => {
+    const userId = req.params.userId
+    const stream = res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment;filename=${userId}.pdf`
+    })
+    await ticketsServices.getElectronicTickets({
+      userId,
+      dataCallback: (chunk) => stream.write(chunk),
+      endCallback: () => stream.end()
+    })
+  })
+
 
 module.exports = router

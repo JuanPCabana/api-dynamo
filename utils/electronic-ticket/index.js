@@ -1,26 +1,17 @@
-import buildmakeSendElectronicTicket from "./electronic-ticket"
-import buildmakeSendElectronicTicketOffice from "./electronic-ticket-office"
-import { registerFont, createCanvas, loadImage } from "canvas"
-import bwipjs from "bwip-js"
-import path from "path"
-import moment from "moment"
-const makeElectronicTicket = buildmakeSendElectronicTicket({
-  registerFont: registerFont,
-  canvasLoader: createCanvas,
-  imageLoader: loadImage,
-  barcodeWriter: bwipjs,
-  path: path,
-  moment
+const attachment = require("../attachment")  
+const { attachmentDownload, attachmentDownloadOffice } = require("../attachment") 
+const {makeElectronicTicket} = require("../../components/electronic-ticket")
+const { makeSendElectronicTicketOffice } = require("../../components/electronic-ticket") 
+const sendMailService = require("../mailer") 
+const makeSendElectronicTicket = require("./send-electronic-ticket") 
+const makeGetElectronicTicket = require("./get-electronic-ticket") 
+
+
+
+const getElectronicTicket = makeGetElectronicTicket({
+  attachmentDownload,
+  makeElectronicTicket,
+  
 })
 
-const makeSendElectronicTicketOffice = buildmakeSendElectronicTicketOffice({
-  registerFont: registerFont,
-  canvasLoader: createCanvas,
-  imageLoader: loadImage,
-  barcodeWriter: bwipjs,
-  path: path,
-  moment
-})
-export default makeElectronicTicket
-
-export { makeSendElectronicTicketOffice }
+module.exports = getElectronicTicket

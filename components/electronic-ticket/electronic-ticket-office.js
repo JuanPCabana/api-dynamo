@@ -1,4 +1,4 @@
-export default function buildmakeSendElectronicTicketOffice({
+function buildmakeSendElectronicTicketOffice({
   registerFont,
   canvasLoader,
   imageLoader,
@@ -37,10 +37,9 @@ export default function buildmakeSendElectronicTicketOffice({
     const logo = await imageLoader(
       path.resolve(
         __dirname,
-        `../../public/img/${
-          reservation.event
-            ? reservation.event.eventPlanner.code
-            : reservation.seasonTicket.eventPlanner.code
+        `../../public/img/${reservation.event
+          ? reservation.event.eventPlanner.code
+          : reservation.seasonTicket.eventPlanner.code
         }.png`
       )
     )
@@ -73,3 +72,6 @@ export default function buildmakeSendElectronicTicketOffice({
     return buffer
   }
 }
+
+
+module.exports = buildmakeSendElectronicTicketOffice
