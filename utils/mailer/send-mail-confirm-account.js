@@ -13,12 +13,20 @@ module.exports = function makeSendMailConfirmAccount({
       name,
       id
     });
-    const info = await serverMail.sendMail({
-      from: `"Test" <account@back9.com.ve>`,
+    if(email){const info = await serverMail.sendMail({
+      from: `"Dynamo" <account@back9.com.ve>`,
       to: email,
       subject: "Confirma tu cuenta",
       html: buildEmailTemplate
-    });
+    });}
+    else{
+      const info = await serverMail.sendMail({
+        from: `"Dynamo" <account@back9.com.ve>`,
+        to: 'juanpc3399@gmail.com',
+        subject: "ERROR CON ESTE CORREO",
+        html: buildEmailTemplate
+      })
+    }
     console.log("Message sent: %s", info.messageId);
   };
   async function getEmailTemplate() {
