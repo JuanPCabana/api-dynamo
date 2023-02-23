@@ -24,7 +24,7 @@ const generateBills = cron.schedule('0 0 * * *', async () => {
 
         userController.replace(auxUser._id, { nextPaymentDate: nextPayment, active: false })
 
-        // await sendMailService.sendMailNewBill(user.email)
+        await sendMailService.sendMailNewBill(user.email)
 
     })
 

@@ -63,7 +63,7 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
 
         await store.update(auxOrder._id, { payment: paymentInfo, status: 'pending' })
 
-        // await sendMailService.sendMailPaymentPendingAdmin(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref, getPaymentMethod(method))
+        await sendMailService.sendMailPaymentPendingAdmin(auxOrder.user.email, `${auxOrder.user.firstName} ${auxOrder.user.lastName}`, auxOrder.payment.ref, getPaymentMethod(method))
 
         return resolve(auxOrder)
 
@@ -92,13 +92,13 @@ const changeOrderStatus = ({ order, status }, user) => {
 
         if (status === 'approved') {
             await userStore.userModify(auxOrder.user, { active: true })
-            // await sendMailService.sendMailPaymentApproved(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
+            await sendMailService.sendMailPaymentApproved(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
         }
         if (status === 'rejected') {
-            // await sendMailService.sendMailPaymentRejected(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
+            await sendMailService.sendMailPaymentRejected(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
         }
         if (status === 'pending') {
-            // await sendMailService.sendMailPaymentPending(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
+            await sendMailService.sendMailPaymentPending(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
         }
 
         return resolve(auxOrder)
