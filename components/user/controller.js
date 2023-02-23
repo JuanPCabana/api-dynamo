@@ -40,6 +40,11 @@ const addUser = async ({
 
     }
 
+    const day = new Date().getDate()
+    const nextMonth = new Date().getMonth() + 2
+
+    const nextPayment = `${day}/${nextMonth}`
+
     const paswordHashed = await bcrypt.hash(password, 10)
     const token = makeToken()
 
@@ -57,6 +62,7 @@ const addUser = async ({
         position: position,
         phone: phone,
         gender: gender,
+        nextPaymentDate: nextPayment,
         token,
         membership,
         newStudent: newStudent,
@@ -257,7 +263,7 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
 
         return payment
     }
-    else{
+    else {
         const response = await store.findById(userId, false)
         const finalResponse = response.toObject()
         delete finalResponse.password
