@@ -71,7 +71,7 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
 }
 
 const changeOrderStatus = ({ order, status }, user) => {
-    console.log("🚀 ~ file: controller.js:74 ~ changeOrderStatus ~ user", user)
+    // console.log("🚀 ~ file: controller.js:74 ~ changeOrderStatus ~ user", user)
     return new Promise(async (resolve, reject) => {
 
         if (!order || !status || !user) {

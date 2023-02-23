@@ -11,7 +11,7 @@ const addDocument = async ({
     group,
     global
 }, tokenUser, file) => {
-    console.log("🚀 ~ file: controller.js:14 ~ user", user)
+    // console.log("🚀 ~ file: controller.js:14 ~ user", user)
 
 
     if (!file || !name || !tokenUser) {
@@ -58,7 +58,7 @@ const multiAddDocument = async ({
     category,
     user
 }, userToken, files) => {
-    console.log("🚀 ~ file: controller.js:60 ~ files", files)
+    // console.log("🚀 ~ file: controller.js:60 ~ files", files)
 
 
     if (files.lenght > 0 || !name || !userToken || files === []) {
