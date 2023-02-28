@@ -25,7 +25,7 @@ const addOrder = async ({ ammount, user }) => {
 
     const response = await store.add(order)
 
-    await userController.replace(user, { newPaymentDate: paymentDay })
+    // await userController.replace(user, { newPaymentDate: paymentDay })
 
 
     return response
