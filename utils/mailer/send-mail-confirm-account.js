@@ -27,7 +27,6 @@ module.exports = function makeSendMailConfirmAccount({
         html: buildEmailTemplate
       })
     }
-    console.log("Message sent: %s", info.messageId);
   };
   async function getEmailTemplate() {
     const requestFile = await new Promise((resolve, reject) =>
