@@ -5,6 +5,7 @@ module.exports = function makeSendMailConfirmAccount({
   path
 }) {
   return async function sendMailConfirmAccount(email, name, token, id) {
+    console.log(email);
     const htmlTemplate = await getEmailTemplate();
     const buildEmailTemplate = buildEmailBodyTemplate({
       htmlTemplate,
@@ -15,12 +16,6 @@ module.exports = function makeSendMailConfirmAccount({
     });
     if (email) {
       const info = await serverMail.sendMail({
-        from: `"Dynamo" <account@back9.com.ve>`,
-        to: email,
-        subject: "Confirma tu cuenta",
-        html: buildEmailTemplate
-      });
-      console.log({
         from: `"Dynamo" <account@back9.com.ve>`,
         to: email,
         subject: "Confirma tu cuenta",
