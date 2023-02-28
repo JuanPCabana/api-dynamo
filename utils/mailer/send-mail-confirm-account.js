@@ -9,17 +9,25 @@ module.exports = function makeSendMailConfirmAccount({
     const buildEmailTemplate = buildEmailBodyTemplate({
       htmlTemplate,
       token,
-      email, 
+      email,
       name,
       id
     });
-    if(email){const info = await serverMail.sendMail({
-      from: `"Dynamo" <account@back9.com.ve>`,
-      to: email,
-      subject: "Confirma tu cuenta",
-      html: buildEmailTemplate
-    });}
-    else{
+    if (email) {
+      const info = await serverMail.sendMail({
+        from: `"Dynamo" <account@back9.com.ve>`,
+        to: email,
+        subject: "Confirma tu cuenta",
+        html: buildEmailTemplate
+      });
+      console.log({
+        from: `"Dynamo" <account@back9.com.ve>`,
+        to: email,
+        subject: "Confirma tu cuenta",
+        html: buildEmailTemplate
+      });
+    }
+    else {
       const info = await serverMail.sendMail({
         from: `"Dynamo" <account@back9.com.ve>`,
         to: 'juanpc3399@gmail.com',
@@ -31,7 +39,7 @@ module.exports = function makeSendMailConfirmAccount({
   async function getEmailTemplate() {
     const requestFile = await new Promise((resolve, reject) =>
       fs.readFile(
-        path.resolve(__dirname,"../../files/acount.html"),
+        path.resolve(__dirname, "../../files/acount.html"),
         "utf8",
         (err, content) => (err ? reject(err) : resolve(content))
       )
