@@ -20,7 +20,7 @@ module.exports = function makeSendMailPaymentPendingAdmin({
     });
     const info = await serverMail.sendMail({
       from: `"Dynamo" <account@back9.com.ve>`,
-      to: process.env.SMTP_USER,
+      to: 'account@back9.com.ve',
       subject: "Nuevo pago registrado",
       html: buildEmailTemplate,
     });

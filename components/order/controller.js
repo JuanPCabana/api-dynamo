@@ -97,15 +97,15 @@ const changeOrderStatus = ({ order, status }, user) => {
 
         // console.log(auxOrder.user)
         await store.update(auxOrder._id, { status: status, managedBy: user.sub })
-        if(!auxOrder.user.email){
+        if (!auxOrder.user.email) {
             const info = await serverMail.sendMail({
-              from: `"Dynamo" <account@back9.com.ve>`,
-              to: 'juanpc3399@gmail.com',
-              subject: "ERROR CON ESTE CORREO",
-              html: buildEmailTemplate
+                from: `"Dynamo" <account@back9.com.ve>`,
+                to: 'juanpc3399@gmail.com',
+                subject: "ERROR CON ESTE CORREO",
+                html: buildEmailTemplate
             })
             return reject(boom.badRequest('Error en el servidor de correos'))
-          }
+        }
         if (status === 'approved') {
             await userStore.userModify(auxOrder.user, { active: true })
             await sendMailService.sendMailPaymentApproved(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
