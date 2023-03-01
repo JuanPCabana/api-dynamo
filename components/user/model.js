@@ -11,6 +11,7 @@ const mySchema = new Schema({
     birthDate: { type: Date, required: true },
     height: { type: Number, required: true },
     weight: { type: Number, required: true },
+    document: { type: Number, required: false },
     league: { type: Schema.ObjectId, ref: 'Leagues' },
     category: { type: mongoose.ObjectId, required: false, ref: 'Categories' },
     position: { type: String, required: false },
