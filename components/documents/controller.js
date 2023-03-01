@@ -78,7 +78,8 @@ const multiAddDocument = async ({
         var extension = result.key.slice(result.key.lastIndexOf('.'))
         return {
             file: result.Location,
-            name: name ? `${name}${extension}` : result.key,
+            name: result.key,
+            displayName: `${name}${extension}`,
             date: now(),
             description,
             league,
@@ -144,11 +145,20 @@ const listUserDocuments = (tokenUser, { user }) => {
 
 }
 
+const deleteDocument = ({ id }, userId) => {
+    return new Promise(async (resolve, reject) => {
+        if (!id) return reject(boom.badRequest('Id inválido!'))
+        const document = await store.find(id)
+        if (!document) return reject(boom.badRequest('Documento no encontrado!'))
+        return resolve(document)
+    })
+}
 
 module.exports = {
     add: addDocument,
     multiAdd: multiAddDocument,
     listAll: listAllDocuments,
     list: listUserDocuments,
-    listGlobal: listGlobalDocuments
+    listGlobal: listGlobalDocuments,
+    delete: deleteDocument
 }

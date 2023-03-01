@@ -29,11 +29,17 @@ const listUserDocs = (userId) => {
     return Model.find(filter).populate([{ path: 'user' }, { path: 'from' }, { path: 'league' }, { path: 'category' }])
 
 }
+const getOneItem = (id) => {
+    let filter = { _id: id }
+    return Model.findOne(filter).populate([{ path: 'user' }, { path: 'from' }, { path: 'league' }, { path: 'category' }])
+
+}
 
 module.exports = {
     add: addDocument,
     multiAdd: multiAddDocuments,
     listAll: listAllDocuments,
     list: listUserDocs,
-    listGlobal: listGlobalDocuments
+    listGlobal: listGlobalDocuments,
+    find: getOneItem
 }
