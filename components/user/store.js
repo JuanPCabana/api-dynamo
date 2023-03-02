@@ -41,7 +41,7 @@ const listUsers = async (id, email, newUsers, query) => {
         }
     }
 
-    return await Model.find(filter).populate([{ path: 'league' }, { path: 'category' }])
+    return await Model.find(filter).populate([{ path: 'league' }, { path: 'category' }, { path: 'membership' }])
 
 }
 const getUserByEmail = (email) => {
