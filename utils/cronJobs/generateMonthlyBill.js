@@ -20,7 +20,7 @@ const generateBills = cron.schedule(' 0 11 7 * *', async () => {
         console.log("🚀 ~ list", user.email)
         let auxUser = user.toObject()
 
-        orderController.add({ ammount: user.membership._id.toString() ?? '63c56873019597f1d03b24e2', user: auxUser._id })
+        orderController.add({ ammount: user?.membership?._id.toString() ?? '63c56873019597f1d03b24e2', user: auxUser._id })
 
         userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
 
