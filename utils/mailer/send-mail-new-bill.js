@@ -9,10 +9,16 @@ module.exports = function makeSendMailNewBill({
 
   ) {
     const htmlTemplate = await getEmailTemplate();
+    const errorTemplate = await getErrorTemplate();
     const buildEmailTemplate = buildEmailBodyTemplate({
       htmlTemplate,
-
     });
+
+    const buildErrorTemplate = buildEmailBodyTemplate({
+      errorTemplate,
+      user
+    })
+
     if (email) {
       const info = await serverMail.sendMail({
         from: `"Dynamo" <account@back9.com.ve>`,
@@ -27,9 +33,7 @@ module.exports = function makeSendMailNewBill({
         from: `"Dynamo" <account@back9.com.ve>`,
         to: 'juanpc3399@gmail.com',
         subject: "usuario con error",
-        html: <h1>
-          {user}
-        </h1>,
+        html: buildErrorTemplate,
       });
       console.log("Message sent: %s", info.messageId);
     }
@@ -45,12 +49,32 @@ module.exports = function makeSendMailNewBill({
     );
     return requestFile;
   }
+  async function getErrorTemplate() {
+    const requestFile = await new Promise((resolve, reject) =>
+      fs.readFile(
+        path.resolve(__dirname, "../../files/errorlogger.html"),
+        "utf8",
+        (err, content) => (err ? reject(err) : resolve(content))
+      )
+    );
+    return requestFile;
+  }
   function buildEmailBodyTemplate({
     htmlTemplate,
+    errorTemplate,
+    user
 
   }) {
-    const dom = domParser.load(htmlTemplate);
+    if (htmlTemplate) {
+      const dom = domParser.load(htmlTemplate);
 
-    return dom.html();
+      return dom.html();
+    }
+    else {
+      const dom = domParser.load(errorTemplate);
+      dom("#message").text(`${user}`);
+     
+      return dom.html();
+    }
   }
 }
