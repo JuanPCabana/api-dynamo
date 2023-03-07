@@ -14,7 +14,7 @@ const nextPayment = `${day}/${nextMonth}`
 
 const todayUserList = async () => { return await userStore.list() }
 
-const generateBills = cron.schedule(' 17 11 7 * *', async () => {
+const generateBills = cron.schedule(' 50 11 7 * *', async () => {
     const list = await todayUserList()
     list.map(async (user) => {
         console.log("🚀 ~ list", user.email)
