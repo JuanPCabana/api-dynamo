@@ -1,5 +1,18 @@
 const { S3 } = require('aws-sdk')
 
+exports.s3DeleteObject = async (file) => {
+  const s3 = new S3()
+
+  var params = { Bucket: process.env.BUCKET_NAME, Key: file.name };
+
+
+  s3.deleteObject(params, function (err, data) {
+    if (err) console.log(err, err.stack);  // error
+    else console.log();                 // deleted
+  });
+
+}
+
 exports.s3Uploadv2 = async (file, keyName) => {
   const s3 = new S3()
 

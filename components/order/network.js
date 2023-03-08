@@ -16,6 +16,16 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('s
         });
 })
 
+// generate month order to user
+router.post('/generate', passport.authenticate('jwt', { session: false }), checkRoles( 'admin'), (req, res, next) => {
+    controller.generate(req.body, req.user)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Creado correctamente', order: { ...data._doc } })
+        }).catch((err) => {
+            next(err)
+        });
+})
+
 //add payment info
 router.post('/payment', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
     controller.addPayment(req.body)

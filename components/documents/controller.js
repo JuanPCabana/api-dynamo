@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const boom = require('@hapi/boom')
 const { s3Uploadv2, s3MultiUploadv2 } = require('../../awsS3')
 const now = require('../../utils/helpers/now')
+const { default: mongoose } = require('mongoose')
 
 const addDocument = async ({
     name,
@@ -147,9 +148,17 @@ const listUserDocuments = (tokenUser, { user }) => {
 
 const deleteDocument = ({ id }, userId) => {
     return new Promise(async (resolve, reject) => {
+
+        const validId = mongoose.Types.ObjectId.isValid(id)
+        if (!validId) return reject(boom.badRequest('Id inválido!'))
         if (!id) return reject(boom.badRequest('Id inválido!'))
         const document = await store.find(id)
         if (!document) return reject(boom.badRequest('Documento no encontrado!'))
+        console.log("🚀 ~ file: controller.js:156 ~ returnnewPromise ~ document:", document)
+
+
+       
+
         return resolve(document)
     })
 }

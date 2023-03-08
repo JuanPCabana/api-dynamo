@@ -181,11 +181,38 @@ const inscriptionOrder = async ({ ammount, user }, userId) => {
 
 }
 
+const generateOrder = async ({ id }, tokenUser) => {
+
+    const day = new Date().getDate()
+    const nextMonth = new Date().getMonth() + 2
+
+    const nextPayment = `${day}/${nextMonth}`
+
+    return new Promise(async (resolve, reject) => {
+        if (!id) return reject(boom.badRequest('Usuario invalido!'))
+
+        const user = await userStore.findById(id, false)
+
+
+        let auxUser = user.toObject()
+
+        const response = addOrder({ ammount: user?.membership?._id.toString() ?? '63c56873019597f1d03b24e2', user: auxUser._id })
+
+        // await userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
+
+        await sendMailService.sendMailNewBill(user.email, user)
+
+        resolve(response)
+
+    })
+}
+
 module.exports = {
     add: addOrder,
     inscription: inscriptionOrder,
     addPayment,
     listAll: listAllOrders,
     list: listUserOrders,
-    updateStatus: changeOrderStatus
+    updateStatus: changeOrderStatus,
+    generate: generateOrder
 }

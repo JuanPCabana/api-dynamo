@@ -19,7 +19,7 @@ module.exports = function makeSendMailNewBill({
       user
     })
 
-    if (email) {
+    try {
       const info = await serverMail.sendMail({
         from: `"Dynamo" <account@back9.com.ve>`,
         to: email,
@@ -27,8 +27,8 @@ module.exports = function makeSendMailNewBill({
         html: buildEmailTemplate,
       });
       console.log("Message sent: %s", info.messageId);
-    }
-    else {
+    } 
+    catch (error) {
       const info = await serverMail.sendMail({
         from: `"Dynamo" <account@back9.com.ve>`,
         to: 'juanpc3399@gmail.com',
@@ -73,7 +73,7 @@ module.exports = function makeSendMailNewBill({
     else {
       const dom = domParser.load(errorTemplate);
       dom("#message").text(`${user}`);
-     
+
       return dom.html();
     }
   }

@@ -14,7 +14,7 @@ const nextPayment = `${day}/${nextMonth}`
 
 const todayUserList = async () => { return await userStore.list() }
 
-const generateBills = cron.schedule(' 58 11 7 * *', async () => {
+const generateBills = cron.schedule(' 0 0 1 * *', async () => {
     const list = await todayUserList()
     list.map(async (user) => {
         console.log("🚀 ~ list", user.email)
@@ -24,7 +24,7 @@ const generateBills = cron.schedule(' 58 11 7 * *', async () => {
 
         userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
 
-        // await sendMailService.sendMailNewBill(user.email, user)
+        await sendMailService.sendMailNewBill(user.email, user)
 
     })
 
