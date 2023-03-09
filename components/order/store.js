@@ -7,9 +7,9 @@ const addOrder = async (order) => {
 
 const listAllOrders = (query) => {
     if (query.status) {
-        return Model.find({ status: query.status }).populate([{ path: 'user' }, { path: 'ammount' }])
+        return Model.find({ status: query.status }).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
     }
-    return Model.find({}).populate([{ path: 'user' }, { path: 'ammount' }])
+    return Model.find({}).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
 
 }
 const listUserOrders = (id, query) => {
