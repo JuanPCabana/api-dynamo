@@ -250,12 +250,12 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
         user.password = '123456'
         const userInfo = await addUser(user)
         userId = userInfo._id.toString()
-        await replaceUser(userId, { active: true, verifiedEmail: true, newStudent: false })
+        await replaceUser(userId, { active: false, verifiedEmail: true, newStudent: false })
 
     }
     else {
         userId = existentUser._id.toString()
-        await replaceUser(userId, { ...user, active: true, verifiedEmail: true, newStudent: false })
+        await replaceUser(userId, { ...user, active: false, verifiedEmail: true, newStudent: false })
     }
 
 
@@ -265,10 +265,12 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
 
         const payment = await orderController.addPayment({ order: orderId, ...paymentInfo }, true)
 
+        await orderController.generate({ id: userId })
         return payment
     }
     else {
         const response = await store.findById(userId, false)
+        await orderController.generate({ id: userId })
         const finalResponse = response.toObject()
         delete finalResponse.password
         return finalResponse
