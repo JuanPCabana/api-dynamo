@@ -107,7 +107,13 @@ const changeOrderStatus = ({ order, status }, user) => {
             return reject(boom.badRequest('Error en el servidor de correos'))
         }
         if (status === 'approved') {
-            await userStore.userModify(auxOrder.user, { active: true })
+            if (!auxOrder.inscription) {
+                await userStore.userModify(auxOrder.user, { active: true })
+            }
+            else {
+                await generateOrder({ id: auxOrder.user._id.toString() }, user.sub)
+            }
+
             await sendMailService.sendMailPaymentApproved(auxOrder.user.email, `${auxOrder?.user?.firstName} ${auxOrder?.user?.lastName}`, auxOrder?.payment?.ref)
         }
         if (status === 'rejected') {

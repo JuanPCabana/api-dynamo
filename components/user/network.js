@@ -26,10 +26,10 @@ router.post('/enrole', passport.authenticate('jwt', { session: false }), checkRo
     const { user } = req.body
     const { paymentInfo } = req.body
     const { oldStudent } = req.body
-    const tokenUser  = req.user
+    const tokenUser = req.user
     controller.enrole(user, paymentInfo, oldStudent, tokenUser)
         .then((data) => {
-            data?.user? delete data.user.password : null        
+            data?.user ? delete data.user.password : null
             response.success(req, res, 200, { message: 'Creado correctamente', inscriptionInfo: { ...data } })
         }).catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
@@ -138,15 +138,29 @@ router.patch('/membership', passport.authenticate('jwt', { session: false }), ch
 router.get("/idcard/:userId", async (req, res) => {
     const userId = req.params.userId
     const stream = res.writeHead(200, {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment;filename=${userId}.pdf`
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment;filename=${userId}.pdf`
     })
     await ticketsServices.getElectronicTickets({
-      userId,
-      dataCallback: (chunk) => stream.write(chunk),
-      endCallback: () => stream.end()
+        userId,
+        dataCallback: (chunk) => stream.write(chunk),
+        endCallback: () => stream.end()
     })
-  })
+})
+
+
+//Cambiar password
+router.patch('/passwordChange', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
+    controller.changePass(req.user.sub,req.body)
+        .then((data) => {
+            response.success(req, res, 200, { message:'Password actualizado correctamente!' })
+        })
+        .catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 
 
 module.exports = router

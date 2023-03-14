@@ -265,16 +265,34 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
 
         const payment = await orderController.addPayment({ order: orderId, ...paymentInfo }, true)
 
-        await orderController.generate({ id: userId })
+        // await orderController.generate({ id: userId })
         return payment
     }
     else {
         const response = await store.findById(userId, false)
-        await orderController.generate({ id: userId })
+        // await orderController.generate({ id: userId })
         const finalResponse = response.toObject()
         delete finalResponse.password
         return finalResponse
     }
+}
+
+const changePassword = async (tokenUser, body) => {
+    return new Promise(async (resolve, reject) => {
+        if (!tokenUser) return reject(boom.unauthorized('Token Invalido!'))
+        const user = await store.findById(tokenUser, false)
+        const auxUser = user.toObject()
+
+        const isMatch = await bcrypt.compare(body.password, auxUser.password)
+        if (!isMatch) {
+            return reject(boom.unauthorized(''))
+        }
+        const passwordHashed = await bcrypt.hash(body.newPassword, 10)
+
+        const updatedUser = replaceUser(auxUser._id, { password: passwordHashed })
+
+        return resolve(auxUser)
+    })
 }
 
 module.exports = {
@@ -288,5 +306,6 @@ module.exports = {
     replace: replaceUser,
     addAvatar,
     changeMembership,
-    enrole: enroleStudent
+    enrole: enroleStudent,
+    changePass: changePassword
 }
