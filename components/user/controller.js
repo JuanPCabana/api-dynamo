@@ -257,7 +257,7 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
         userId = existentUser._id.toString()
         await replaceUser(userId, { ...user, active: false, verifiedEmail: true, newStudent: false })
     }
-
+ 
 
     if (!oldStudent) {
         const newOrder = await orderController.inscription({ ammount: paymentInfo.bill, user: userId }, tokenUser.sub)
