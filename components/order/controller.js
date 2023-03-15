@@ -35,7 +35,7 @@ const addOrder = async ({ ammount, user }) => {
 const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
     return new Promise(async (resolve, reject) => {
 
-        if (!method || !ref || !ammount || !order) {
+        if (!method || !ref ||/*  !ammount || */ !order) {
             return reject(boom.badRequest('Datos incompletos'))
         }
 
@@ -47,7 +47,7 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
             date: now(),
             method,
             ref,
-            ammount,
+            // ammount,
             email
         }
             :
@@ -55,10 +55,10 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
                 date: now(),
                 method,
                 ref,
-                ammount
+                // ammount
             }
         auxOrder.payment = paymentInfo
-        auxOrder.status = inscription ? 'approved' : 'pending'
+        auxOrder.status = 'pending'
         delete auxOrder.user.password
 
         await store.update(auxOrder._id, { payment: paymentInfo, status: 'pending' })
