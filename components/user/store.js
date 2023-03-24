@@ -41,7 +41,35 @@ const listUsers = async (id, email, newUsers, query) => {
         }
     }
 
-    return await Model.find(filter).populate([{ path: 'league' }, { path: 'category' }, { path: 'membership' }])
+    // const test = await Model.aggregate([
+    //     {
+    //         '$lookup': {
+    //             'from': 'orders',
+    //             'localField': '_id',
+    //             'foreignField': 'user',
+    //             'as': 'orders'
+    //         }
+    //     }, {
+    //         '$match': {
+    //             'orders.status': 'unpaid'
+    //         }
+    //     }, {
+    //         '$set': {
+    //             'status': 'debtor'
+    //         }
+    //     }, {
+    //         '$unset': 'orders'
+    //     }
+    // ])
+    // console.log("🚀 ~ file: store.js:64 ~ listUsers ~ test:", test)
+
+    // test.map(async user => {
+        // await replaceObject(user)
+    // })
+
+    const resp = await Model.find(filter).populate([{ path: 'league' }, { path: 'category' }, { path: 'membership' }])
+
+    return { docs: resp, totalDocs: resp.length } //await Model.find(filter).populate([{ path: 'league' }, { path: 'category' }, { path: 'membership' }])
 
 }
 const getUserByEmail = (email) => {
@@ -96,9 +124,9 @@ const updateInfo = async (body, verification) => {
     })
     return result
 }
- 
-const replaceObject = (body) => {
-    let result = Model.replaceOne({ _id: body._id }, { ...body })
+
+const replaceObject = async (body) => {
+    let result = await Model.replaceOne({ _id: body._id.toString() }, { ...body })
 
     return result
 }
@@ -124,15 +152,15 @@ const userModify = async (id, newProps) => {
 
 const findByUsernameOrEmail = async (query) => {
 
-            const filter = {
-                $or: [
-                    { email: query },
-                    { username: query }
-                ]
-            }
+    const filter = {
+        $or: [
+            { email: query },
+            { username: query }
+        ]
+    }
 
-    
-   
+
+
     return await Model.findOne(filter).populate([{ path: 'league' }, { path: 'category' }])
 
 }

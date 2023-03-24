@@ -83,14 +83,17 @@ const listUsers = ({ id, email, newUsers, query }) => {
     return new Promise(async (resolve, reject) => {
         const userList = await store.list(id, email, newUsers, query)
 
-        listToClient = userList.map((user) => {
-            const aux = user.toObject()
-            delete aux.password
-            return aux
+        listToClient = userList.docs.map((user) => {
+            // console.log("🚀 ~ file: controller.js:91 ~ listToClient=userList.map ~ user:", user)
+            // const aux = user.toObject()
+            // delete aux.password
+            delete user.password
+            return user
+            // return aux
         })
 
 
-        return resolve(listToClient)
+        return resolve({ docs: listToClient, totalDocs: userList.totalDocs })
     })
 
 }
@@ -257,7 +260,7 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
         userId = existentUser._id.toString()
         await replaceUser(userId, { ...user, active: false, verifiedEmail: true, newStudent: false })
     }
- 
+
 
     if (!oldStudent) {
         const newOrder = await orderController.inscription({ ammount: paymentInfo.bill, user: userId }, tokenUser.sub)
