@@ -22,7 +22,7 @@ router.post('/', (req, res, next) => {
 })
 
 //new inscription
-router.post('/enrole', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.post('/enrole', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     const { user } = req.body
     const { paymentInfo } = req.body
     const { oldStudent } = req.body
@@ -38,7 +38,7 @@ router.post('/enrole', passport.authenticate('jwt', { session: false }), checkRo
 })
 
 //update users
-router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
+router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), (req, res, next) => {
     controller.update(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Usuario actualizado correctamente' })
@@ -49,7 +49,7 @@ router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('
 })
 
 //get all users
-router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     const queryData = { ...req.query, ...req.body }
     controller.list(queryData)
         .then((data) => {
@@ -61,7 +61,7 @@ router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles(
 })
 
 //get current user
-router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student', 'teacher'), (req, res, next) => {
+router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student', 'teacher'), (req, res, next) => {
     const userId = req.user.sub
     controller.get(userId)
         .then((data) => {
@@ -73,7 +73,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
 })
 
 //get User
-router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     const userId = req.params.id
     controller.getById(userId)
         .then((data) => {
@@ -98,7 +98,7 @@ router.post('/validateEmail', (req, res, next) => {
 })
 
 //Cambio de status (solvente : no solvente)
-router.post('/:id/status', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.post('/:id/status', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     const userId = req.params.id
     const newStatus = req.body.status
     controller.statusChange(userId, newStatus)
@@ -111,7 +111,7 @@ router.post('/:id/status', passport.authenticate('jwt', { session: false }), che
 })
 
 //post avatar
-router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.single('file'), (req, res, next) => {
+router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), upload.single('file'), (req, res, next) => {
     controller.addAvatar(req.user.sub, req.file, req.body.user)
         .then((data) => {
             response.success(req, res, 200, { message: 'Avatar cargado correctamente' })
@@ -123,7 +123,7 @@ router.post('/avatar', passport.authenticate('jwt', { session: false }), checkRo
 })
 
 //Change membership
-router.patch('/membership', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.patch('/membership', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     controller.changeMembership(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Plan actualizado correctamente' })
@@ -150,10 +150,10 @@ router.get("/idcard/:userId", async (req, res) => {
 
 
 //Cambiar password
-router.patch('/passwordChange', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
-    controller.changePass(req.user.sub,req.body)
+router.patch('/passwordChange', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), (req, res, next) => {
+    controller.changePass(req.user.sub, req.body)
         .then((data) => {
-            response.success(req, res, 200, { message:'Password actualizado correctamente!' })
+            response.success(req, res, 200, { message: 'Password actualizado correctamente!' })
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
@@ -161,6 +161,15 @@ router.patch('/passwordChange', passport.authenticate('jwt', { session: false })
         });
 })
 
-
+router.delete('/:id', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin'), (req, res, next) => {
+    controller.delete(req.params)
+        .then((data) => {
+            delete data._doc.password
+            response.success(req, res, 200, { message: 'Usuario eliminado correctamente', user: { ...data._doc } })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
 
 module.exports = router

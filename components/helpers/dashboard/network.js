@@ -7,7 +7,7 @@ const passport = require('passport')
 const { checkRoles } = require('../../../middlewares/auth.handler');
 
 
-router.get('/categories', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.get('/categories', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
 
     controller.categoriesInfo()
         .then((data) => {

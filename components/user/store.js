@@ -64,7 +64,7 @@ const listUsers = async (id, email, newUsers, query) => {
     // console.log("🚀 ~ file: store.js:64 ~ listUsers ~ test:", test)
 
     // test.map(async user => {
-        // await replaceObject(user)
+    // await replaceObject(user)
     // })
 
     const resp = await Model.find(filter).populate([{ path: 'league' }, { path: 'category' }, { path: 'membership' }])
@@ -165,6 +165,10 @@ const findByUsernameOrEmail = async (query) => {
 
 }
 
+const removeUser = async (id) => {
+    return await Model.findOneAndDelete({ _id: id })
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -176,5 +180,6 @@ module.exports = {
     replace: replaceObject,
     getToday: getTodayUsers,
     userModify,
-    findByUsernameOrEmail
+    findByUsernameOrEmail,
+    delete: removeUser
 }

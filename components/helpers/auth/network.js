@@ -40,7 +40,7 @@ router.post('/login', passport.authenticate('local', { session: false }), (req, 
         }); */
 })
 
-router.post('/recoverPassword', /* passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), */ (req, res, next) => {
+router.post('/recoverPassword', /* passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), */ (req, res, next) => {
     const userEmail = req.body.email
     
     userController.recoverToken(userEmail)

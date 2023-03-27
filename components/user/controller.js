@@ -298,6 +298,21 @@ const changePassword = async (tokenUser, body) => {
     })
 }
 
+const deleteUser = ({ id }) => {
+
+    return new Promise(async (resolve, reject) => {
+        if (!id) return reject(boom.badRequest('Id inválido!'))
+
+        const deletedUser = await store.delete(id)
+        
+        if (!deletedUser) return reject(boom.badRequest('Usuario no encontrado!'))
+
+        return resolve(deletedUser)
+
+    })
+
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -310,5 +325,6 @@ module.exports = {
     addAvatar,
     changeMembership,
     enrole: enroleStudent,
-    changePass: changePassword
+    changePass: changePassword,
+    delete: deleteUser
 }
