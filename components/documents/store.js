@@ -34,6 +34,9 @@ const getOneItem = (id) => {
     return Model.findOne(filter).populate([{ path: 'user' }, { path: 'from' }, { path: 'league' }, { path: 'category' }])
 
 }
+const removeDocument = async (id) => {
+    return await Model.findOneAndDelete({ _id: id })
+}
 
 module.exports = {
     add: addDocument,
@@ -41,5 +44,6 @@ module.exports = {
     listAll: listAllDocuments,
     list: listUserDocs,
     listGlobal: listGlobalDocuments,
-    find: getOneItem
+    find: getOneItem,
+    delete: removeDocument
 }

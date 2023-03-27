@@ -5,6 +5,7 @@ const sendMailService = require('../../utils/mailer')
 const { makeToken } = require('../../utils/helpers/makeToken')
 const { s3Uploadv2 } = require('../../awsS3')
 const orderController = require('../../components/order/controller')
+const { default: mongoose } = require('mongoose')
 
 const addUser = async ({
     email,
@@ -301,10 +302,12 @@ const changePassword = async (tokenUser, body) => {
 const deleteUser = ({ id }) => {
 
     return new Promise(async (resolve, reject) => {
+        const validId = mongoose.Types.ObjectId.isValid(id)
+        if (!validId) return reject(boom.badRequest('Id inválido!'))
         if (!id) return reject(boom.badRequest('Id inválido!'))
 
         const deletedUser = await store.delete(id)
-        
+
         if (!deletedUser) return reject(boom.badRequest('Usuario no encontrado!'))
 
         return resolve(deletedUser)

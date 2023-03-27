@@ -73,7 +73,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), checkRol
 
     controller.delete(req.params, req.user.sub)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Creado correctamente', fileInfo: { ...data._doc } })
+            response.success(req, res, 200, { message: 'Documento eliminado correctamente', fileInfo: { ...data._doc } })
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
