@@ -11,7 +11,7 @@ router.get('/categories', passport.authenticate('jwt', { session: false }), chec
 
     controller.categoriesInfo()
         .then((data) => {
-            response.success(req, res, 200, { body: { ...data } })
+            response.success(req, res, 200, { ...data })
         }).catch((err) => {
             // response.error(req, res, 400, { message: 'algo fallo!', err })
             next(err)
