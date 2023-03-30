@@ -278,11 +278,17 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
         return payment
     }
     else {
+        const newOrder = await orderController.inscription({ ammount: paymentInfo.bill, user: userId }, tokenUser.sub)
+        const orderId = newOrder._id.toString()
+
+        const payment = await orderController.addPayment({ order: orderId, method:'CORT', ref:'Estudiante antiguo', email:' ' }, true)
+
+
         const response = await store.findById(userId, false)
         // await orderController.generate({ id: userId })
         const finalResponse = response.toObject()
         delete finalResponse.password
-        return finalResponse
+        return payment
     }
 }
 
