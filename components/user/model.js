@@ -22,7 +22,7 @@ const mySchema = new Schema({
     status: { type: String, default:'registered' },
     newStudent: { type: Boolean, default: false },
     active: { type: Boolean, default: false },
-    verifiedEmail: { type: Boolean, default: false },
+    verifiedEmail: { type: Boolean, default: true },
     nextPaymentDate: { type: String },
     avatar: { type: String },
     membership: { type: Schema.ObjectId, ref: 'Prices' },
