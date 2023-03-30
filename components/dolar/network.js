@@ -7,7 +7,7 @@ const boom = require('@hapi/boom')
 const passport = require('passport')
 
 
-router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     controller.add(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Creado correctamente', price: { ...data._doc } })

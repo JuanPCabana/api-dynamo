@@ -5,6 +5,7 @@ const sendMailService = require('../../utils/mailer')
 const { makeToken } = require('../../utils/helpers/makeToken')
 const { s3Uploadv2 } = require('../../awsS3')
 const orderController = require('../../components/order/controller')
+const { default: mongoose } = require('mongoose')
 
 const addUser = async ({
     email,
@@ -88,14 +89,17 @@ const listUsers = ({ id, email, newUsers, query }) => {
     return new Promise(async (resolve, reject) => {
         const userList = await store.list(id, email, newUsers, query)
 
-        listToClient = userList.map((user) => {
-            const aux = user.toObject()
-            delete aux.password
-            return aux
+        listToClient = userList.docs.map((user) => {
+            // console.log("🚀 ~ file: controller.js:91 ~ listToClient=userList.map ~ user:", user)
+            // const aux = user.toObject()
+            // delete aux.password
+            delete user.password
+            return user
+            // return aux
         })
 
 
-        return resolve(listToClient)
+        return resolve({ docs: listToClient, totalDocs: userList.totalDocs })
     })
 
 }
@@ -300,6 +304,23 @@ const changePassword = async (tokenUser, body) => {
     })
 }
 
+const deleteUser = ({ id }) => {
+
+    return new Promise(async (resolve, reject) => {
+        const validId = mongoose.Types.ObjectId.isValid(id)
+        if (!validId) return reject(boom.badRequest('Id inválido!'))
+        if (!id) return reject(boom.badRequest('Id inválido!'))
+
+        const deletedUser = await store.delete(id)
+
+        if (!deletedUser) return reject(boom.badRequest('Usuario no encontrado!'))
+
+        return resolve(deletedUser)
+
+    })
+
+}
+
 module.exports = {
     add: addUser,
     list: listUsers,
@@ -312,5 +333,6 @@ module.exports = {
     addAvatar,
     changeMembership,
     enrole: enroleStudent,
-    changePass: changePassword
+    changePass: changePassword,
+    delete: deleteUser
 }

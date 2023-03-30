@@ -7,7 +7,7 @@ const boom = require('@hapi/boom')
 const passport = require('passport')
 
 // create order
-router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), (req, res, next) => {
     controller.add(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Creado correctamente', order: { ...data._doc } })
@@ -17,7 +17,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('s
 })
 
 // generate month order to user
-router.post('/generate', passport.authenticate('jwt', { session: false }), checkRoles( 'admin'), (req, res, next) => {
+router.post('/generate', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin',  'admin'), (req, res, next) => {
     controller.generate(req.body, req.user)
         .then((data) => {
             response.success(req, res, 200, { message: 'Creado correctamente', order: { ...data._doc } })
@@ -27,7 +27,7 @@ router.post('/generate', passport.authenticate('jwt', { session: false }), check
 })
 
 //add payment info
-router.post('/payment', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+router.post('/payment', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), (req, res, next) => {
     controller.addPayment(req.body)
         .then((data) => {
             response.success(req, res, 200, { message: 'Información de pago agregada correctamente', order: { ...data } })
@@ -37,7 +37,7 @@ router.post('/payment', passport.authenticate('jwt', { session: false }), checkR
 })
 
 //change order status
-router.post('/status', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.post('/status', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     controller.updateStatus(req.body, req.user)
         .then((data) => {
             response.success(req, res, 200, { message: 'Estatus de la orden actualizado correctamente', order: { ...data } })
@@ -47,7 +47,7 @@ router.post('/status', passport.authenticate('jwt', { session: false }), checkRo
 })
 
 //get all orders
-router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('admin'), (req, res, next) => {
+router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
     const queryData = { ...req.query }
     controller.listAll(queryData)
         .then((data) => {
@@ -57,7 +57,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('ad
         });
 })
 //get user orders
-router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('admin', 'student'), (req, res, next) => {
+router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), (req, res, next) => {
     const queryData = { ...req.body, ...req.query }
     const tokenUser = req.user
     controller.list(queryData, tokenUser)

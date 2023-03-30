@@ -152,12 +152,8 @@ const deleteDocument = ({ id }, userId) => {
         const validId = mongoose.Types.ObjectId.isValid(id)
         if (!validId) return reject(boom.badRequest('Id inválido!'))
         if (!id) return reject(boom.badRequest('Id inválido!'))
-        const document = await store.find(id)
+        const document = await store.delete(id)
         if (!document) return reject(boom.badRequest('Documento no encontrado!'))
-        console.log("🚀 ~ file: controller.js:156 ~ returnnewPromise ~ document:", document)
-
-
-       
 
         return resolve(document)
     })

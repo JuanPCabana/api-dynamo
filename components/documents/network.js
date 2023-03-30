@@ -9,7 +9,7 @@ const passport = require('passport')
 const upload = require('../../middlewares/multer.handler')
 
 //post pdf file
-router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.single('file'), (req, res, next) => {
+router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), upload.single('file'), (req, res, next) => {
 
     controller.add(req.body, req.user.sub, req.file)
         .then((data) => {
@@ -21,7 +21,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('s
         });
 })
 
-router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), (req, res, next) => {
 
     controller.list(req.user, req.query)
         .then((data) => {
@@ -33,7 +33,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('st
         });
 })
 
-router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), (req, res, next) => {
 
     controller.listAll()
         .then((data) => {
@@ -45,7 +45,7 @@ router.get('/all', passport.authenticate('jwt', { session: false }), checkRoles(
         });
 })
 
-router.get('/global', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+router.get('/global', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), (req, res, next) => {
 
     controller.listGlobal()
         .then((data) => {
@@ -57,7 +57,7 @@ router.get('/global', passport.authenticate('jwt', { session: false }), checkRol
         });
 })
 
-router.post('/multi', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), upload.array('file'), (req, res, next) => {
+router.post('/multi', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), upload.array('file'), (req, res, next) => {
 
     controller.multiAdd(req.body, req.user.sub, req.files)
         .then((data) => {
@@ -69,11 +69,11 @@ router.post('/multi', passport.authenticate('jwt', { session: false }), checkRol
         });
 })
 
-router.delete('/:id', passport.authenticate('jwt', { session: false }), checkRoles('student', 'admin'), (req, res, next) => {
+router.delete('/:id', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'student', 'admin'), (req, res, next) => {
 
     controller.delete(req.params, req.user.sub)
         .then((data) => {
-            response.success(req, res, 200, { message: 'Creado correctamente', fileInfo: { ...data._doc } })
+            response.success(req, res, 200, { message: 'Documento eliminado correctamente', fileInfo: { ...data._doc } })
         })
         .catch((err) => {
             // response.error(req, res, 500, { message: 'Error inesperado' }, err)
