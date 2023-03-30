@@ -8,7 +8,7 @@ const generateRecoverToken = async (userEmail) => {
 
 
     return new Promise(async (resolve, reject) => {
-        const userData = await userStore.findByEmail(userEmail)
+        const userData = await userStore.findByEmail(userEmail.toLowerCase())
 
         if (!userData) {
             return reject(boom.badRequest('Email invalido'))
