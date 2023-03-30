@@ -9,7 +9,7 @@ const listUsers = async (id, email, newUsers, query) => {
     let filter = {}
     if (newUsers) {
 
-        filter = { newStudent: true }
+        filter = { status: 'registered' }
         if (query) {
             filter = {
                 newStudent: true,
