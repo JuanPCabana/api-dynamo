@@ -128,7 +128,7 @@ const getUserById = (userId) => {
         }
 
         const userList = await store.findById(userId)
-        let userInfo = userList.toObject()
+        // let userInfo = userList.toObject()
         delete userInfo.password
         return resolve(userInfo)
     })
