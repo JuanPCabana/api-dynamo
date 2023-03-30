@@ -39,7 +39,7 @@ const addUser = async ({
             return Promise.reject(boom.badRequest('El correo o nombre de usuario ya existe!'))
         }
     }
-    else{
+    else {
         return Promise.reject(boom.badRequest('El correo o nombre de usuario ya existe!'))
     }
     if (role === 'admin') {
@@ -73,7 +73,7 @@ const addUser = async ({
         nextPaymentDate: nextPayment,
         token,
         membership,
-        newStudent: newStudent,
+        newStudent: true,
         parent,
         role: role
     }
@@ -281,7 +281,7 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
         const newOrder = await orderController.inscription({ ammount: paymentInfo.bill, user: userId }, tokenUser.sub)
         const orderId = newOrder._id.toString()
 
-        const payment = await orderController.addPayment({ order: orderId, method:'CORT', ref:'Estudiante antiguo', email:' ' }, true)
+        const payment = await orderController.addPayment({ order: orderId, method: 'CORT', ref: 'Estudiante antiguo', email: ' ' }, true)
 
 
         const response = await store.findById(userId, false)

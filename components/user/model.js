@@ -19,7 +19,7 @@ const mySchema = new Schema({
     role: { type: String, required: false, default: 'student' },
     gender: { type: String, required: true },
     token: { type: Object },
-    status: { type: String, default:'inactive' },
+    status: { type: String, default:'registered' },
     newStudent: { type: Boolean, default: false },
     active: { type: Boolean, default: false },
     verifiedEmail: { type: Boolean, default: false },
