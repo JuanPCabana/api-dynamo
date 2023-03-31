@@ -226,7 +226,7 @@ const getOrder = async (id) => {
         const validId = mongoose.isValidObjectId(id)
         if (!validId) return reject(boom.badRequest('Id invalildo!'))
         const order = await store.getOrderInfo(id)
-        if(!order) return reject(boom.badRequest('Orden no encontrada!'))
+        if (!order) return reject(boom.badRequest('Orden no encontrada!'))
         return resolve(order)
     })
 }

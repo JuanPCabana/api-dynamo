@@ -66,7 +66,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles(
         });
 })
 //get user orders
-router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), (req, res, next) => {
+router.get('/user/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), (req, res, next) => {
     const queryData = { ...req.body, ...req.query }
     const tokenUser = req.user
     controller.list(queryData, tokenUser)
