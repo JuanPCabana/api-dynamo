@@ -56,6 +56,15 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkRoles('b9
             next(err)
         });
 })
+router.get('/:id', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), (req, res, next) => {
+    const queryData = req.params.id
+    controller.getOrder(queryData)
+        .then((data) => {
+            response.success(req, res, 200, data)
+        }).catch((err) => {
+            next(err)
+        });
+})
 //get user orders
 router.get('/user-payments', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'student'), (req, res, next) => {
     const queryData = { ...req.body, ...req.query }

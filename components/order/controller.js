@@ -6,6 +6,7 @@ const userController = require('../user/controller')
 const userStore = require('../user/store')
 const sendMailService = require('../../utils/mailer')
 const getPaymentMethod = require('../../utils/helpers/getPaymentMethod')
+const { default: mongoose } = require('mongoose')
 
 const addOrder = async ({ ammount, user }) => {
 
@@ -108,7 +109,7 @@ const changeOrderStatus = ({ order, status }, user) => {
         }
         if (status === 'approved') {
             if (!auxOrder.inscription) {
-                await userStore.userModify(auxOrder.user, { active: true, status:'active' })
+                await userStore.userModify(auxOrder.user, { active: true, status: 'active' })
             }
             else {
                 await generateOrder({ id: auxOrder.user._id.toString() }, user.sub)
@@ -213,10 +214,21 @@ const generateOrder = async ({ id }, tokenUser) => {
     })
 }
 
-const multiDelete = async (id)=>{
+const multiDelete = async (id) => {
 
     const deletedDocs = await store.multiDelete(id)
     return deletedDocs
+}
+
+const getOrder = async (id) => {
+    return new Promise(async (resolve, reject) => {
+        if (!id) return reject(boom.badRequest('Usuario invalido!'))
+        const validId = mongoose.isValidObjectId(id)
+        if (!validId) return reject(boom.badRequest('Id invalildo!'))
+        const order = await store.getOrderInfo(id)
+        if(!order) return reject(boom.badRequest('Orden no encontrada!'))
+        return resolve(order)
+    })
 }
 
 module.exports = {
@@ -227,5 +239,6 @@ module.exports = {
     list: listUserOrders,
     updateStatus: changeOrderStatus,
     generate: generateOrder,
-    multiDelete
+    multiDelete,
+    getOrder
 }
