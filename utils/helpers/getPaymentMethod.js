@@ -1,7 +1,8 @@
 const METHODS = {
     VES: "Pagomovil",
     ZELLE: "Zelle",
-    CASH: "Efectivo"
+    CASH: "Efectivo",
+    CORT: 'Exonerado'
 
 }
 
