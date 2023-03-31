@@ -213,6 +213,12 @@ const generateOrder = async ({ id }, tokenUser) => {
     })
 }
 
+const multiDelete = async (id)=>{
+
+    const deletedDocs = await store.multiDelete(id)
+    return deletedDocs
+}
+
 module.exports = {
     add: addOrder,
     inscription: inscriptionOrder,
@@ -220,5 +226,6 @@ module.exports = {
     listAll: listAllOrders,
     list: listUserOrders,
     updateStatus: changeOrderStatus,
-    generate: generateOrder
+    generate: generateOrder,
+    multiDelete
 }

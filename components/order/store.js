@@ -35,10 +35,17 @@ const updateOrder = (Id, newProp) => {
     return Model.updateOne(filter, { $set: { ...newProp } })
 }
 
+const multiDelete = async (id) => {
+
+    const multiDeleted = await Model.deleteMany({ user: id })
+    return multiDeleted
+}
+
 module.exports = {
     add: addOrder,
     listAll: listAllOrders,
     list: listUserOrders,
     getOrderInfo,
-    update: updateOrder
+    update: updateOrder,
+    multiDelete
 }

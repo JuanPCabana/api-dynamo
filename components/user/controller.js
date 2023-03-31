@@ -5,6 +5,7 @@ const sendMailService = require('../../utils/mailer')
 const { makeToken } = require('../../utils/helpers/makeToken')
 const { s3Uploadv2 } = require('../../awsS3')
 const orderController = require('../../components/order/controller')
+const documentStore = require('../documents/store')
 const { default: mongoose } = require('mongoose')
 
 const addUser = async ({
@@ -316,7 +317,8 @@ const deleteUser = ({ id }) => {
         const validId = mongoose.Types.ObjectId.isValid(id)
         if (!validId) return reject(boom.badRequest('Id inválido!'))
         if (!id) return reject(boom.badRequest('Id inválido!'))
-
+        await orderController.multiDelete(id)
+        await documentStore.multiDelete(id)
         const deletedUser = await store.delete(id)
 
         if (!deletedUser) return reject(boom.badRequest('Usuario no encontrado!'))

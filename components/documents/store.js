@@ -37,6 +37,9 @@ const getOneItem = (id) => {
 const removeDocument = async (id) => {
     return await Model.findOneAndDelete({ _id: id })
 }
+const multiDelete = async (id) => {
+    return await Model.deleteMany({user:id})
+}
 
 module.exports = {
     add: addDocument,
@@ -45,5 +48,6 @@ module.exports = {
     list: listUserDocs,
     listGlobal: listGlobalDocuments,
     find: getOneItem,
-    delete: removeDocument
+    delete: removeDocument,
+    multiDelete
 }
