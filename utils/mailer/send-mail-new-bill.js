@@ -21,7 +21,7 @@ module.exports = function makeSendMailNewBill({
 
     try {
       const info = await serverMail.sendMail({
-        from: `"Dynamo" <account@back9.com.ve>`,
+        from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
         to: email,
         subject: "Nueva Factura Generada",
         html: buildEmailTemplate,
@@ -30,7 +30,7 @@ module.exports = function makeSendMailNewBill({
     } 
     catch (error) {
       const info = await serverMail.sendMail({
-        from: `"Dynamo" <account@back9.com.ve>`,
+        from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
         to: 'juanpc3399@gmail.com',
         subject: "usuario con error",
         html: buildErrorTemplate,

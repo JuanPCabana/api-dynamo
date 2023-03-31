@@ -16,7 +16,7 @@ module.exports = function makeSendMailConfirmAccount({
     });
     if (email) {
       const info = await serverMail.sendMail({
-        from: `"Dynamo" <account@back9.com.ve>`,
+        from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
         to: email,
         subject: "Confirma tu cuenta",
         html: buildEmailTemplate
@@ -24,7 +24,7 @@ module.exports = function makeSendMailConfirmAccount({
     }
     else {
       const info = await serverMail.sendMail({
-        from: `"Dynamo" <account@back9.com.ve>`,
+        from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
         to: 'juanpc3399@gmail.com',
         subject: "ERROR CON ESTE CORREO",
         html: buildEmailTemplate

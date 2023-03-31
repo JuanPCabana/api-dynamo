@@ -12,7 +12,7 @@ module.exports = function makeSendMailPasswordReset({
         id
       });
       const info = await serverMail.sendMail({
-        from: `"Dynamo" <account@back9.com.ve>`,
+        from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
         to: email,
         subject: "Restablecer contraseña",
         html: buildEmailTemplate
