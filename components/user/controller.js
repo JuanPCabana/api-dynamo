@@ -260,12 +260,12 @@ const enroleStudent = async (user, paymentInfo, oldStudent, tokenUser) => {
         user.password = '123456'
         const userInfo = await addUser(user)
         userId = userInfo._id.toString()
-        await replaceUser(userId, { active: false, verifiedEmail: true, newStudent: false })
+        await replaceUser(userId, { active: false, verifiedEmail: true, newStudent: false, status:'inactive' })
 
     }
     else {
         userId = existentUser._id.toString()
-        await replaceUser(userId, { ...user, active: false, verifiedEmail: true, newStudent: false })
+        await replaceUser(userId, { ...user, active: false, verifiedEmail: true, newStudent: false, status:'inactive' })
     }
 
 

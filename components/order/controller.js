@@ -108,7 +108,7 @@ const changeOrderStatus = ({ order, status }, user) => {
         }
         if (status === 'approved') {
             if (!auxOrder.inscription) {
-                await userStore.userModify(auxOrder.user, { active: true })
+                await userStore.userModify(auxOrder.user, { active: true, status:'active' })
             }
             else {
                 await generateOrder({ id: auxOrder.user._id.toString() }, user.sub)
