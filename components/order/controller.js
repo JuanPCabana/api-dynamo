@@ -39,6 +39,8 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
         if (!method || !ref ||/*  !ammount || */ !order) {
             return reject(boom.badRequest('Datos incompletos'))
         }
+        const validId = mongoose.isValidObjectId(order)
+        if (!validId) reject(boom.badRequest('Id Invalido!'))
 
         const orderInfo = await store.getOrderInfo(order)
 
@@ -237,7 +239,7 @@ const updatePrice = async (orderId, newPrice) => {
     if (!validId) return Promise.reject(boom.badRequest('Id invalido!'))
     const orderInfo = await store.getOrderInfo(orderId)
     if (orderInfo.status === 'approved' || orderInfo.status === 'rejected') return Promise.reject(boom.badRequest('No se puede editar una orden aprobada o rechazada!'))
-    const returnProduct = await store.update(orderId, newPrice)
+    const returnProduct = await store.updatePrice(orderId, newPrice)
     if (!returnProduct) return Promise.reject(boom.badRequest('Orden no encontrada!'))
     return returnProduct
 

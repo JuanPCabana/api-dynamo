@@ -44,11 +44,11 @@ const multiDelete = async (id) => {
 const updatePrice = async (orderId, newPrice) => {
 
     let filter = { _id: orderId }
-    const result = await Model.findOneAndUpdate(filter, { $set: { ammount: newPrice } }).populate([{path:'user'},{path:'ammount'},{path:'managedBy'}])
+    const result = await Model.findOneAndUpdate(filter, { $set: { ammount: newPrice } }).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
     return result
 
 }
- 
+
 module.exports = {
     add: addOrder,
     listAll: listAllOrders,
@@ -56,5 +56,5 @@ module.exports = {
     getOrderInfo,
     update: updateOrder,
     multiDelete,
-    update: updatePrice
+    updatePrice
 }

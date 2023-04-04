@@ -33,7 +33,6 @@ const deletePrice = async (id) => {
 }
 
 const getOnePrice = async (id) => {
-console.log("🚀 ~ file: store.js:36 ~ getOnePrice ~ id:", id)
 
     let filter = { _id: id }
 
