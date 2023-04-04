@@ -231,6 +231,18 @@ const getOrder = async (id) => {
     })
 }
 
+const updatePrice = async (orderId, newPrice) => {
+
+    const validId = mongoose.Types.ObjectId.isValid(orderId)
+    if (!validId) return Promise.reject(boom.badRequest('Id invalido!'))
+    const orderInfo = await store.getOrderInfo(orderId)
+    if (orderInfo.status === 'approved' || orderInfo.status === 'rejected') return Promise.reject(boom.badRequest('No se puede editar una orden aprobada o rechazada!'))
+    const returnProduct = await store.update(orderId, newPrice)
+    if (!returnProduct) return Promise.reject(boom.badRequest('Orden no encontrada!'))
+    return returnProduct
+
+}
+
 module.exports = {
     add: addOrder,
     inscription: inscriptionOrder,
@@ -240,5 +252,6 @@ module.exports = {
     updateStatus: changeOrderStatus,
     generate: generateOrder,
     multiDelete,
-    getOrder
+    getOrder,
+    update: updatePrice
 }

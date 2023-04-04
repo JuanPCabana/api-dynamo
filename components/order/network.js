@@ -77,4 +77,17 @@ router.get('/user/user-payments', passport.authenticate('jwt', { session: false 
         });
 })
 
+//update
+
+router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
+    controller.update(req.body.orderId, req.body.newPrice)
+        .then((data) => {
+            console.log("🚀 ~ file: network.js:23 ~ .then ~ data:", data)
+            response.success(req, res, 200, { message: 'orden modificada correctamente', order: { ...data._doc } })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 module.exports = router
