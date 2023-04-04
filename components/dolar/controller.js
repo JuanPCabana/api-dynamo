@@ -5,7 +5,7 @@ const now = require('../../utils/helpers/now')
 
 const addPrice = async ({ ammount }) => {
 
-   if (!ammount) return Promise.reject(boom.badRequest("Monto Invalido"))
+    if (!ammount) return Promise.reject(boom.badRequest("Monto Invalido"))
 
     const price = {
         ammount
@@ -25,11 +25,16 @@ const listAllPrices = () => {
 
 }
 
+const updatePrice = async (newPrice) => {
 
+    return await store.update(newPrice)
+
+}
 
 
 
 module.exports = {
     add: addPrice,
     getPrice: listAllPrices,
+    update: updatePrice
 }
