@@ -9,7 +9,7 @@ module.exports = function makeSendMailWelcome({ serverMail, domParser, fs, path 
       password
     })
     const info = await serverMail.sendMail({
-      from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
+      from: `"Dynamo" <dynamo@back9.com.ve>`,
       to: email,
       subject: "Bienvenido a Dynamo",
       html: buildEmailTemplate

@@ -18,7 +18,7 @@ module.exports = function makeSendMailPaymentApproved({
       
     });
     const info = await serverMail.sendMail({
-      from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
+      from: `"Dynamo" <dynamo@back9.com.ve>`,
       to: email,
       subject: "Pago aprobado",
       html: buildEmailTemplate,

@@ -70,7 +70,7 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
         }
         else {
             const info = await serverMail.sendMail({
-                from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
+                from: `"Dynamo" <dynamo@back9.com.ve>`,
                 to: 'juanpc3399@gmail.com',
                 subject: "ERROR CON ESTE CORREO",
                 html: buildEmailTemplate
@@ -102,7 +102,7 @@ const changeOrderStatus = ({ order, status }, user) => {
         await store.update(auxOrder._id, { status: status, managedBy: user.sub })
         if (!auxOrder.user.email) {
             const info = await serverMail.sendMail({
-                from: `"Dynamo" <dynamo@back9.com.ve.ve>`,
+                from: `"Dynamo" <dynamo@back9.com.ve>`,
                 to: 'juanpc3399@gmail.com',
                 subject: "ERROR CON ESTE CORREO",
                 html: buildEmailTemplate
