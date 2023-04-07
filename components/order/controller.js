@@ -46,7 +46,7 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
 
         const auxOrder = orderInfo.toObject()
 
-        paymentInfo = method === 'ZELLE' ? {
+        paymentInfo = method === 'ZELLE' || method === 'VES' ? {
             date: now(),
             method,
             ref,
