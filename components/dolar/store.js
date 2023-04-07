@@ -6,14 +6,18 @@ const addPrice = (price) => {
 }
 
 const listAllPrices = () => {
-   
+
     return Model.findOne({})
 
 }
 
+const updatePrice = async (newPrice) => {
+    return await Model.updateOne({}, { $set: { ammount: newPrice } })
+}
 
 module.exports = {
     add: addPrice,
     listAll: listAllPrices,
-    
+    update: updatePrice
+
 }

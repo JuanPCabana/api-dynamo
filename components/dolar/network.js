@@ -17,6 +17,16 @@ router.post('/', passport.authenticate('jwt', { session: false }), checkRoles('b
         });
 })
 
+router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
+    controller.update(req.body.newPrice)
+        .then((data) => {
+            response.success(req, res, 200, { message: 'Precio actualizado correctamente', /* price: { ...data._doc } */ })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 router.get('/', (req, res, next) => {
 
     controller.getPrice()
