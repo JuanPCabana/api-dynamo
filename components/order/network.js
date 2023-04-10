@@ -89,4 +89,16 @@ router.patch('/', passport.authenticate('jwt', { session: false }), checkRoles('
         });
 })
 
+//delete
+router.delete('/:id', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin'), (req, res, next) => {
+    controller.delete(req.params)
+        .then((data) => {
+            delete data._doc.password
+            response.success(req, res, 200, { message: 'Orden eliminada correctamente', order: { ...data._doc } })
+        }).catch((err) => {
+            // response.error(req, res, 500, { message: 'Error inesperado' }, err)
+            next(err)
+        });
+})
+
 module.exports = router

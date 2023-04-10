@@ -48,7 +48,13 @@ const updatePrice = async (orderId, newPrice) => {
     return result
 
 }
- 
+
+const deleteOrder = async (id) => {
+    let filter = { _id: id }
+    const result = await Model.findOneAndDelete(filter)
+    return result
+}
+
 module.exports = {
     add: addOrder,
     listAll: listAllOrders,
@@ -56,5 +62,6 @@ module.exports = {
     getOrderInfo,
     update: updateOrder,
     multiDelete,
-    updatePrice
+    updatePrice,
+    delete: deleteOrder
 }

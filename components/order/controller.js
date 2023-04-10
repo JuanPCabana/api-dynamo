@@ -246,6 +246,22 @@ const updatePrice = async (orderId, newPrice) => {
 
 }
 
+const deleteOrder = ({ id }) => {
+
+    return new Promise(async (resolve, reject) => {
+        const validId = mongoose.Types.ObjectId.isValid(id)
+        if (!validId) return reject(boom.badRequest('Id inválido!'))
+        if (!id) return reject(boom.badRequest('Id inválido!'))
+        const deletedOrder = await store.delete(id)
+
+        if (!deletedOrder) return reject(boom.badRequest('Usuario no encontrado!'))
+
+        return resolve(deletedOrder)
+
+    })
+
+}
+
 module.exports = {
     add: addOrder,
     inscription: inscriptionOrder,
@@ -256,5 +272,6 @@ module.exports = {
     generate: generateOrder,
     multiDelete,
     getOrder,
-    update: updatePrice
+    update: updatePrice,
+    delete: deleteOrder
 }
