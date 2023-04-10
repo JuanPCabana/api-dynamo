@@ -2,6 +2,7 @@ const { CategoryModel } = require('../../league/model')
 const PriceModel = require('../../prices/model')
 const UserModel = require('../../user/model')
 const OrderModel = require('../../order/model')
+const { default: mongoose } = require('mongoose')
 
 const getCategoriesInfo = async () => {
 
@@ -61,6 +62,84 @@ const getCategoriesInfo = async () => {
 
 }
 
+const getCategoryInfo = async (id) => {
+    const userList = await UserModel.aggregate(
+        [
+            {
+                '$match': {
+                    'category': mongoose.Types.ObjectId(id),
+                    // 'status': {
+                    //     '$ne': 'registered'
+                    // }
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'orders',
+                    'localField': '_id',
+                    'foreignField': 'user',
+                    'as': 'unpaidOrders'
+                }
+            }, {
+                '$unwind': '$unpaidOrders'
+            }, {
+                '$match': {
+                    'unpaidOrders.status': 'unpaid'
+                }
+            }, {
+                '$lookup': {
+                    'from': 'prices',
+                    'localField': 'unpaidOrders.ammount',
+                    'foreignField': '_id',
+                    'as': 'productAmounts'
+                }
+            }, {
+                '$group': {
+                    '_id': '$_id',
+                    'user': {
+                        '$first': '$$ROOT'
+                    },
+                    'totalDebt': {
+                        '$sum': {
+                            '$arrayElemAt': [
+                                '$productAmounts.ammount', 0
+                            ]
+                        }
+                    },
+                    'orders': {
+                        '$push': '$unpaidOrders'
+                    }
+                }
+            }, {
+                '$unset': 'user.unpaidOrders'
+            }, {
+                '$unset': 'user.productAmounts'
+            }, {
+                '$project': {
+                    '_id': 0,
+                    'user': '$user',
+                    'orders': '$orders',
+                    'totalDebt': 1
+                }
+            }
+        ]
+    );
+    const returnList = []
+    for (user of userList) {
+        const auxUser = user
+        delete auxUser.user.password
+        returnList.push(auxUser)
+    }
+
+    const totalDebt = returnList.reduce((accumulator, currentValue) => accumulator + currentValue.totalDebt, 0);
+
+
+    return { docs: returnList, totalCategoryDebt: totalDebt }
+
+}
+
+
 module.exports = {
-    getCategoriesInfo
+    getCategoriesInfo,
+    getCategoryInfo
 }
