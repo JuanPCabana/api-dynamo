@@ -41,6 +41,7 @@ const getCategoriesInfo = async () => {
 
         return {
             // ...categoryInfo,
+            _id: categoryInfo._id,
             name: categoryInfo.name,
             code: categoryInfo.code,
             activeUsers,
@@ -81,7 +82,9 @@ const getCategoryInfo = async (id) => {
                     'as': 'unpaidOrders'
                 }
             }, {
-                '$unwind': '$unpaidOrders'
+                '$unwind': {
+                    'path': '$unpaidOrders'
+                }
             }, {
                 '$match': {
                     'unpaidOrders.status': 'unpaid'
@@ -115,8 +118,16 @@ const getCategoryInfo = async (id) => {
             }, {
                 '$unset': 'user.productAmounts'
             }, {
+                '$lookup': {
+                    'from': 'categories',
+                    'localField': 'user.category',
+                    'foreignField': '_id',
+                    'as': 'user.category'
+                }
+            }, {
                 '$project': {
                     '_id': 0,
+                    'category': '$user.category.name',
                     'user': '$user',
                     'orders': '$orders',
                     'totalDebt': 1
