@@ -135,16 +135,7 @@ const changeOrderStatus = ({ order, status }, user) => {
 const listAllOrders = (query) => {
 
     return new Promise(async (resolve, reject) => {
-        const orderList = await store.listAll(query)
-
-        const response = orderList.map((order) => {
-            const auxOrder = order.toObject()
-            delete auxOrder?.user?.password
-            if (auxOrder) return auxOrder
-            else return
-
-        })
-
+        const response = await store.listAll(query)
 
         return resolve(response)
     })
@@ -159,14 +150,14 @@ const listUserOrders = (body, tokenUser) => {
             return reject(boom.badRequest('Id invalido'))
         }
 
-        const userOrderList = await store.list(body.user ? body.user : tokenUser.sub, body.status)
+        const response = await store.list(body.user ? body.user : tokenUser.sub, body.status)
 
-        const response = userOrderList.map((order) => {
+      /*   const response = userOrderList.map((order) => {
             const auxOrder = order.toObject()
             delete auxOrder.user.password
             return auxOrder
         })
-
+ */
         return resolve(response)
     })
 

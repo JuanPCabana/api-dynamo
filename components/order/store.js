@@ -1,3 +1,4 @@
+const { deleteOrderPassword } = require('../../utils/helpers/deleteListPassword');
 const Model = require('./model')
 
 const addOrder = async (order) => {
@@ -5,23 +6,45 @@ const addOrder = async (order) => {
     return await myOrder.save()
 }
 
-const listAllOrders = (query) => {
+const listAllOrders = async (query) => {
     if (query.status) {
-        return Model.find({ status: query.status }).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
-    }
-    return Model.find({}).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
+        const orderList = await Model.find({ status: query.status }).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
+        const response = deleteOrderPassword(orderList)
 
+        return {
+            docs: response,
+            totalDocs: orderList.length
+        }
+
+    }
+    const orderList = await Model.find({}).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
+    const response = deleteOrderPassword(orderList)
+
+    return {
+        docs: response,
+        totalDocs: orderList.length
+    }
 }
-const listUserOrders = (id, query) => {
+const listUserOrders = async (id, query) => {
 
     if (query) {
         let filter = { user: id, status: query }
-        return Model.find(filter).populate([{ path: 'user' }, { path: 'ammount' }])
+        const orderList = await Model.find(filter).populate([{ path: 'user' }, { path: 'ammount' }])
+        const response = deleteOrderPassword(orderList)
+        return {
+            docs: response,
+            totalDocs: orderList.length
+        }
     }
 
     let filter = { user: id }
-    return Model.find(filter).populate([{ path: 'user' }, { path: 'ammount' }])
+    const orderList = await Model.find(filter).populate([{ path: 'user' }, { path: 'ammount' }])
+    const response = deleteOrderPassword(orderList)
 
+    return {
+        docs: response,
+        totalDocs: orderList.length
+    }
 }
 
 const getOrderInfo = (id) => {
