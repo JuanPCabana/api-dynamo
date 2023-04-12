@@ -20,8 +20,9 @@ const verifyDebts = async () => {
 
         const list = await todayUserList()
 
-        const test = []
+        const expiredOrderList = []
         const errors = []
+        const debtors = []
         //list.map(order => {
         for (order of list) {
             const orderDate = new Date(order.date).getMonth() + 1
@@ -33,12 +34,13 @@ const verifyDebts = async () => {
                     console.log("🚀 ~ file: expireBills.js:25 ~ expireBills ~ date:", order, prevMonth, orderDate)
                     orderStore.orderModify(order._id, { expired: true })
                     userController.replace(order.user._id, { status: 'debtor' })
-                    test.push(order)
+
+                    expiredOrderList.push(order)
                 }
 
             }
         }
-        resolve({ errores: errors, expiredOrders: test })
+        resolve({ errores: errors, expiredOrders: expiredOrderList, totalExpiredOrders: expiredOrderList.length })
 
     })
 }

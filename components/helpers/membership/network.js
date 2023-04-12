@@ -8,9 +8,7 @@ const jwt = require('jsonwebtoken');
 const { checkRoles } = require('../../../middlewares/auth.handler');
 
 
-router.get('/verifyDebts', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
-
-
+router.get('/verifyDebts', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin'), (req, res, next) => {
     controller.verifyDebts()
         .then((data) => {
             response.success(req, res, 200, { ...data })
@@ -20,9 +18,7 @@ router.get('/verifyDebts', passport.authenticate('jwt', { session: false }), che
         });
 })
 
-router.get('/generateMonthlyBills', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
-
-
+router.get('/generateMonthlyBills', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin'), (req, res, next) => {
     controller.generateMonthlyBills()
         .then((data) => {
             response.success(req, res, 200, { ...data })
