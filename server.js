@@ -40,4 +40,7 @@ app.listen(PORT)
 console.log('Servidor corriendo en puerto ', PORT)
 
 const generateBills = require('./utils/cronJobs/generateMonthlyBill')
-generateBills.start()
+// generateBills.start()
+
+const expireBills = require('./utils/cronJobs/expireBills')
+// expireBills.start()

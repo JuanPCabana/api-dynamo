@@ -7,6 +7,7 @@ const league = require('../components/league/network')
 const price = require('../components/prices/network')
 const dolar = require('../components/dolar/network')
 const dashboard = require('../components/helpers/dashboard/network')
+const membership = require('../components/helpers/membership/network')
 
 const routes = (server) => {
     server.use('/user', user)
@@ -17,6 +18,7 @@ const routes = (server) => {
     server.use('/price', price)
     server.use('/dolar', dolar)
     server.use('/dashboard', dashboard)
+    server.use('/membership', membership)
 }
 
 module.exports = routes

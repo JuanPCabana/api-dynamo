@@ -78,6 +78,12 @@ const deleteOrder = async (id) => {
     return result
 }
 
+const orderModify = async (id, newProps) => {
+    let filter = { _id: id }
+    const result = await Model.findOneAndUpdate(filter, { $set: { ...newProps } })
+    return result
+}
+
 module.exports = {
     add: addOrder,
     listAll: listAllOrders,
@@ -86,5 +92,6 @@ module.exports = {
     update: updateOrder,
     multiDelete,
     updatePrice,
-    delete: deleteOrder
+    delete: deleteOrder,
+    orderModify
 }
