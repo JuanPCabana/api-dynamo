@@ -90,26 +90,25 @@ const generateMonthlyBills = async () => {
     return new Promise(async (resolve, reject) => {
 
         const list = await todayUserList()
-        console.log("🚀 ~ file: controller.js:93 ~ returnnewPromise ~ list:", list)
-        return resolve({ length: list.length, a: list })
         // list.map(async (user) => {
-        // const ordersGenerated = []
-        // for (user of list.docs) {
-        //     if (user.status === 'active' || user.status === 'debtor' /* user._id.toString() === '641b759db70ef007f3117856' */) {
-        //         console.log("🚀 ~ list", user.email)
-        //         let auxUser = user.toObject()
+        const ordersGenerated = []
+        for (user of list) {
+            if (user.status === 'active' || user.status === 'debtor' /* user._id.toString() === '641b759db70ef007f3117856' */) {
+                console.log("🚀 ~ list", user.email)
+                // let auxUser = user.toObject()
 
-        //         orderController.add({ ammount: user?.membership?._id.toString() ?? '63c56873019597f1d03b24e2', user: auxUser._id })
+                orderController.add({ ammount: user?.membership?._id.toString() ?? '63c56873019597f1d03b24e2', user: user._id })
 
-        //         // userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
+                // userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
 
-        //         await sendMailService.sendMailNewBill(user.email, user)
-        //         ordersGenerated.push(user)
-        //     }
-        // }
-        // resolve({
-        //     totalOrdersGenerated: ordersGenerated.length
-        // })
+                await sendMailService.sendMailNewBill(user.email, user)
+                ordersGenerated.push(user)
+            }
+        }
+        return resolve({
+            message: 'Ordenes del presente mes generadas',
+            totalOrdersGenerated: ordersGenerated.length
+        })
 
     })
 }
