@@ -150,7 +150,76 @@ const getCategoryInfo = async (id) => {
 }
 
 
+const perProductInfo = async () =>{
+    return await OrderModel.aggregate([
+        {
+          '$lookup': {
+            'from': 'prices', 
+            'localField': 'ammount', 
+            'foreignField': '_id', 
+            'as': 'ammount'
+          }
+        }, {
+          '$lookup': {
+            'from': 'users', 
+            'localField': 'user', 
+            'foreignField': '_id', 
+            'as': 'user'
+          }
+        }, {
+          '$lookup': {
+            'from': 'prices', 
+            'localField': 'user.membership', 
+            'foreignField': '_id', 
+            'as': 'membership'
+          }
+        }, {
+          '$unwind': {
+            'path': '$ammount'
+          }
+        }, {
+          '$unwind': {
+            'path': '$membership'
+          }
+        }, {
+          '$unwind': {
+            'path': '$user'
+          }
+        }, {
+          '$match': {
+            'status': 'approved'
+          }
+        }, {
+          '$group': {
+            '_id': {
+              'membership': '$user.membership', 
+              'membershipName': '$membership.name', 
+              'method': '$payment.method'
+            }, 
+            'orders': {
+              '$push': '$$ROOT'
+            }
+          }
+        }, {
+          '$group': {
+            '_id': '$_id.method', 
+            'payments': {
+              '$push': {
+                'membership': '$_id.membership', 
+                'membershipName': '$_id.membershipName', 
+                'orders': '$orders'
+              }
+            }
+          }
+        }
+      ])
+
+      
+}
+
+
 module.exports = {
     getCategoriesInfo,
-    getCategoryInfo
+    getCategoryInfo,
+    perProductInfo
 }
