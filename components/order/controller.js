@@ -8,7 +8,7 @@ const sendMailService = require('../../utils/mailer')
 const getPaymentMethod = require('../../utils/helpers/getPaymentMethod')
 const { default: mongoose } = require('mongoose')
 
-const addOrder = async ({ ammount, user }) => {
+const addOrder = async ({ ammount, user }, date) => {
 
     if (!user) return Promise.reject(boom.badRequest("Usuario Invalido"))
     if (!ammount) return Promise.reject(boom.badRequest("Monto Invalido"))
@@ -16,7 +16,7 @@ const addOrder = async ({ ammount, user }) => {
     const order = {
         ammount,
         user,
-        date: now()
+        date: now(date ? date : false)
     }
 
     const day = new Date().getDate()
@@ -152,12 +152,12 @@ const listUserOrders = (body, tokenUser) => {
 
         const response = await store.list(body.user ? body.user : tokenUser.sub, body.status)
 
-      /*   const response = userOrderList.map((order) => {
-            const auxOrder = order.toObject()
-            delete auxOrder.user.password
-            return auxOrder
-        })
- */
+        /*   const response = userOrderList.map((order) => {
+              const auxOrder = order.toObject()
+              delete auxOrder.user.password
+              return auxOrder
+          })
+   */
         return resolve(response)
     })
 
@@ -182,7 +182,7 @@ const inscriptionOrder = async ({ ammount, user }, userId) => {
 
 }
 
-const generateOrder = async ({ id }, tokenUser) => {
+const generateOrder = async ({ id, date }, tokenUser) => {
 
     const day = new Date().getDate()
     const nextMonth = new Date().getMonth() + 2
@@ -197,7 +197,7 @@ const generateOrder = async ({ id }, tokenUser) => {
 
         let auxUser = user.toObject()
 
-        const response = addOrder({ ammount: user?.membership?._id.toString() ?? '63c56873019597f1d03b24e2', user: auxUser._id })
+        const response = addOrder({ ammount: user?.membership?._id.toString() ?? '63c56873019597f1d03b24e2', user: auxUser._id }, date)
 
         // await userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
 
