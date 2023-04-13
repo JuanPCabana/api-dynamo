@@ -188,6 +188,7 @@ const generateOrder = async ({ id, date }, tokenUser) => {
     const nextMonth = new Date().getMonth() + 2
 
     const nextPayment = `${day}/${nextMonth}`
+    console.log("🚀 ~ file: controller.js:186 ~ generateOrder ~ id:", id)
 
     return new Promise(async (resolve, reject) => {
         if (!id) return reject(boom.badRequest('Usuario invalido!'))
