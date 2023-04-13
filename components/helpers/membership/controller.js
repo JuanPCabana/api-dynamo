@@ -72,7 +72,16 @@ const generateMonthlyBills = async () => {
                             $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
                         }
                     },
+                    $or: [{ status: 'active' }, { status: 'debtor' }],
                     role: 'student'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'prices',
+                    localField: 'membership',
+                    foreignField: '_id',
+                    as: 'membership'
                 }
             },
             {
@@ -80,7 +89,9 @@ const generateMonthlyBills = async () => {
                     _id: 1,
                     email: 1,
                     firstName: 1,
+                    status: 1,
                     lastName: 1,
+                    membership: 1,
                     orders: 1
                 }
             }
@@ -90,20 +101,21 @@ const generateMonthlyBills = async () => {
     return new Promise(async (resolve, reject) => {
 
         const list = await todayUserList()
+        // console.log("🚀 ~ file: controller.js:93 ~ returnnewPromise ~ list:", list)
         // list.map(async (user) => {
         const ordersGenerated = []
         for (user of list) {
-            if (user.status === 'active' || user.status === 'debtor' /* user._id.toString() === '641b759db70ef007f3117856' */) {
-                console.log("🚀 ~ list", user.email)
-                // let auxUser = user.toObject()
+            // if (/* user.status === 'active' || user.status === 'debtor' */ /* user._id.toString() === '641b759db70ef007f3117856' */) {
+            console.log("🚀 ~ list", user.email, user?.membership[0]?._id?.toString())
+            let auxUser = user
 
-                orderController.add({ ammount: user?.membership?._id.toString() ?? '63c56873019597f1d03b24e2', user: user._id })
+            orderController.add({ ammount: user?.membership[0]?._id?.toString() ?? '63c56873019597f1d03b24e2', user: user._id })
 
-                // userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
+            userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
 
-                await sendMailService.sendMailNewBill(user.email, user)
-                ordersGenerated.push(user)
-            }
+            await sendMailService.sendMailNewBill(user.email, user)
+            ordersGenerated.push(user)
+            // }
         }
         return resolve({
             message: 'Ordenes del presente mes generadas',

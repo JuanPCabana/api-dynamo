@@ -25,7 +25,7 @@ const generateRecoverToken = async (userEmail) => {
         }
         else {
             const info = await serverMail.sendMail({
-                from: `"Dynamo" <administracion@dynamopuertofc.com>`,
+                from: `"Dynamo" <dynamo@back9.com.ve>`,
                 to: 'juanpc3399@gmail.com',
                 subject: "ERROR CON ESTE CORREO",
                 html: buildEmailTemplate

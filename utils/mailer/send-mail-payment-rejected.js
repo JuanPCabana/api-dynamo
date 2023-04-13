@@ -18,7 +18,7 @@ module.exports = function makeSendMailPaymentRejected({
       
     });
     const info = await serverMail.sendMail({
-      from: `"Dynamo" <administracion@dynamopuertofc.com>`,
+      from: `"Dynamo" <dynamo@back9.com.ve>`,
       to: email,
       subject: "Pago rechazado",
       html: buildEmailTemplate,
