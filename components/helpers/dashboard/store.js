@@ -3,7 +3,7 @@ const PriceModel = require('../../prices/model')
 const UserModel = require('../../user/model')
 const OrderModel = require('../../order/model')
 const { default: mongoose } = require('mongoose')
-
+// mongoose.set('strictQuery', true);
 const getCategoriesInfo = async () => {
 
   const categoriesInfo = await CategoryModel.aggregate([
@@ -228,6 +228,10 @@ const perProductInfo = async () => {
           }
         }
       }, {
+        '$sort': {
+          '_id.membership.name': 1
+        }
+      }, {
         '$group': {
           '_id': '$_id.method',
           'totalAmmount': {
@@ -236,6 +240,10 @@ const perProductInfo = async () => {
           'methods': {
             '$push': '$$ROOT'
           }
+        }
+      }, {
+        '$sort': {
+          '_id': 1
         }
       }, {
         '$project': {
@@ -311,12 +319,130 @@ const perProductInfo = async () => {
         }
       ] */)
 
+  const categoryInfoDetails = await OrderModel.aggregate([
+    {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'user',
+        'foreignField': '_id',
+        'as': 'user'
+      }
+    }, {
+      '$match': {
+        'status': 'approved',
+        'inscription': false
+      }
+    }, {
+      '$lookup': {
+        'from': 'categories',
+        'localField': 'user.category',
+        'foreignField': '_id',
+        'as': 'category'
+      }
+    }, {
+      '$lookup': {
+        'from': 'prices',
+        'localField': 'ammount',
+        'foreignField': '_id',
+        'as': 'membership'
+      }
+    }, {
+      '$unwind': {
+        'path': '$user'
+      }
+    }, {
+      '$unwind': {
+        'path': '$category'
+      }
+    }, {
+      '$unwind': {
+        'path': '$membership'
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'method': '$payment.method',
+          'category': {
+            'name': '$category.name',
+            '_id': '$category._id'
+          },
+          'membership': {
+            '_id': '$membership._id',
+            'name': '$membership.name'
+          }
+        },
+        'totalAmmount': {
+          '$sum': '$membership.ammount'
+        },
+        'orders': {
+          '$push': '$$ROOT'
+        }
+      }
+    },
+    {
+      '$sort': {
+        '_id.membership.name': 1,
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'method': '$_id.method',
+          'membership': {
+            '_id': '$_id.membership._id',
+            'name': '$_id.membership.name'
+          }
+        },
+        'totalProductAmmount': {
+          '$sum': '$totalAmmount'
+        },
+        'orders': {
+          '$push': '$orders'
+        }
+      }
+    },
+    {
+      '$sort': {
+        '_id.method': 1
+      }
+    }, {
+      '$group': {
+        '_id': '$_id.membership',
+        'totalAmmount': {
+          '$sum': '$totalProductAmmount'
+        },
+        'methods': {
+          '$push': '$$ROOT'
+        }
+      }
+    }, {
+      '$sort': {
+        '_id.name': 1
+      }
+    }, {
+      '$project': {
+        '_id': 1,
+        'totalAmmount': 1,
+        /* 'methods': {
+          '_id': 1,
+          'totalProductAmmount': 1
+        } */
+      }
+    }
+  ])
 
+  /*  const sortedPaymentInfo = paymentInfoDetails.sort((a, b) => {
+     if (a._id < b._id) {
+       return -1;
+     }
+     if (a._id > b._id) {
+       return 1;
+     }
+     return 0;
+   });
+  */
   return {
-    docs: [
-      ...paymentInfoDetails,
-     
-    ]
+    perMethod: paymentInfoDetails,
+    perProduct: categoryInfoDetails,
   }
 
 
