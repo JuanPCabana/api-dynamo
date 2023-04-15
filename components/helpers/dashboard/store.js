@@ -163,7 +163,7 @@ const perProductInfo = async () => {
       }, {
         '$match': {
           'status': 'approved',
-          'inscription': false
+          // 'inscription': false
         }
       }, {
         '$lookup': {
@@ -321,23 +321,15 @@ const perProductInfo = async () => {
 
   const categoryInfoDetails = await OrderModel.aggregate([
     {
+      '$match': {
+        'status': 'approved'
+      }
+    }, {
       '$lookup': {
         'from': 'users',
         'localField': 'user',
         'foreignField': '_id',
         'as': 'user'
-      }
-    }, {
-      '$match': {
-        'status': 'approved',
-        'inscription': false
-      }
-    }, {
-      '$lookup': {
-        'from': 'categories',
-        'localField': 'user.category',
-        'foreignField': '_id',
-        'as': 'category'
       }
     }, {
       '$lookup': {
@@ -347,85 +339,56 @@ const perProductInfo = async () => {
         'as': 'membership'
       }
     }, {
-      '$unwind': {
-        'path': '$user'
-      }
-    }, {
-      '$unwind': {
-        'path': '$category'
+      '$lookup': {
+        'from': 'categories',
+        'localField': 'user.category',
+        'foreignField': '_id',
+        'as': 'category'
       }
     }, {
       '$unwind': {
         'path': '$membership'
       }
     }, {
-      '$group': {
-        '_id': {
-          'method': '$payment.method',
-          'category': {
-            'name': '$category.name',
-            '_id': '$category._id'
-          },
-          'membership': {
-            '_id': '$membership._id',
-            'name': '$membership.name'
-          }
-        },
-        'totalAmmount': {
-          '$sum': '$membership.ammount'
-        },
-        'orders': {
-          '$push': '$$ROOT'
-        }
-      }
-    },
-    {
-      '$sort': {
-        '_id.membership.name': 1,
+      '$unwind': {
+        'path': '$category'
       }
     }, {
       '$group': {
         '_id': {
-          'method': '$_id.method',
-          'membership': {
-            '_id': '$_id.membership._id',
-            'name': '$_id.membership.name'
-          }
+          'category': {
+            '_id': '$membership._id',
+            'name': '$membership.name'
+          },
+          'method': '$payment.method'
         },
-        'totalProductAmmount': {
-          '$sum': '$totalAmmount'
-        },
-        'orders': {
-          '$push': '$orders'
+        'totalPerMethodNCat': {
+          '$sum': '$membership.ammount'
         }
       }
-    },
-    {
+    }, {
       '$sort': {
         '_id.method': 1
       }
     }, {
       '$group': {
-        '_id': '$_id.membership',
-        'totalAmmount': {
-          '$sum': '$totalProductAmmount'
+        '_id': {
+          'category': {
+            '_id': '$_id.category._id',
+            'name': '$_id.category.name'
+          }
         },
+        'totalAmmount': { '$sum': '$totalPerMethodNCat' },
         'methods': {
-          '$push': '$$ROOT'
+          '$push': {
+            'method': '$_id.method',
+            'totalAmmount': '$totalPerMethodNCat'
+          }
         }
       }
     }, {
       '$sort': {
-        '_id.name': 1
-      }
-    }, {
-      '$project': {
-        '_id': 1,
-        'totalAmmount': 1,
-        /* 'methods': {
-          '_id': 1,
-          'totalProductAmmount': 1
-        } */
+        '_id.category.name': 1
       }
     }
   ])
