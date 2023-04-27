@@ -435,6 +435,10 @@ const perMonthInfo = async () => {
         'as': 'price'
       }
     }, {
+      '$match': {
+        'status': 'approved'
+      }
+    }, {
       '$unwind': {
         'path': '$price'
       }
