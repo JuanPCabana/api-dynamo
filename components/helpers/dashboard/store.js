@@ -494,8 +494,8 @@ const perMonthInfo = async () => {
       }
     }, {
       '$sort': {
-        '_id.month': 1,
-        '_id.year': 1
+        '_id.category': 1
+
       }
     }
   ])
