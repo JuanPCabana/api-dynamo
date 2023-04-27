@@ -477,6 +477,10 @@ const perMonthInfo = async () => {
         'path': '$categoriesPerMonth'
       }
     }, {
+      '$sort': {
+        'categoriesPerMonth._id.category.name': 1
+      }
+    }, {
       '$group': {
         '_id': {
           'month': '$categoriesPerMonth._id.month',
