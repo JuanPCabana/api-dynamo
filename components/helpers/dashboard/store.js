@@ -485,7 +485,7 @@ const perMonthInfo = async () => {
         '_id': {
           'category': '$categoriesPerMonth._id.category'
         },
-        'categories': {
+        'months': {
           '$push': '$categoriesPerMonth'
         },
         'totalAmmount': {
