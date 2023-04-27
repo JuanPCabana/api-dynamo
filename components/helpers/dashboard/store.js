@@ -315,10 +315,105 @@ const perProductInfo = async () => {
   return {
     docs: [
       ...paymentInfoDetails,
-     
+
     ]
   }
 
+
+}
+
+const perMonthInfo = async () => {
+  const monthDetails = await OrderModel.aggregate([
+    {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'user',
+        'foreignField': '_id',
+        'as': 'user'
+      }
+    }, {
+      '$lookup': {
+        'from': 'categories',
+        'localField': 'user.category',
+        'foreignField': '_id',
+        'as': 'category'
+      }
+    }, {
+      '$lookup': {
+        'from': 'prices',
+        'localField': 'ammount',
+        'foreignField': '_id',
+        'as': 'price'
+      }
+    }, {
+      '$unwind': {
+        'path': '$price'
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'month': {
+            '$month': '$date'
+          },
+          'year': {
+            '$year': '$date'
+          },
+          'category': '$category'
+        },
+        'orders': {
+          '$push': '$$ROOT'
+        },
+        'count': {
+          '$sum': 1
+        }
+      }
+    }, {
+      '$unwind': {
+        'path': '$_id.category'
+      }
+    }, {
+      '$group': {
+        '_id': '',
+        'categoriesPerMonth': {
+          '$push': {
+            '_id': '$_id',
+            'totalAmmount': {
+              '$sum': '$orders.price.ammount'
+            }
+          }
+        }
+      }
+    }, {
+      '$unwind': {
+        'path': '$categoriesPerMonth'
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'month': '$categoriesPerMonth._id.month',
+          'year': '$categoriesPerMonth._id.year'
+        },
+        'categories': {
+          '$push': '$categoriesPerMonth'
+        },
+        'totalAmmount': {
+          '$sum': '$categoriesPerMonth.totalAmmount'
+        }
+      }
+    }, {
+      '$sort': {
+        '_id.month': 1,
+        '_id.year': 1
+      }
+    }
+  ])
+
+  return {
+    docs: [
+      ...monthDetails,
+
+    ]
+  }
 
 }
 
@@ -326,5 +421,6 @@ const perProductInfo = async () => {
 module.exports = {
   getCategoriesInfo,
   getCategoryInfo,
-  perProductInfo
+  perProductInfo,
+  perMonthInfo
 }
