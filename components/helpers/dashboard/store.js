@@ -483,8 +483,7 @@ const perMonthInfo = async () => {
     }, {
       '$group': {
         '_id': {
-          'month': '$categoriesPerMonth._id.month',
-          'year': '$categoriesPerMonth._id.year'
+          'category': '$categoriesPerMonth._id.category'
         },
         'categories': {
           '$push': '$categoriesPerMonth'
