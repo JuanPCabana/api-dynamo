@@ -21,7 +21,7 @@ router.get('/perProductInfo', passport.authenticate('jwt', { session: false }), 
 
     controller.perProductInfo()
         .then((data) => {
-            response.success(req, res, 200, data )
+            response.success(req, res, 200, data)
         }).catch((err) => {
             // response.error(req, res, 400, { message: 'algo fallo!', err })
             next(err)
@@ -38,7 +38,16 @@ router.get('/categories/:id', passport.authenticate('jwt', { session: false }), 
         });
 })
 
+router.get('/perMonthInfo', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
 
+    controller.perMonthInfo()
+        .then((data) => {
+            response.success(req, res, 200, data)
+        }).catch((err) => {
+            // response.error(req, res, 400, { message: 'algo fallo!', err })
+            next(err)
+        });
+})
 
 
 module.exports = router

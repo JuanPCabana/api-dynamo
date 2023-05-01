@@ -25,8 +25,15 @@ const perProductInfo = async () =>{
     return returnInfo
 }
 
+const perMonthInfo = async () =>{
+    const returnInfo = await dashboardStore.perMonthInfo()
+
+    return returnInfo
+}
+
 module.exports = {
     categoriesInfo,
     categoryInfo,
-    perProductInfo
+    perProductInfo,
+    perMonthInfo
 }

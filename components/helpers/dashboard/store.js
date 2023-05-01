@@ -411,9 +411,112 @@ const perProductInfo = async () => {
 
 }
 
+const perMonthInfo = async () => {
+  const monthDetails = await OrderModel.aggregate([
+    {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'user',
+        'foreignField': '_id',
+        'as': 'user'
+      }
+    }, {
+      '$lookup': {
+        'from': 'categories',
+        'localField': 'user.category',
+        'foreignField': '_id',
+        'as': 'category'
+      }
+    }, {
+      '$lookup': {
+        'from': 'prices',
+        'localField': 'ammount',
+        'foreignField': '_id',
+        'as': 'price'
+      }
+    }, {
+      '$match': {
+        'status': 'approved'
+      }
+    }, {
+      '$unwind': {
+        'path': '$price'
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'month': {
+            '$month': '$date'
+          },
+          'year': {
+            '$year': '$date'
+          },
+          'category': '$category'
+        },
+        'orders': {
+          '$push': '$$ROOT'
+        },
+        'count': {
+          '$sum': 1
+        }
+      }
+    }, {
+      '$unwind': {
+        'path': '$_id.category'
+      }
+    }, {
+      '$group': {
+        '_id': '',
+        'categoriesPerMonth': {
+          '$push': {
+            '_id': '$_id',
+            'totalAmmount': {
+              '$sum': '$orders.price.ammount'
+            }
+          }
+        }
+      }
+    }, {
+      '$unwind': {
+        'path': '$categoriesPerMonth'
+      }
+    }, {
+      '$sort': {
+        'categoriesPerMonth._id.category.name': 1
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'category': '$categoriesPerMonth._id.category'
+        },
+        'months': {
+          '$push': '$categoriesPerMonth'
+        },
+        'totalAmmount': {
+          '$sum': '$categoriesPerMonth.totalAmmount'
+        }
+      }
+    }, {
+      '$sort': {
+        '_id.category.name': 1
+
+      }
+    }
+  ])
+
+  return {
+    docs: [
+      ...monthDetails,
+
+    ]
+  }
+
+}
+
 
 module.exports = {
   getCategoriesInfo,
   getCategoryInfo,
-  perProductInfo
+  perProductInfo,
+  perMonthInfo
 }
