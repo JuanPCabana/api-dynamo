@@ -109,9 +109,9 @@ const generateMonthlyBills = async () => {
             console.log("🚀 ~ list", user.email, user?.membership[0]?._id?.toString())
             let auxUser = user
 
-            orderController.add({ ammount: user?.membership[0]?._id?.toString() ?? '63c56873019597f1d03b24e2', user: user._id })
+            orderController.add({ ammount: user?.membership[0]?._id?.toString() ?? '63c56873019597f1d03b24e2', user: user._id }, new Date(new Date().getFullYear(), new Date().getMonth(), 1))
 
-            userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
+            // userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
 
             await sendMailService.sendMailNewBill(user.email, user)
             ordersGenerated.push(user)
