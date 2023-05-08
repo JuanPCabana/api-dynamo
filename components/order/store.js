@@ -7,23 +7,92 @@ const addOrder = async (order) => {
 }
 
 const listAllOrders = async (query) => {
+    // if (query.status) {
+    // const orderList = await Model.find({ status: query.status }).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
+
+    let pipeline = []
     if (query.status) {
-        const orderList = await Model.find({ status: query.status }).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
-        const response = deleteOrderPassword(orderList)
-
-        return {
-            docs: response,
-            totalDocs: orderList.length
-        }
-
+        pipeline.push({
+            '$match': {
+                'status': query.status
+            }
+        })
     }
-    const orderList = await Model.find({}).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
-    const response = deleteOrderPassword(orderList)
+
+    pipeline = [...pipeline,
+    {
+        '$lookup': {
+            'from': 'users',
+            'localField': 'user',
+            'foreignField': '_id',
+            'as': 'user'
+        }
+    }, {
+        '$lookup': {
+            'from': 'users',
+            'localField': 'managedBy',
+            'foreignField': '_id',
+            'as': 'managedBy'
+        }
+    }, {
+        '$lookup': {
+            'from': 'prices',
+            'localField': 'ammount',
+            'foreignField': '_id',
+            'as': 'ammount'
+        }
+    }, {
+        '$unwind': {
+            'path': '$user'
+        }
+    }, {
+        '$unwind': {
+            'path': '$ammount'
+        }
+    }, {
+        '$unset': 'user.password'
+    }, {
+        '$unset': 'managedBy.password'
+    }, {
+        '$project': {
+            '_id': '$_id',
+            'status': '$status',
+            'date': '$date',
+            'inscription': '$inscription',
+            'ammount': '$ammount',
+            'user': '$user',
+            'expired': '$expired',
+            'payment': '$payment',
+            'managedBy': '$managedBy',
+            'paymentDate': {
+                '$toDate': '$payment.date'
+            }
+        }
+    }, {
+        '$sort': {
+            'paymentDate': -1
+        }
+    }
+    ]
+
+    const orderedOrderList = await Model.aggregate(pipeline)
+    // console.log("🚀 ~ file: store.js:56 ~ listAllOrders ~ orderedOrderList:", orderedOrderList)
+    // console.log("🚀 ~ file: store.js:12 ~ listAllOrders ~ orderList:", orderList)
+    // const response = deleteOrderPassword(orderList)
 
     return {
-        docs: response,
-        totalDocs: orderList.length
+        docs: orderedOrderList,
+        totalDocs: orderedOrderList.length
     }
+
+    // }
+    // const orderList = await Model.find({}).populate([{ path: 'user' }, { path: 'ammount' }, { path: 'managedBy' }])
+    // const response = deleteOrderPassword(orderList)
+
+    // return {
+    //     docs: response,
+    //     totalDocs: orderList.length
+    // }
 }
 const listUserOrders = async (id, query) => {
 
