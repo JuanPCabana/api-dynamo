@@ -440,7 +440,7 @@ const perMonthDebt = async () => {
       }
     }, {
       '$match': {
-        'status': 'unpaid'
+        'status': { '$ne': 'rejected' }
       }
     }, {
       '$group': {
@@ -456,6 +456,28 @@ const perMonthDebt = async () => {
         'orders': {
           '$push': '$$ROOT'
         },
+        'totalUnpaid': {
+          '$sum': {
+            '$cond': [
+              {
+                '$eq': [
+                  '$status', 'unpaid'
+                ]
+              }, '$price.ammount', 0
+            ]
+          }
+        },
+        'totalPaid': {
+          '$sum': {
+            '$cond': [
+              {
+                '$eq': [
+                  '$status', 'approved'
+                ]
+              }, '$price.ammount', 0
+            ]
+          }
+        },
         'count': {
           '$sum': 1
         }
@@ -470,6 +492,12 @@ const perMonthDebt = async () => {
         'categoriesPerMonth': {
           '$push': {
             '_id': '$_id',
+            'totalUnpaid': {
+              '$sum': '$totalUnpaid'
+            },
+            'totalPaid': {
+              '$sum': '$totalPaid'
+            },
             'totalAmmount': {
               '$sum': '$orders.price.ammount'
             }
@@ -491,6 +519,12 @@ const perMonthDebt = async () => {
         },
         'months': {
           '$push': '$categoriesPerMonth'
+        },
+        'totalUnpaid': {
+          '$sum': '$categoriesPerMonth.totalUnpaid'
+        },
+        'totalPaid': {
+          '$sum': '$categoriesPerMonth.totalPaid'
         },
         'totalAmmount': {
           '$sum': '$categoriesPerMonth.totalAmmount'
