@@ -7,7 +7,7 @@ const passport = require('passport')
 const { checkRoles } = require('../../../middlewares/auth.handler');
 
 
-router.get('/categories', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
+router.get('/categories', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), (req, res, next) => {
 
     controller.categoriesInfo()
         .then((data) => {
@@ -17,7 +17,7 @@ router.get('/categories', passport.authenticate('jwt', { session: false }), chec
             next(err)
         });
 })
-router.get('/perProductInfo', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
+router.get('/perProductInfo', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), (req, res, next) => {
 
     controller.perProductInfo()
         .then((data) => {
@@ -27,7 +27,7 @@ router.get('/perProductInfo', passport.authenticate('jwt', { session: false }), 
             next(err)
         });
 })
-router.get('/categories/:id', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
+router.get('/categories/:id', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), (req, res, next) => {
 
     controller.categoryInfo(req.params.id)
         .then((data) => {
@@ -38,7 +38,7 @@ router.get('/categories/:id', passport.authenticate('jwt', { session: false }), 
         });
 })
 
-router.get('/perMonthInfo', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
+router.get('/perMonthInfo', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), (req, res, next) => {
 
     controller.perMonthInfo()
         .then((data) => {
@@ -48,7 +48,7 @@ router.get('/perMonthInfo', passport.authenticate('jwt', { session: false }), ch
             next(err)
         });
 })
-router.get('/perMonthDebt', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin'), (req, res, next) => {
+router.get('/perMonthDebt', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), (req, res, next) => {
 
     controller.perMonthDebt()
         .then((data) => {
