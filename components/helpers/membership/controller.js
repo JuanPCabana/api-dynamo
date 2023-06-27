@@ -113,7 +113,7 @@ const generateMonthlyBills = async () => {
 
             // userController.replace(auxUser._id, { nextPaymentDate: nextPayment/* , active: false */ })
 
-            await sendMailService.sendMailNewBill(user.email, user)
+            // await sendMailService.sendMailNewBill(user.email, user)
             ordersGenerated.push(user)
             // }
         }

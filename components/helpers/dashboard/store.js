@@ -570,12 +570,16 @@ const perMonthInfo = async () => {
         'as': 'price'
       }
     }, {
-      '$match': {
-        'status': 'approved'
+      '$unwind': {
+        'path': '$price'
       }
     }, {
       '$unwind': {
-        'path': '$price'
+        'path': '$category'
+      }
+    }, {
+      '$sort': {
+        'category.name': 1
       }
     }, {
       '$group': {
@@ -591,6 +595,28 @@ const perMonthInfo = async () => {
         'orders': {
           '$push': '$$ROOT'
         },
+        'totalUnpaid': {
+          '$sum': {
+            '$cond': [
+              {
+                '$eq': [
+                  '$status', 'unpaid'
+                ]
+              }, '$price.ammount', 0
+            ]
+          }
+        },
+        'totalPaid': {
+          '$sum': {
+            '$cond': [
+              {
+                '$eq': [
+                  '$status', 'approved'
+                ]
+              }, '$price.ammount', 0
+            ]
+          }
+        },
         'count': {
           '$sum': 1
         }
@@ -605,6 +631,12 @@ const perMonthInfo = async () => {
         'categoriesPerMonth': {
           '$push': {
             '_id': '$_id',
+            'totalUnpaid': {
+              '$sum': '$totalUnpaid'
+            },
+            'totalPaid': {
+              '$sum': '$totalPaid'
+            },
             'totalAmmount': {
               '$sum': '$orders.price.ammount'
             }
@@ -627,14 +659,24 @@ const perMonthInfo = async () => {
         'months': {
           '$push': '$categoriesPerMonth'
         },
+        'totalUnpaid': {
+          '$sum': '$categoriesPerMonth.totalUnpaid'
+        },
+        'totalPaid': {
+          '$sum': '$categoriesPerMonth.totalPaid'
+        },
         'totalAmmount': {
           '$sum': '$categoriesPerMonth.totalAmmount'
         }
       }
     }, {
       '$sort': {
+        '_id.month': 1,
+        '_id.year': 1
+      }
+    }, {
+      '$sort': {
         '_id.category.name': 1
-
       }
     }
   ])
@@ -648,11 +690,121 @@ const perMonthInfo = async () => {
 
 }
 
+const downloadDebtors = async () => {
+  const debtorsList = await OrderModel.aggregate([
+    {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'user',
+        'foreignField': '_id',
+        'as': 'user'
+      }
+    }, {
+      '$unwind': {
+        'path': '$user'
+      }
+    }, {
+      '$lookup': {
+        'from': 'categories',
+        'localField': 'user.category',
+        'foreignField': '_id',
+        'as': 'user.category'
+      }
+    }, {
+      '$lookup': {
+        'from': 'leagues',
+        'localField': 'user.league',
+        'foreignField': '_id',
+        'as': 'user.league'
+      }
+    }, {
+      '$lookup': {
+        'from': 'prices',
+        'localField': 'user.membership',
+        'foreignField': '_id',
+        'as': 'user.membership'
+      }
+    }, {
+      '$unwind': {
+        'path': '$user.membership'
+      }
+    }, {
+      '$unwind': {
+        'path': '$user.league'
+      }
+    }, {
+      '$unwind': {
+        'path': '$user.category'
+      }
+    }, {
+      '$match': {
+        'user.status': 'debtor',
+        'status': 'unpaid',
+        'expired': true
+      }
+    }, {
+      '$lookup': {
+        'from': 'prices',
+        'localField': 'ammount',
+        'foreignField': '_id',
+        'as': 'ammount'
+      }
+    }, {
+      '$unwind': {
+        'path': '$ammount'
+      }
+    }, {
+      '$group': {
+        '_id': '$user',
+        'orders': {
+          '$push': '$$ROOT'
+        },
+        'totalDebt': {
+          '$sum': '$ammount.ammount'
+        }
+      }
+    }, {
+      '$project': {
+        '_id': '$_id._id',
+        'user': '$_id',
+        'totalDebt': 1
+      }
+    }, {
+      '$project': {
+        '_id': 1,
+        'firstName': '$user.firstName',
+        'lastName': '$user.lastName',
+        'league': '$user.league.name',
+        'category': '$user.category.name',
+        'membership': '$user.membership.name',
+        'membershipPrice': '$user.membership.ammount',
+        'totalDebt': 1,
+        'username': '$user.username',
+        'email': '$user.email',
+        'phone': '$user.phone'
+      }
+    }, {
+      '$sort': {
+        'totalDebt': -1
+      }
+    }
+  ])
+
+  return {
+    docs: [
+      ...debtorsList,
+
+    ]
+  }
+
+}
+
 
 module.exports = {
   getCategoriesInfo,
   getCategoryInfo,
   perProductInfo,
   perMonthInfo,
-  perMonthDebt
+  perMonthDebt,
+  downloadDebtors
 }

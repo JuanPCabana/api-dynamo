@@ -5,6 +5,7 @@ const controller = require('./controller')
 const boom = require('@hapi/boom')
 const passport = require('passport')
 const { checkRoles } = require('../../../middlewares/auth.handler');
+const fs = require('fs')
 
 
 router.get('/categories', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), (req, res, next) => {
@@ -53,6 +54,36 @@ router.get('/perMonthDebt', passport.authenticate('jwt', { session: false }), ch
     controller.perMonthDebt()
         .then((data) => {
             response.success(req, res, 200, data)
+        }).catch((err) => {
+            // response.error(req, res, 400, { message: 'algo fallo!', err })
+            next(err)
+        });
+})
+
+router.get('/downloadDebtors',/*  passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), */ (req, res, next) => {
+
+    controller.downloadDebtors()
+        .then((data) => {
+            res.setHeader('Content-Type', 'text/csv; charset=utf-8'); 
+            res.setHeader('Content-Disposition', 'attachment; filename="data.csv"');
+
+            res.download('output.csv', 'data.csv', (err) => {
+                if (err) {
+                    console.error('Error al descargar el archivo CSV:', err);
+                } else {
+                    console.log('Archivo CSV descargado con éxito.');
+
+                    fs.unlink('output.csv', (err) => {
+                        if (err) {
+                            console.error('Error al borrar el archivo CSV:', err);
+                        } else {
+                            console.log('Archivo CSV borrado con éxito.');
+                        }
+                    });
+                }
+            });
+
+            // response.success(req, res, 200, data)
         }).catch((err) => {
             // response.error(req, res, 400, { message: 'algo fallo!', err })
             next(err)
