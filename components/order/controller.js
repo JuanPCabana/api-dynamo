@@ -29,6 +29,11 @@ const addOrder = async ({ ammount, user }, date) => {
     // await userController.replace(user, { newPaymentDate: paymentDay })
 
 
+    const freeMemberships = ['63ed213530a02a7af27f43b5', '63ff64c08bacc93143433d97']
+
+    if (freeMemberships.includes(response.ammount.toString())) {
+        await changeOrderStatus({ order: response._id.toString(), status: 'approved' }, false, true)
+    }
     return response
 
 }
@@ -81,11 +86,11 @@ const addPayment = ({ order, method, ref, ammount, email }, inscription) => {
     })
 }
 
-const changeOrderStatus = ({ order, status }, user) => {
+const changeOrderStatus = ({ order, status }, user, system) => {
     // console.log("🚀 ~ file: controller.js:74 ~ changeOrderStatus ~ user", user)
     return new Promise(async (resolve, reject) => {
 
-        if (!order || !status || !user) {
+        if (!order || !status /* || !user */) {
             return reject(boom.badRequest('Datos incompletos'))
         }
 
@@ -94,12 +99,12 @@ const changeOrderStatus = ({ order, status }, user) => {
         const auxOrder = orderInfo.toObject()
 
         auxOrder.status = status
-        auxOrder.managedBy = user.sub
+        auxOrder.managedBy = system ? '63abaf4dcc68af5e79c2e84d' : user.sub
 
         delete auxOrder.user.password
 
         // console.log(auxOrder.user)
-        await store.update(auxOrder._id, { status: status, managedBy: user.sub })
+        await store.update(auxOrder._id, { status: status, managedBy: system ? '63abaf4dcc68af5e79c2e84d' : user.sub })
         if (!auxOrder.user.email) {
             const info = await serverMail.sendMail({
                 from: `"Dynamo" <administracion@dynamopuertofc.com>`,
