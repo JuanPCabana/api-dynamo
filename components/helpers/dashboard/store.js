@@ -125,6 +125,17 @@ const getCategoryInfo = async (id) => {
           'as': 'user.category'
         }
       }, {
+        '$lookup': {
+          'from': 'prices',
+          'localField': 'user.membership',
+          'foreignField': '_id',
+          'as': 'user.membership'
+        }
+      }, {
+        '$unwind': {
+          'path': '$user.membership'
+        }
+      }, {
         '$project': {
           '_id': 0,
           'category': '$user.category.name',
