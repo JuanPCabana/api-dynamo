@@ -38,6 +38,11 @@ const perMonthDebt = async () => {
 
     return returnInfo
 }
+const incomePerMethodAndMonth = async () => {
+    const returnInfo = await dashboardStore.incomePerMethodAndMonth()
+
+    return returnInfo
+}
 const downloadDebtors = async () => {
     const returnInfo = await dashboardStore.downloadDebtors()
 
@@ -73,5 +78,6 @@ module.exports = {
     perProductInfo,
     perMonthInfo,
     perMonthDebt,
-    downloadDebtors
+    downloadDebtors,
+    incomePerMethodAndMonth
 }

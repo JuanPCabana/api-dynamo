@@ -810,6 +810,89 @@ const downloadDebtors = async () => {
 
 }
 
+const incomePerMethodAndMonth = async () => {
+  const methodInfoArray = await OrderModel.aggregate([
+    {
+      '$lookup': {
+        'from': 'prices', 
+        'localField': 'ammount', 
+        'foreignField': '_id', 
+        'as': 'ammount'
+      }
+    }, {
+      '$lookup': {
+        'from': 'users', 
+        'localField': 'user', 
+        'foreignField': '_id', 
+        'as': 'user'
+      }
+    }, {
+      '$lookup': {
+        'from': 'prices', 
+        'localField': 'user.membership', 
+        'foreignField': '_id', 
+        'as': 'membership'
+      }
+    }, {
+      '$unwind': {
+        'path': '$ammount'
+      }
+    }, {
+      '$unwind': {
+        'path': '$membership'
+      }
+    }, {
+      '$unwind': {
+        'path': '$user'
+      }
+    }, {
+      '$match': {
+        'status': 'approved'
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'month': {
+            '$month': '$date'
+          }, 
+          'year': {
+            '$year': '$date'
+          }, 
+          'method': '$payment.method'
+        }, 
+        'orders': {
+          '$push': '$$ROOT'
+        }, 
+        'totalAmount': {
+          '$sum': '$ammount.ammount'
+        }
+      }
+    }, {
+      '$group': {
+        '_id': '$_id.method', 
+        'payments': {
+          '$push': {
+            'month': '$_id.month', 
+            'year': '$_id.year', 
+            'totalAmount': '$totalAmount'
+          }
+        }, 
+        'totalAmount': {
+          '$sum': '$totalAmount'
+        }
+      }
+    }
+  ])
+
+  return {
+    docs: [
+      ...methodInfoArray,
+
+    ]
+  }
+
+}
+
 
 module.exports = {
   getCategoriesInfo,
@@ -817,5 +900,6 @@ module.exports = {
   perProductInfo,
   perMonthInfo,
   perMonthDebt,
-  downloadDebtors
+  downloadDebtors,
+  incomePerMethodAndMonth
 }

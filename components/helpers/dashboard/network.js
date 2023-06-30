@@ -59,6 +59,16 @@ router.get('/perMonthDebt', passport.authenticate('jwt', { session: false }), ch
             next(err)
         });
 })
+router.get('/incomePerMethodAndMonth', passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), (req, res, next) => {
+
+    controller.incomePerMethodAndMonth()
+        .then((data) => {
+            response.success(req, res, 200, data)
+        }).catch((err) => {
+            // response.error(req, res, 400, { message: 'algo fallo!', err })
+            next(err)
+        });
+})
 
 router.get('/downloadDebtors',/*  passport.authenticate('jwt', { session: false }), checkRoles('b9Admin', 'admin', 'teacher'), */ (req, res, next) => {
 
